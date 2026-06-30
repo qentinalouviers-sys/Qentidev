@@ -56,6 +56,19 @@ var GOOGLE_REVIEWS = {
       '<span class="reviews__count">' + total + "</span>";
   }
 
+  function renderPhotos(photos) {
+    var wrap = document.getElementById("reviewsPhotos");
+    if (!wrap) return;
+    if (!photos || !photos.length) { wrap.style.display = "none"; return; }
+    var list = photos.slice(0, 6);
+    wrap.innerHTML = list.map(function (ph) {
+      var url;
+      try { url = ph.getUrl({ maxWidth: 600, maxHeight: 600 }); } catch (e) { return ""; }
+      return '<a class="gphoto" href="' + url + '" target="_blank" rel="noopener" aria-label="Agrandir la photo">' +
+        '<img src="' + url + '" alt="Photo de la pizzeria QENTINA" loading="lazy" referrerpolicy="no-referrer" /></a>';
+    }).join("");
+  }
+
   function renderReviews(reviews) {
     if (!reviews || !reviews.length) {
       showState("Aucun avis à afficher pour le moment.");
@@ -90,7 +103,7 @@ var GOOGLE_REVIEWS = {
   window.__qentinaInitReviews = function () {
     try {
       var service = new google.maps.places.PlacesService(document.createElement("div"));
-      var fields = ["name", "rating", "user_ratings_total", "reviews", "url"];
+      var fields = ["name", "rating", "user_ratings_total", "reviews", "url", "photos"];
 
       function setWriteLink(placeId) {
         var write = document.getElementById("reviewWrite");
@@ -106,6 +119,7 @@ var GOOGLE_REVIEWS = {
           function (place, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK && place) {
               renderRating(place);
+              renderPhotos(place.photos);
               renderReviews(place.reviews);
               if (place.url) {
                 var more = document.getElementById("reviewsMore");
