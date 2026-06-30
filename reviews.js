@@ -61,7 +61,7 @@ var GOOGLE_REVIEWS = {
       showState("Aucun avis à afficher pour le moment.");
       return;
     }
-    var list = reviews.slice(0, 6);
+    var list = reviews.slice(0, 5);
     grid.innerHTML = list.map(function (r) {
       var photo = r.profile_photo_url
         ? '<img src="' + escapeHtml(r.profile_photo_url) + '" alt="" loading="lazy" referrerpolicy="no-referrer" />'
@@ -92,7 +92,15 @@ var GOOGLE_REVIEWS = {
       var service = new google.maps.places.PlacesService(document.createElement("div"));
       var fields = ["name", "rating", "user_ratings_total", "reviews", "url"];
 
+      function setWriteLink(placeId) {
+        var write = document.getElementById("reviewWrite");
+        if (write && placeId) {
+          write.href = "https://search.google.com/local/writereview?placeid=" + encodeURIComponent(placeId);
+        }
+      }
+
       function details(placeId) {
+        setWriteLink(placeId);
         service.getDetails(
           { placeId: placeId, fields: fields, language: "fr" },
           function (place, status) {

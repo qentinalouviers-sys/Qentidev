@@ -563,6 +563,21 @@ section { position: relative; z-index: 2; }
   border: 1px solid var(--line);
   line-height: 0;
 }
+.reviews__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.2rem 1.8rem;
+  margin-top: 2.4rem;
+}
+.reviews__more {
+  color: var(--terra);
+  font-weight: 500;
+  transition: opacity .25s var(--ease);
+}
+.reviews__more:hover { opacity: .7; }
+
 .center-link { text-align: center; margin-top: 1.3rem; }
 .center-link a { color: var(--terra); font-weight: 500; transition: opacity .25s var(--ease); }
 .center-link a:hover { opacity: .7; }
