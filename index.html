@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QENTINA — Pizzeria artisanale à Louviers</title>
+  <meta name="description" content="QENTINA, pizzeria artisanale à Louviers. Pâte maison, produits frais, cuisson au feu de bois. Sur place, à emporter et en livraison." />
+  <meta name="theme-color" content="#0f0d0b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>" />
+</head>
+<body>
+  <!-- Curseur personnalisé -->
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav" id="nav">
+    <a href="#accueil" class="nav__logo">
+      <span class="nav__logo-mark">🍕</span>
+      <span class="nav__logo-text">QENTINA</span>
+    </a>
+    <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#menu">La carte</a>
+      <a href="#histoire">Notre histoire</a>
+      <a href="#infos">Nous trouver</a>
+      <a href="#contact" class="nav__cta">Réserver</a>
+    </nav>
+    <button class="nav__burger" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Menu mobile -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#menu">La carte</a>
+    <a href="#histoire">Notre histoire</a>
+    <a href="#infos">Nous trouver</a>
+    <a href="#contact">Réserver</a>
+  </div>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="accueil">
+      <div class="hero__glow"></div>
+      <div class="hero__content">
+        <p class="hero__eyebrow reveal">Pizzeria artisanale · Louviers</p>
+        <h1 class="hero__title">
+          <span class="reveal" style="--d:.05s">L'art de la</span>
+          <span class="reveal hero__title-accent" style="--d:.15s">vraie pizza</span>
+        </h1>
+        <p class="hero__lead reveal" style="--d:.3s">
+          Pâte maturée 48&nbsp;heures, tomates San Marzano, mozzarella fior di latte
+          et cuisson au feu de bois. Le goût de l'Italie, au cœur de Louviers.
+        </p>
+        <div class="hero__actions reveal" style="--d:.45s">
+          <a href="#menu" class="btn btn--primary">Découvrir la carte</a>
+          <a href="#contact" class="btn btn--ghost">Commander&nbsp;<span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero__stats reveal" style="--d:.6s">
+          <div><strong>48h</strong><span>de maturation</span></div>
+          <div><strong>100%</strong><span>fait maison</span></div>
+          <div><strong>4.9★</strong><span>avis clients</span></div>
+        </div>
+      </div>
+      <div class="hero__pizza" aria-hidden="true">
+        <div class="hero__pizza-disc">🍕</div>
+      </div>
+      <a href="#menu" class="hero__scroll" aria-label="Défiler vers le bas">
+        <span></span>
+      </a>
+    </section>
+
+    <!-- Bandeau défilant -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Feu de bois</span><span>•</span><span>Produits frais</span><span>•</span>
+        <span>Pâte maison</span><span>•</span><span>Mozzarella fior di latte</span><span>•</span>
+        <span>Fait avec passion</span><span>•</span>
+        <span>Feu de bois</span><span>•</span><span>Produits frais</span><span>•</span>
+        <span>Pâte maison</span><span>•</span><span>Mozzarella fior di latte</span><span>•</span>
+        <span>Fait avec passion</span><span>•</span>
+      </div>
+    </div>
+
+    <!-- Spécialités -->
+    <section class="features">
+      <article class="feature reveal">
+        <div class="feature__icon">🔥</div>
+        <h3>Cuisson au feu de bois</h3>
+        <p>Une croûte croustillante, un cœur moelleux. 90 secondes à 450°C, comme à Naples.</p>
+      </article>
+      <article class="feature reveal" style="--d:.1s">
+        <div class="feature__icon">🌿</div>
+        <h3>Produits frais & locaux</h3>
+        <p>Nous sélectionnons chaque jour des ingrédients de saison auprès de producteurs de la région.</p>
+      </article>
+      <article class="feature reveal" style="--d:.2s">
+        <div class="feature__icon">🛵</div>
+        <h3>À emporter & livraison</h3>
+        <p>Sur place, à emporter ou livré chez vous à Louviers et alentours en moins de 30 minutes.</p>
+      </article>
+    </section>
+
+    <!-- Menu -->
+    <section class="menu" id="menu">
+      <div class="section-head reveal">
+        <p class="section-head__eyebrow">Notre carte</p>
+        <h2 class="section-head__title">Les pizzas signature</h2>
+        <p class="section-head__lead">Des classiques revisités aux créations de la maison, chaque pizza raconte une histoire.</p>
+      </div>
+
+      <div class="menu__grid">
+        <article class="card reveal">
+          <div class="card__badge">★ La star</div>
+          <div class="card__emoji">🍅</div>
+          <div class="card__body">
+            <div class="card__head">
+              <h3>Margherita</h3>
+              <span class="card__price">11&nbsp;€</span>
+            </div>
+            <p>San Marzano, fior di latte, basilic frais, huile d'olive extra-vierge.</p>
+          </div>
+        </article>
+
+        <article class="card reveal" style="--d:.05s">
+          <div class="card__emoji">🌶️</div>
+          <div class="card__body">
+            <div class="card__head">
+              <h3>Diavola</h3>
+              <span class="card__price">14&nbsp;€</span>
+            </div>
+            <p>Tomate, mozzarella, spianata piccante, miel de Calabre, piment frais.</p>
+          </div>
+        </article>
+
+        <article class="card reveal" style="--d:.1s">
+          <div class="card__emoji">🧀</div>
+          <div class="card__body">
+            <div class="card__head">
+              <h3>Quattro Formaggi</h3>
+              <span class="card__price">15&nbsp;€</span>
+            </div>
+            <p>Crème, mozzarella, gorgonzola, pecorino, parmesan affiné 24 mois.</p>
+          </div>
+        </article>
+
+        <article class="card reveal" style="--d:.15s">
+          <div class="card__emoji">🍄</div>
+          <div class="card__body">
+            <div class="card__head">
+              <h3>Tartufo</h3>
+              <span class="card__price">17&nbsp;€</span>
+            </div>
+            <p>Crème de truffe, champignons, mozzarella, copeaux de parmesan, roquette.</p>
+          </div>
+        </article>
+
+        <article class="card reveal" style="--d:.2s">
+          <div class="card__emoji">🥓</div>
+          <div class="card__body">
+            <div class="card__head">
+              <h3>Capricciosa</h3>
+              <span class="card__price">15&nbsp;€</span>
+            </div>
+            <p>Tomate, mozzarella, jambon, champignons, artichauts, olives, origan.</p>
+          </div>
+        </article>
+
+        <article class="card reveal" style="--d:.25s">
+          <div class="card__badge card__badge--green">Veggie</div>
+          <div class="card__emoji">🫑</div>
+          <div class="card__body">
+            <div class="card__head">
+              <h3>Ortolana</h3>
+              <span class="card__price">14&nbsp;€</span>
+            </div>
+            <p>Légumes grillés, courgettes, aubergines, poivrons, tomates cerises, pesto.</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="menu__note reveal">Pâte sans gluten disponible · Suppléments au choix · Menu enfant 9&nbsp;€</p>
+    </section>
+
+    <!-- Histoire -->
+    <section class="story" id="histoire">
+      <div class="story__media reveal">
+        <div class="story__media-inner">🔥</div>
+        <div class="story__sticker">Depuis 2018</div>
+      </div>
+      <div class="story__content reveal" style="--d:.1s">
+        <p class="section-head__eyebrow">Notre histoire</p>
+        <h2 class="section-head__title">La passion de Qentina</h2>
+        <p>
+          Tout commence par une farine, de l'eau, du temps et beaucoup d'amour.
+          Chez QENTINA, nous pétrissons notre pâte chaque matin et la laissons
+          maturer 48 heures pour une digestibilité et une légèreté incomparables.
+        </p>
+        <p>
+          Installée au cœur de Louviers, notre pizzeria est née de l'envie de
+          partager une cuisine simple, généreuse et authentique. Ici, on prend
+          le temps de bien faire les choses.
+        </p>
+        <ul class="story__list">
+          <li>Four à bois traditionnel napolitain</li>
+          <li>Ingrédients d'origine contrôlée</li>
+          <li>Une équipe passionnée et chaleureuse</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Infos pratiques -->
+    <section class="infos" id="infos">
+      <div class="section-head reveal">
+        <p class="section-head__eyebrow">Nous trouver</p>
+        <h2 class="section-head__title">Venez nous rendre visite</h2>
+      </div>
+      <div class="infos__grid">
+        <div class="info-card reveal">
+          <div class="info-card__icon">📍</div>
+          <h3>Adresse</h3>
+          <p>12 rue du Maréchal Foch<br />27400 Louviers</p>
+        </div>
+        <div class="info-card reveal" style="--d:.08s">
+          <div class="info-card__icon">🕑</div>
+          <h3>Horaires</h3>
+          <p>Mar – Dim : 11h30 – 14h00<br />18h30 – 22h30<br /><em>Fermé le lundi</em></p>
+        </div>
+        <div class="info-card reveal" style="--d:.16s">
+          <div class="info-card__icon">📞</div>
+          <h3>Téléphone</h3>
+          <p><a href="tel:+33232000000">02 32 00 00 00</a><br />Commandes & réservations</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact / Réservation -->
+    <section class="contact" id="contact">
+      <div class="contact__inner">
+        <div class="contact__text reveal">
+          <p class="section-head__eyebrow">Réservation</p>
+          <h2 class="section-head__title">Réservez votre table</h2>
+          <p>Une question, un événement, une grande tablée&nbsp;? Écrivez-nous et nous vous répondons rapidement.</p>
+          <div class="contact__social">
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="Facebook">Facebook</a>
+            <a href="tel:+33232000000" aria-label="Téléphone">Appeler</a>
+          </div>
+        </div>
+        <form class="contact__form reveal" style="--d:.1s" id="reservationForm" novalidate>
+          <div class="field">
+            <input type="text" id="name" name="name" required placeholder=" " />
+            <label for="name">Votre nom</label>
+          </div>
+          <div class="field field--row">
+            <div class="field">
+              <input type="tel" id="phone" name="phone" required placeholder=" " />
+              <label for="phone">Téléphone</label>
+            </div>
+            <div class="field">
+              <input type="number" id="guests" name="guests" min="1" max="30" placeholder=" " />
+              <label for="guests">Couverts</label>
+            </div>
+          </div>
+          <div class="field">
+            <input type="datetime-local" id="datetime" name="datetime" required />
+            <label for="datetime" class="label--static">Date & heure</label>
+          </div>
+          <div class="field">
+            <textarea id="message" name="message" rows="3" placeholder=" "></textarea>
+            <label for="message">Un message (facultatif)</label>
+          </div>
+          <button type="submit" class="btn btn--primary btn--full">Envoyer la demande</button>
+          <p class="contact__feedback" id="formFeedback" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="nav__logo-mark">🍕</span>
+        <span class="nav__logo-text">QENTINA</span>
+      </div>
+      <p>Pizzeria artisanale au feu de bois, à Louviers.</p>
+    </div>
+    <div class="footer__links">
+      <a href="#menu">La carte</a>
+      <a href="#histoire">Notre histoire</a>
+      <a href="#infos">Nous trouver</a>
+      <a href="#contact">Réserver</a>
+    </div>
+    <p class="footer__copy">© <span id="year"></span> QENTINA · Tous droits réservés · Fait avec ❤️ à Louviers</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
