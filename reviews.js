@@ -8,7 +8,7 @@
    Guide d'installation : DEPLOIEMENT-AVIS.md
    ============================================================ */
 var QENTINA_REVIEWS = {
-  endpoint: "__WORKER_URL__"
+  endpoint: "https://qentidev.qentina-louviers.workers.dev/"
 };
 
 (function () {
