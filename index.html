@@ -119,60 +119,21 @@
         <p class="section-lead">Des classiques revisités aux créations de la maison — chaque pizza raconte une histoire.</p>
       </div>
 
-      <div class="menu__list">
-        <article class="dish reveal">
-          <div class="dish__row">
-            <h3>Margherita <span class="tag">Signature</span></h3>
-            <span class="dish__lead-line"></span>
-            <span class="dish__price">11&nbsp;€</span>
-          </div>
-          <p>San Marzano, fior di latte, basilic frais, huile d'olive extra-vierge.</p>
-        </article>
-
-        <article class="dish reveal" style="--d:.04s">
-          <div class="dish__row">
-            <h3>Diavola</h3>
-            <span class="dish__lead-line"></span>
-            <span class="dish__price">14&nbsp;€</span>
-          </div>
-          <p>Tomate, mozzarella, spianata piccante, miel de Calabre, piment frais.</p>
-        </article>
-
-        <article class="dish reveal" style="--d:.08s">
-          <div class="dish__row">
-            <h3>Quattro Formaggi</h3>
-            <span class="dish__lead-line"></span>
-            <span class="dish__price">15&nbsp;€</span>
-          </div>
-          <p>Crème, mozzarella, gorgonzola, pecorino, parmesan affiné 24&nbsp;mois.</p>
-        </article>
-
-        <article class="dish reveal" style="--d:.12s">
-          <div class="dish__row">
-            <h3>Tartufo</h3>
-            <span class="dish__lead-line"></span>
-            <span class="dish__price">17&nbsp;€</span>
-          </div>
-          <p>Crème de truffe, champignons, mozzarella, copeaux de parmesan, roquette.</p>
-        </article>
-
-        <article class="dish reveal" style="--d:.16s">
-          <div class="dish__row">
-            <h3>Capricciosa</h3>
-            <span class="dish__lead-line"></span>
-            <span class="dish__price">15&nbsp;€</span>
-          </div>
-          <p>Tomate, mozzarella, jambon, champignons, artichauts, olives, origan.</p>
-        </article>
-
-        <article class="dish reveal" style="--d:.2s">
-          <div class="dish__row">
-            <h3>Ortolana <span class="tag tag--olive">Veggie</span></h3>
-            <span class="dish__lead-line"></span>
-            <span class="dish__price">14&nbsp;€</span>
-          </div>
-          <p>Légumes grillés, courgettes, aubergines, poivrons, tomates cerises, pesto.</p>
-        </article>
+      <div class="menu__gallery">
+        <button type="button" class="menu-card reveal" data-index="0" data-full="menu-1.svg" aria-label="Agrandir la carte, page 1">
+          <img src="menu-1.svg" alt="Carte QENTINA — page 1" loading="lazy" />
+          <span class="menu-card__hint" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
+            Cliquer pour agrandir
+          </span>
+        </button>
+        <button type="button" class="menu-card reveal" style="--d:.08s" data-index="1" data-full="menu-2.svg" aria-label="Agrandir la carte, page 2">
+          <img src="menu-2.svg" alt="Carte QENTINA — page 2" loading="lazy" />
+          <span class="menu-card__hint" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
+            Cliquer pour agrandir
+          </span>
+        </button>
       </div>
 
       <p class="menu__note reveal">Pâte sans gluten disponible · Suppléments au choix · Menu enfant 9&nbsp;€</p>
@@ -315,6 +276,17 @@
     </nav>
     <p class="footer__copy">© <span id="year"></span> QENTINA · Tous droits réservés · Fait à Louviers</p>
   </footer>
+
+  <!-- Visualiseur d'images (carte) -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visualiseur de la carte" hidden>
+    <button class="lightbox__close" type="button" aria-label="Fermer">&times;</button>
+    <button class="lightbox__nav lightbox__prev" type="button" aria-label="Image précédente">&#8249;</button>
+    <figure class="lightbox__stage">
+      <img class="lightbox__img" id="lightboxImg" src="" alt="" />
+    </figure>
+    <button class="lightbox__nav lightbox__next" type="button" aria-label="Image suivante">&#8250;</button>
+    <span class="lightbox__counter" id="lightboxCounter"></span>
+  </div>
 
   <!-- Bouton flottant de réservation -->
   <div class="fab" id="fab">
