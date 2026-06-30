@@ -4,6 +4,32 @@
 (function () {
   "use strict";
 
+  /* Toujours ouvrir le site tout en haut (sauf si un lien #ancre est utilisé) */
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (!location.hash) {
+    window.scrollTo(0, 0);
+    window.addEventListener("load", function () {
+      if (!location.hash) window.scrollTo(0, 0);
+    });
+  }
+
+  /* Carte Google Maps : chargée seulement à l'approche (évite le saut au démarrage) */
+  var mapFrame = document.querySelector(".map iframe[data-src]");
+  if (mapFrame) {
+    var loadMap = function () {
+      if (mapFrame.src) return;
+      mapFrame.src = mapFrame.getAttribute("data-src");
+    };
+    if ("IntersectionObserver" in window) {
+      var mo = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { loadMap(); mo.disconnect(); }
+      }, { rootMargin: "200px" });
+      mo.observe(mapFrame);
+    } else {
+      loadMap();
+    }
+  }
+
   /* Année dans le footer */
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
