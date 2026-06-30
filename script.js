@@ -49,6 +49,25 @@
     reveals.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
+  /* Bouton flottant : visible après le hero, masqué sur la section contact */
+  var fab = document.getElementById("fab");
+  var contact = document.getElementById("contact");
+  if (fab) {
+    var contactVisible = false;
+    if ("IntersectionObserver" in window && contact) {
+      new IntersectionObserver(function (entries) {
+        contactVisible = entries[0].isIntersecting;
+        updateFab();
+      }, { threshold: 0.18 }).observe(contact);
+    }
+    function updateFab() {
+      var pastHero = window.scrollY > window.innerHeight * 0.7;
+      fab.classList.toggle("is-shown", pastHero && !contactVisible);
+    }
+    window.addEventListener("scroll", updateFab, { passive: true });
+    updateFab();
+  }
+
   /* Formulaire de réservation */
   var form = document.getElementById("reservationForm");
   var feedback = document.getElementById("formFeedback");

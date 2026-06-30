@@ -591,6 +591,61 @@ section { position: relative; z-index: 2; }
   font-size: .85rem;
 }
 
+/* ---------- Bouton flottant de réservation ---------- */
+.fab {
+  position: fixed;
+  right: clamp(1rem, 4vw, 2rem);
+  bottom: clamp(1rem, 4vw, 2rem);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity .4s var(--ease), transform .4s var(--ease);
+}
+.fab.is-shown { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.fab__call,
+.fab__book {
+  box-shadow: 0 16px 36px -12px rgba(33, 28, 23, 0.45);
+  transition: transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease);
+}
+.fab__call {
+  display: grid;
+  place-items: center;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--terra);
+  border: 1px solid var(--line-soft);
+}
+.fab__call svg { width: 24px; height: 24px; }
+.fab__call:hover { transform: translateY(-3px); background: var(--ink); color: var(--paper); }
+
+.fab__book {
+  display: inline-flex;
+  align-items: center;
+  height: 54px;
+  padding: 0 1.5rem;
+  border-radius: 100px;
+  background: var(--terra);
+  color: #fff;
+  font-weight: 500;
+  font-size: .98rem;
+}
+.fab__book:hover { transform: translateY(-3px); background: var(--terra-deep); }
+
+@media (max-width: 620px) {
+  .fab {
+    left: 1rem; right: 1rem;
+    bottom: 1rem;
+    gap: .7rem;
+  }
+  .fab__book { flex: 1; justify-content: center; }
+}
+
 /* ---------- Apparition au défilement ---------- */
 .reveal {
   opacity: 0;
