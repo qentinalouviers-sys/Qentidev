@@ -4,202 +4,193 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QENTINA — Pizzeria artisanale à Louviers</title>
-  <meta name="description" content="QENTINA, pizzeria artisanale à Louviers. Pâte maison, produits frais, cuisson au feu de bois. Sur place, à emporter et en livraison." />
-  <meta name="theme-color" content="#0f0d0b" />
+  <meta name="description" content="QENTINA, pizzeria artisanale à Louviers. Pâte maturée 48 h, produits frais, cuisson au feu de bois. Sur place, à emporter et en livraison." />
+  <meta name="theme-color" content="#f6f1ea" />
+  <meta property="og:title" content="QENTINA — Pizzeria artisanale à Louviers" />
+  <meta property="og:description" content="Pâte maturée 48 h, produits frais, cuisson au feu de bois. Au cœur de Louviers." />
+  <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23c0573b'/><text x='50' y='72' font-size='62' font-family='Georgia,serif' fill='%23f6f1ea' text-anchor='middle'>Q</text></svg>" />
 </head>
 <body>
-  <!-- Curseur personnalisé -->
-  <div class="cursor" aria-hidden="true"></div>
-
   <!-- Navigation -->
   <header class="nav" id="nav">
-    <a href="#accueil" class="nav__logo">
-      <span class="nav__logo-mark">🍕</span>
+    <a href="#accueil" class="nav__logo" aria-label="QENTINA, accueil">
+      <span class="nav__logo-mark">Q</span>
       <span class="nav__logo-text">QENTINA</span>
     </a>
     <nav class="nav__links" aria-label="Navigation principale">
       <a href="#menu">La carte</a>
-      <a href="#histoire">Notre histoire</a>
+      <a href="#histoire">La maison</a>
       <a href="#avis">Avis</a>
-      <a href="#infos">Nous trouver</a>
+      <a href="#infos">Infos</a>
       <a href="#contact" class="nav__cta">Réserver</a>
     </nav>
     <button class="nav__burger" aria-label="Ouvrir le menu" aria-expanded="false">
-      <span></span><span></span><span></span>
+      <span></span><span></span>
     </button>
   </header>
 
-  <!-- Menu mobile -->
   <div class="mobile-menu" id="mobileMenu">
     <a href="#menu">La carte</a>
-    <a href="#histoire">Notre histoire</a>
+    <a href="#histoire">La maison</a>
     <a href="#avis">Avis</a>
-    <a href="#infos">Nous trouver</a>
+    <a href="#infos">Infos</a>
     <a href="#contact">Réserver</a>
   </div>
 
   <main>
     <!-- Hero -->
     <section class="hero" id="accueil">
-      <div class="hero__glow"></div>
-      <div class="hero__content">
-        <p class="hero__eyebrow reveal">Pizzeria artisanale · Louviers</p>
-        <h1 class="hero__title">
-          <span class="reveal" style="--d:.05s">L'art de la</span>
-          <span class="reveal hero__title-accent" style="--d:.15s">vraie pizza</span>
+      <div class="hero__text">
+        <p class="eyebrow reveal">Pizzeria artisanale · Louviers</p>
+        <h1 class="hero__title reveal" style="--d:.05s">
+          L'art de la<br /><em>vraie pizza</em>
         </h1>
-        <p class="hero__lead reveal" style="--d:.3s">
-          Pâte maturée 48&nbsp;heures, tomates San Marzano, mozzarella fior di latte
+        <p class="hero__lead reveal" style="--d:.12s">
+          Pâte maturée 48&nbsp;heures, tomates San&nbsp;Marzano, mozzarella fior&nbsp;di&nbsp;latte
           et cuisson au feu de bois. Le goût de l'Italie, au cœur de Louviers.
         </p>
-        <div class="hero__actions reveal" style="--d:.45s">
+        <div class="hero__actions reveal" style="--d:.18s">
           <a href="#menu" class="btn btn--primary">Découvrir la carte</a>
-          <a href="#contact" class="btn btn--ghost">Commander&nbsp;<span aria-hidden="true">→</span></a>
+          <a href="#contact" class="btn btn--ghost">Réserver une table</a>
         </div>
-        <div class="hero__stats reveal" style="--d:.6s">
-          <div><strong>48h</strong><span>de maturation</span></div>
-          <div><strong>100%</strong><span>fait maison</span></div>
-          <div><strong>4.9★</strong><span>avis clients</span></div>
+        <dl class="hero__meta reveal" style="--d:.24s">
+          <div><dt>48&nbsp;h</dt><dd>de maturation</dd></div>
+          <div><dt>Feu de bois</dt><dd>cuisson napolitaine</dd></div>
+          <div><dt>Maison</dt><dd>chaque jour</dd></div>
+        </dl>
+      </div>
+      <div class="hero__visual reveal" style="--d:.1s" aria-hidden="true">
+        <div class="plate">
+          <div class="plate__ring"></div>
+          <div class="plate__ring plate__ring--2"></div>
+          <div class="plate__center"></div>
         </div>
+        <span class="hero__tag">Cuite au feu de bois</span>
       </div>
-      <div class="hero__pizza" aria-hidden="true">
-        <div class="hero__pizza-disc">🍕</div>
-      </div>
-      <a href="#menu" class="hero__scroll" aria-label="Défiler vers le bas">
-        <span></span>
-      </a>
     </section>
 
-    <!-- Bandeau défilant -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        <span>Feu de bois</span><span>•</span><span>Produits frais</span><span>•</span>
-        <span>Pâte maison</span><span>•</span><span>Mozzarella fior di latte</span><span>•</span>
-        <span>Fait avec passion</span><span>•</span>
-        <span>Feu de bois</span><span>•</span><span>Produits frais</span><span>•</span>
-        <span>Pâte maison</span><span>•</span><span>Mozzarella fior di latte</span><span>•</span>
-        <span>Fait avec passion</span><span>•</span>
+    <!-- Bandeau valeurs -->
+    <div class="strip" aria-hidden="true">
+      <div class="strip__track">
+        <span>Feu de bois</span><i></i><span>Produits frais</span><i></i>
+        <span>Pâte maturée 48 h</span><i></i><span>Fior di latte</span><i></i>
+        <span>Fait avec passion</span><i></i>
+        <span>Feu de bois</span><i></i><span>Produits frais</span><i></i>
+        <span>Pâte maturée 48 h</span><i></i><span>Fior di latte</span><i></i>
+        <span>Fait avec passion</span><i></i>
       </div>
     </div>
 
     <!-- Spécialités -->
     <section class="features">
       <article class="feature reveal">
-        <div class="feature__icon">🔥</div>
+        <span class="feature__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3-1 4-1 6a3 3 0 0 0 6 0c0-1-.4-2-1-2.7C16.5 9 18 11 18 14a6 6 0 0 1-12 0c0-4 3-6 4-8 .7 1 1.3 1.7 2 2 0-2 0-3 0-5Z"/></svg>
+        </span>
         <h3>Cuisson au feu de bois</h3>
-        <p>Une croûte croustillante, un cœur moelleux. 90 secondes à 450°C, comme à Naples.</p>
+        <p>Une croûte croustillante, un cœur moelleux. 90&nbsp;secondes à 450&nbsp;°C, comme à Naples.</p>
       </article>
-      <article class="feature reveal" style="--d:.1s">
-        <div class="feature__icon">🌿</div>
-        <h3>Produits frais & locaux</h3>
-        <p>Nous sélectionnons chaque jour des ingrédients de saison auprès de producteurs de la région.</p>
+      <article class="feature reveal" style="--d:.08s">
+        <span class="feature__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 9-9 3 0 5 1 7 2-1 8-5 13-9 14Z"/><path d="M8 17c2-4 5-6 8-7"/></svg>
+        </span>
+        <h3>Produits frais &amp; locaux</h3>
+        <p>Des ingrédients de saison choisis chaque jour auprès de producteurs de la région.</p>
       </article>
-      <article class="feature reveal" style="--d:.2s">
-        <div class="feature__icon">🛵</div>
-        <h3>À emporter & livraison</h3>
-        <p>Sur place, à emporter ou livré chez vous à Louviers et alentours en moins de 30 minutes.</p>
+      <article class="feature reveal" style="--d:.16s">
+        <span class="feature__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="2.5"/><circle cx="18" cy="17" r="2.5"/><path d="M8.5 17H15l3-6h-5M6 11l1.5-4H11l2.5 6"/></svg>
+        </span>
+        <h3>À emporter &amp; livraison</h3>
+        <p>Sur place, à emporter ou livré chez vous à Louviers et alentours en moins de 30&nbsp;minutes.</p>
       </article>
     </section>
 
     <!-- Menu -->
     <section class="menu" id="menu">
       <div class="section-head reveal">
-        <p class="section-head__eyebrow">Notre carte</p>
-        <h2 class="section-head__title">Les pizzas signature</h2>
-        <p class="section-head__lead">Des classiques revisités aux créations de la maison, chaque pizza raconte une histoire.</p>
+        <p class="eyebrow">Notre carte</p>
+        <h2 class="section-title">Les pizzas signature</h2>
+        <p class="section-lead">Des classiques revisités aux créations de la maison — chaque pizza raconte une histoire.</p>
       </div>
 
-      <div class="menu__grid">
-        <article class="card reveal">
-          <div class="card__badge">★ La star</div>
-          <div class="card__emoji">🍅</div>
-          <div class="card__body">
-            <div class="card__head">
-              <h3>Margherita</h3>
-              <span class="card__price">11&nbsp;€</span>
-            </div>
-            <p>San Marzano, fior di latte, basilic frais, huile d'olive extra-vierge.</p>
+      <div class="menu__list">
+        <article class="dish reveal">
+          <div class="dish__row">
+            <h3>Margherita <span class="tag">Signature</span></h3>
+            <span class="dish__lead-line"></span>
+            <span class="dish__price">11&nbsp;€</span>
           </div>
+          <p>San Marzano, fior di latte, basilic frais, huile d'olive extra-vierge.</p>
         </article>
 
-        <article class="card reveal" style="--d:.05s">
-          <div class="card__emoji">🌶️</div>
-          <div class="card__body">
-            <div class="card__head">
-              <h3>Diavola</h3>
-              <span class="card__price">14&nbsp;€</span>
-            </div>
-            <p>Tomate, mozzarella, spianata piccante, miel de Calabre, piment frais.</p>
+        <article class="dish reveal" style="--d:.04s">
+          <div class="dish__row">
+            <h3>Diavola</h3>
+            <span class="dish__lead-line"></span>
+            <span class="dish__price">14&nbsp;€</span>
           </div>
+          <p>Tomate, mozzarella, spianata piccante, miel de Calabre, piment frais.</p>
         </article>
 
-        <article class="card reveal" style="--d:.1s">
-          <div class="card__emoji">🧀</div>
-          <div class="card__body">
-            <div class="card__head">
-              <h3>Quattro Formaggi</h3>
-              <span class="card__price">15&nbsp;€</span>
-            </div>
-            <p>Crème, mozzarella, gorgonzola, pecorino, parmesan affiné 24 mois.</p>
+        <article class="dish reveal" style="--d:.08s">
+          <div class="dish__row">
+            <h3>Quattro Formaggi</h3>
+            <span class="dish__lead-line"></span>
+            <span class="dish__price">15&nbsp;€</span>
           </div>
+          <p>Crème, mozzarella, gorgonzola, pecorino, parmesan affiné 24&nbsp;mois.</p>
         </article>
 
-        <article class="card reveal" style="--d:.15s">
-          <div class="card__emoji">🍄</div>
-          <div class="card__body">
-            <div class="card__head">
-              <h3>Tartufo</h3>
-              <span class="card__price">17&nbsp;€</span>
-            </div>
-            <p>Crème de truffe, champignons, mozzarella, copeaux de parmesan, roquette.</p>
+        <article class="dish reveal" style="--d:.12s">
+          <div class="dish__row">
+            <h3>Tartufo</h3>
+            <span class="dish__lead-line"></span>
+            <span class="dish__price">17&nbsp;€</span>
           </div>
+          <p>Crème de truffe, champignons, mozzarella, copeaux de parmesan, roquette.</p>
         </article>
 
-        <article class="card reveal" style="--d:.2s">
-          <div class="card__emoji">🥓</div>
-          <div class="card__body">
-            <div class="card__head">
-              <h3>Capricciosa</h3>
-              <span class="card__price">15&nbsp;€</span>
-            </div>
-            <p>Tomate, mozzarella, jambon, champignons, artichauts, olives, origan.</p>
+        <article class="dish reveal" style="--d:.16s">
+          <div class="dish__row">
+            <h3>Capricciosa</h3>
+            <span class="dish__lead-line"></span>
+            <span class="dish__price">15&nbsp;€</span>
           </div>
+          <p>Tomate, mozzarella, jambon, champignons, artichauts, olives, origan.</p>
         </article>
 
-        <article class="card reveal" style="--d:.25s">
-          <div class="card__badge card__badge--green">Veggie</div>
-          <div class="card__emoji">🫑</div>
-          <div class="card__body">
-            <div class="card__head">
-              <h3>Ortolana</h3>
-              <span class="card__price">14&nbsp;€</span>
-            </div>
-            <p>Légumes grillés, courgettes, aubergines, poivrons, tomates cerises, pesto.</p>
+        <article class="dish reveal" style="--d:.2s">
+          <div class="dish__row">
+            <h3>Ortolana <span class="tag tag--olive">Veggie</span></h3>
+            <span class="dish__lead-line"></span>
+            <span class="dish__price">14&nbsp;€</span>
           </div>
+          <p>Légumes grillés, courgettes, aubergines, poivrons, tomates cerises, pesto.</p>
         </article>
       </div>
 
       <p class="menu__note reveal">Pâte sans gluten disponible · Suppléments au choix · Menu enfant 9&nbsp;€</p>
     </section>
 
-    <!-- Histoire -->
+    <!-- La maison -->
     <section class="story" id="histoire">
-      <div class="story__media reveal">
-        <div class="story__media-inner">🔥</div>
-        <div class="story__sticker">Depuis 2018</div>
+      <div class="story__media reveal" aria-hidden="true">
+        <div class="story__panel"></div>
+        <span class="story__badge">Depuis 2018</span>
       </div>
-      <div class="story__content reveal" style="--d:.1s">
-        <p class="section-head__eyebrow">Notre histoire</p>
-        <h2 class="section-head__title">La passion de Qentina</h2>
+      <div class="story__content reveal" style="--d:.08s">
+        <p class="eyebrow">La maison</p>
+        <h2 class="section-title">La passion de Qentina</h2>
         <p>
           Tout commence par une farine, de l'eau, du temps et beaucoup d'amour.
           Chez QENTINA, nous pétrissons notre pâte chaque matin et la laissons
-          maturer 48 heures pour une digestibilité et une légèreté incomparables.
+          maturer 48&nbsp;heures pour une légèreté et une digestibilité incomparables.
         </p>
         <p>
           Installée au cœur de Louviers, notre pizzeria est née de l'envie de
@@ -217,14 +208,14 @@
     <!-- Avis Google -->
     <section class="reviews" id="avis">
       <div class="section-head reveal">
-        <p class="section-head__eyebrow">Vos avis</p>
-        <h2 class="section-head__title">Ils ont goûté, ils ont adoré</h2>
+        <p class="eyebrow">Vos avis</p>
+        <h2 class="section-title">Ils ont goûté, ils ont adoré</h2>
         <div class="reviews__rating" id="reviewsRating" aria-live="polite"></div>
       </div>
       <div class="reviews__grid" id="reviewsGrid">
         <p class="reviews__state">Chargement des avis Google…</p>
       </div>
-      <p class="map__link reveal">
+      <p class="center-link reveal">
         <a id="reviewsMore" href="https://www.google.com/maps/search/?api=1&query=QENTINA%20pizzeria%2020%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener">
           Voir tous nos avis sur Google&nbsp;<span aria-hidden="true">→</span>
         </a>
@@ -234,24 +225,21 @@
     <!-- Infos pratiques -->
     <section class="infos" id="infos">
       <div class="section-head reveal">
-        <p class="section-head__eyebrow">Nous trouver</p>
-        <h2 class="section-head__title">Venez nous rendre visite</h2>
+        <p class="eyebrow">Nous trouver</p>
+        <h2 class="section-title">Venez nous rendre visite</h2>
       </div>
       <div class="infos__grid">
-        <div class="info-card reveal">
-          <div class="info-card__icon">📍</div>
+        <div class="info reveal">
           <h3>Adresse</h3>
           <p>20 rue Maréchal Foch<br />27400 Louviers</p>
         </div>
-        <div class="info-card reveal" style="--d:.08s">
-          <div class="info-card__icon">🕑</div>
+        <div class="info reveal" style="--d:.06s">
           <h3>Horaires</h3>
-          <p>Mar – Sam : 12h00 – 14h30<br />19h00 – 22h30<br />Ven & Sam soir jusqu'à 23h00<br /><em>Fermé dimanche & lundi</em></p>
+          <p>Mar – Sam : 12h00 – 14h30<br />19h00 – 22h30<br />Ven &amp; Sam soir jusqu'à 23h00<br /><span class="info__closed">Fermé dimanche &amp; lundi</span></p>
         </div>
-        <div class="info-card reveal" style="--d:.16s">
-          <div class="info-card__icon">📞</div>
+        <div class="info reveal" style="--d:.12s">
           <h3>Téléphone</h3>
-          <p><a href="tel:+33259162093">02 59 16 20 93</a><br />Commandes & réservations</p>
+          <p><a href="tel:+33259162093">02 59 16 20 93</a><br />Commandes &amp; réservations</p>
         </div>
       </div>
 
@@ -262,7 +250,7 @@
           width="100%" height="420" style="border:0;" allowfullscreen=""
           loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-      <p class="map__link reveal">
+      <p class="center-link reveal">
         <a href="https://www.google.com/maps/search/?api=1&query=20%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener">
           Ouvrir l'itinéraire dans Google Maps&nbsp;<span aria-hidden="true">→</span>
         </a>
@@ -273,21 +261,21 @@
     <section class="contact" id="contact">
       <div class="contact__inner">
         <div class="contact__text reveal">
-          <p class="section-head__eyebrow">Réservation</p>
-          <h2 class="section-head__title">Réservez votre table</h2>
-          <p>Une question, un événement, une grande tablée&nbsp;? Écrivez-nous et nous vous répondons rapidement.</p>
+          <p class="eyebrow">Réservation</p>
+          <h2 class="section-title">Réservez votre table</h2>
+          <p>Une question, un événement, une grande tablée&nbsp;? Écrivez-nous, nous vous répondons rapidement.</p>
           <div class="contact__social">
             <a href="#" aria-label="Instagram">Instagram</a>
             <a href="#" aria-label="Facebook">Facebook</a>
-            <a href="tel:+33259162093" aria-label="Téléphone">Appeler</a>
+            <a href="tel:+33259162093">Appeler</a>
           </div>
         </div>
-        <form class="contact__form reveal" style="--d:.1s" id="reservationForm" novalidate>
+        <form class="contact__form reveal" style="--d:.08s" id="reservationForm" novalidate>
           <div class="field">
             <input type="text" id="name" name="name" required placeholder=" " />
             <label for="name">Votre nom</label>
           </div>
-          <div class="field field--row">
+          <div class="field--row">
             <div class="field">
               <input type="tel" id="phone" name="phone" required placeholder=" " />
               <label for="phone">Téléphone</label>
@@ -299,7 +287,7 @@
           </div>
           <div class="field">
             <input type="datetime-local" id="datetime" name="datetime" required />
-            <label for="datetime" class="label--static">Date & heure</label>
+            <label for="datetime" class="label--static">Date &amp; heure</label>
           </div>
           <div class="field">
             <textarea id="message" name="message" rows="3" placeholder=" "></textarea>
@@ -313,20 +301,19 @@
   </main>
 
   <footer class="footer">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <span class="nav__logo-mark">🍕</span>
-        <span class="nav__logo-text">QENTINA</span>
-      </div>
-      <p>Pizzeria artisanale au feu de bois, à Louviers.</p>
+    <div class="footer__brand">
+      <span class="nav__logo-mark">Q</span>
+      <span class="nav__logo-text">QENTINA</span>
     </div>
-    <div class="footer__links">
+    <p class="footer__tag">Pizzeria artisanale au feu de bois, à Louviers.</p>
+    <nav class="footer__links" aria-label="Pied de page">
       <a href="#menu">La carte</a>
-      <a href="#histoire">Notre histoire</a>
-      <a href="#infos">Nous trouver</a>
+      <a href="#histoire">La maison</a>
+      <a href="#avis">Avis</a>
+      <a href="#infos">Infos</a>
       <a href="#contact">Réserver</a>
-    </div>
-    <p class="footer__copy">© <span id="year"></span> QENTINA · Tous droits réservés · Fait avec ❤️ à Louviers</p>
+    </nav>
+    <p class="footer__copy">© <span id="year"></span> QENTINA · Tous droits réservés · Fait à Louviers</p>
   </footer>
 
   <script src="reviews.js"></script>
