@@ -1,14 +1,20 @@
 /* ============================================================
-   QENTINA — Avis Google (via proxy sécurisé)
+   QENTINA — Avis Google (API JavaScript Google Places)
    ------------------------------------------------------------
-   CONFIGURATION : collez l'URL de votre Cloudflare Worker.
-   AUCUNE clé API n'est présente ici : le proxy la garde secrète.
-   Exemple : https://qentina-avis.votre-sous-domaine.workers.dev
+   La clé ci-dessous est RESTREINTE par domaine (referrer HTTP) :
+   elle ne fonctionne que depuis le site officiel QENTINA et reste
+   donc inutilisable ailleurs. C'est la méthode recommandée par
+   Google pour un site statique.
 
-   Guide d'installation : DEPLOIEMENT-AVIS.md
+   Pré-requis côté Google Cloud pour cette clé :
+     - APIs activées : « Maps JavaScript API » ET « Places API »
+     - Restriction de site web (referrer) incluant :
+         https://qentinalouviers-sys.github.io/*
    ============================================================ */
-var QENTINA_REVIEWS = {
-  endpoint: "https://qentidev.qentina-louviers.workers.dev/"
+var GOOGLE_REVIEWS = {
+  apiKey: "AIzaSyDoP4ojCuUzQIf9EFmkgWcEBcPtSFWcIGQ",
+  placeId: "",
+  query: "QENTINA pizzeria 20 rue Maréchal Foch 27400 Louviers"
 };
 
 (function () {
@@ -19,8 +25,7 @@ var QENTINA_REVIEWS = {
   var ratingEl = document.getElementById("reviewsRating");
   if (!section || !grid) return;
 
-  // Tant que l'URL du proxy n'est pas renseignée, on masque la section.
-  if (!QENTINA_REVIEWS.endpoint || QENTINA_REVIEWS.endpoint.indexOf("__") === 0) {
+  if (!GOOGLE_REVIEWS.apiKey || GOOGLE_REVIEWS.apiKey.indexOf("__") === 0) {
     section.style.display = "none";
     return;
   }
@@ -42,12 +47,12 @@ var QENTINA_REVIEWS = {
     grid.innerHTML = '<p class="reviews__state">' + escapeHtml(msg) + "</p>";
   }
 
-  function renderRating(data) {
-    if (!data.rating) return;
-    var total = data.total ? " · " + data.total + " avis" : "";
+  function renderRating(place) {
+    if (!place.rating) return;
+    var total = place.user_ratings_total ? " · " + place.user_ratings_total + " avis" : "";
     ratingEl.innerHTML =
-      '<span class="reviews__score">' + Number(data.rating).toFixed(1).replace(".", ",") + "</span>" +
-      stars(data.rating) +
+      '<span class="reviews__score">' + place.rating.toFixed(1).replace(".", ",") + "</span>" +
+      stars(place.rating) +
       '<span class="reviews__count">' + total + "</span>";
   }
 
@@ -82,22 +87,59 @@ var QENTINA_REVIEWS = {
     });
   }
 
-  // Appel du proxy sécurisé (aucune clé côté navigateur).
-  fetch(QENTINA_REVIEWS.endpoint, { method: "GET" })
-    .then(function (r) { return r.json(); })
-    .then(function (data) {
-      if (!data || data.error) {
-        showState("Les avis ne sont pas disponibles pour le moment.");
-        return;
+  window.__qentinaInitReviews = function () {
+    try {
+      var service = new google.maps.places.PlacesService(document.createElement("div"));
+      var fields = ["name", "rating", "user_ratings_total", "reviews", "url"];
+
+      function details(placeId) {
+        service.getDetails(
+          { placeId: placeId, fields: fields, language: "fr" },
+          function (place, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+              renderRating(place);
+              renderReviews(place.reviews);
+              if (place.url) {
+                var more = document.getElementById("reviewsMore");
+                if (more) more.href = place.url;
+              }
+            } else {
+              showState("Les avis ne sont pas disponibles pour le moment.");
+            }
+          }
+        );
       }
-      renderRating(data);
-      renderReviews(data.reviews);
-      if (data.url) {
-        var more = document.getElementById("reviewsMore");
-        if (more) more.href = data.url;
+
+      if (GOOGLE_REVIEWS.placeId) {
+        details(GOOGLE_REVIEWS.placeId);
+      } else {
+        service.findPlaceFromQuery(
+          { query: GOOGLE_REVIEWS.query, fields: ["place_id"] },
+          function (res, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK && res && res[0]) {
+              details(res[0].place_id);
+            } else {
+              showState("Établissement introuvable sur Google.");
+            }
+          }
+        );
       }
-    })
-    .catch(function () {
-      showState("Impossible de charger les avis pour le moment.");
-    });
+    } catch (e) {
+      showState("Impossible de charger les avis Google.");
+    }
+  };
+
+  // Erreur d'authentification Google (clé non autorisée pour ce domaine, API non activée…)
+  window.gm_authFailure = function () {
+    showState("La clé Google n'est pas autorisée pour ce site (vérifiez les restrictions et les API activées).");
+  };
+
+  var s = document.createElement("script");
+  s.src =
+    "https://maps.googleapis.com/maps/api/js?key=" +
+    encodeURIComponent(GOOGLE_REVIEWS.apiKey) +
+    "&libraries=places&language=fr&loading=async&callback=__qentinaInitReviews";
+  s.async = true;
+  s.onerror = function () { showState("Impossible de joindre Google Maps."); };
+  document.head.appendChild(s);
 })();
