@@ -25,6 +25,7 @@
     <nav class="nav__links" aria-label="Navigation principale">
       <a href="#menu">La carte</a>
       <a href="#histoire">Notre histoire</a>
+      <a href="#avis">Avis</a>
       <a href="#infos">Nous trouver</a>
       <a href="#contact" class="nav__cta">Réserver</a>
     </nav>
@@ -37,6 +38,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#menu">La carte</a>
     <a href="#histoire">Notre histoire</a>
+    <a href="#avis">Avis</a>
     <a href="#infos">Nous trouver</a>
     <a href="#contact">Réserver</a>
   </div>
@@ -212,6 +214,23 @@
       </div>
     </section>
 
+    <!-- Avis Google -->
+    <section class="reviews" id="avis">
+      <div class="section-head reveal">
+        <p class="section-head__eyebrow">Vos avis</p>
+        <h2 class="section-head__title">Ils ont goûté, ils ont adoré</h2>
+        <div class="reviews__rating" id="reviewsRating" aria-live="polite"></div>
+      </div>
+      <div class="reviews__grid" id="reviewsGrid">
+        <p class="reviews__state">Chargement des avis Google…</p>
+      </div>
+      <p class="map__link reveal">
+        <a id="reviewsMore" href="https://www.google.com/maps/search/?api=1&query=QENTINA%20pizzeria%2020%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener">
+          Voir tous nos avis sur Google&nbsp;<span aria-hidden="true">→</span>
+        </a>
+      </p>
+    </section>
+
     <!-- Infos pratiques -->
     <section class="infos" id="infos">
       <div class="section-head reveal">
@@ -310,6 +329,7 @@
     <p class="footer__copy">© <span id="year"></span> QENTINA · Tous droits réservés · Fait avec ❤️ à Louviers</p>
   </footer>
 
+  <script src="reviews.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
