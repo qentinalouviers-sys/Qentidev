@@ -4,18 +4,21 @@
    ============================================================ */
 
 :root {
-  --paper: #f6f1ea;
-  --paper-2: #efe7da;
-  --card: #fbf8f3;
-  --ink: #211c17;
-  --ink-soft: #6c6155;
-  --line: rgba(33, 28, 23, 0.12);
-  --line-soft: rgba(33, 28, 23, 0.07);
+  /* Direction artistique du logo azulejo : bleu canard, crème, ocre, flamme */
+  --paper: #f4ecd9;
+  --paper-2: #e9dcc0;
+  --card: #fbf5e7;
+  --ink: #173033;
+  --ink-soft: #5e6b65;
+  --line: rgba(23, 48, 51, 0.13);
+  --line-soft: rgba(23, 48, 51, 0.08);
 
-  --terra: #bf553a;
-  --terra-deep: #a3442d;
-  --olive: #6c7050;
-  --gold: #b0873d;
+  /* "--terra" conservé comme nom mais porte la couleur primaire (bleu canard) */
+  --terra: #0f5460;
+  --terra-deep: #0a3c46;
+  --olive: #5f7a4e;
+  --gold: #c8902f;
+  --flame: #e07a2e;
 
   --radius: 18px;
   --radius-lg: 26px;
@@ -236,33 +239,17 @@ section { position: relative; z-index: 2; }
 
 /* Visuel hero : "assiette" en CSS, élégante et légère */
 .hero__visual { position: relative; display: grid; place-items: center; }
-.plate {
+.hero__photo {
   position: relative;
-  width: min(82%, 380px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 38% 32%, #d98a5e 0%, #c66a40 38%, #a8512f 70%, #8d3f24 100%);
-  box-shadow:
-    0 40px 80px -30px rgba(141, 63, 36, 0.55),
-    inset 0 2px 10px rgba(255, 255, 255, 0.18);
-  display: grid;
-  place-items: center;
+  width: min(100%, 420px);
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 40px 80px -30px rgba(23, 48, 51, 0.5);
+  border: 1px solid var(--line-soft);
   animation: floaty 9s ease-in-out infinite;
 }
-.plate__ring {
-  position: absolute;
-  inset: 9%;
-  border-radius: 50%;
-  border: 1.5px dashed rgba(246, 241, 234, 0.45);
-}
-.plate__ring--2 { inset: 20%; border-style: solid; border-color: rgba(246, 241, 234, 0.25); }
-.plate__center {
-  width: 42%; height: 42%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #f0d9b0, #e7c489 60%, #d9ad6b);
-  box-shadow: inset 0 3px 12px rgba(120, 70, 30, 0.35);
-}
+.hero__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 @keyframes floaty {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
@@ -466,9 +453,9 @@ section { position: relative; z-index: 2; }
   aspect-ratio: 4 / 5;
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(circle at 30% 25%, rgba(217, 138, 94, 0.55), transparent 55%),
-    linear-gradient(155deg, #8d3f24, #5e2c1a);
-  box-shadow: 0 40px 80px -40px rgba(94, 44, 26, 0.6);
+    radial-gradient(circle at 30% 25%, rgba(30, 120, 135, 0.55), transparent 55%),
+    linear-gradient(155deg, #0f5460, #093540);
+  box-shadow: 0 40px 80px -40px rgba(9, 53, 64, 0.6);
 }
 .story__badge {
   position: absolute;
@@ -654,7 +641,11 @@ section { position: relative; z-index: 2; }
   gap: 1.2rem;
   justify-items: center;
 }
-.footer__brand { display: flex; align-items: center; gap: .55rem; }
+.footer__logo {
+  width: 120px; height: 120px;
+  border-radius: 16px;
+  box-shadow: 0 18px 40px -20px rgba(23, 48, 51, 0.45);
+}
 .footer__tag { color: var(--ink-soft); }
 .footer__links { display: flex; gap: 1.6rem; flex-wrap: wrap; justify-content: center; }
 .footer__links a { color: var(--ink-soft); font-size: .94rem; transition: color .25s var(--ease); }

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QENTINA — Pizzeria artisanale à Louviers</title>
   <meta name="description" content="QENTINA, pizzeria artisanale à Louviers. Pâte maturée 48 h, produits frais, cuisson au feu de bois. Sur place, à emporter et en livraison." />
-  <meta name="theme-color" content="#f6f1ea" />
+  <meta name="theme-color" content="#f4ecd9" />
   <meta property="og:title" content="QENTINA — Pizzeria artisanale à Louviers" />
   <meta property="og:description" content="Pâte maturée 48 h, produits frais, cuisson au feu de bois. Au cœur de Louviers." />
   <meta property="og:type" content="website" />
@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23c0573b'/><text x='50' y='72' font-size='62' font-family='Georgia,serif' fill='%23f6f1ea' text-anchor='middle'>Q</text></svg>" />
+  <link rel="icon" href="logo.jpg" />
 </head>
 <body>
   <!-- Navigation -->
@@ -46,7 +46,7 @@
     <!-- Hero -->
     <section class="hero" id="accueil">
       <div class="hero__text">
-        <p class="eyebrow reveal">Pizzeria artisanale · Louviers</p>
+        <p class="eyebrow reveal">De Naples à Lisbonne · Louviers</p>
         <h1 class="hero__title reveal" style="--d:.05s">
           L'art de la<br /><em>vraie pizza</em>
         </h1>
@@ -64,11 +64,9 @@
           <div><dt>Maison</dt><dd>chaque jour</dd></div>
         </dl>
       </div>
-      <div class="hero__visual reveal" style="--d:.1s" aria-hidden="true">
-        <div class="plate">
-          <div class="plate__ring"></div>
-          <div class="plate__ring plate__ring--2"></div>
-          <div class="plate__center"></div>
+      <div class="hero__visual reveal" style="--d:.1s">
+        <div class="hero__photo">
+          <img src="hero-pizza.jpg" alt="Pizza artisanale QENTINA : burrata, prosciutto et basilic frais" width="1000" height="1333" />
         </div>
         <span class="hero__tag">Cuite au feu de bois</span>
       </div>
@@ -265,10 +263,7 @@
   </main>
 
   <footer class="footer">
-    <div class="footer__brand">
-      <span class="nav__logo-mark">Q</span>
-      <span class="nav__logo-text">QENTINA</span>
-    </div>
+    <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" />
     <p class="footer__tag">Pizzeria artisanale au feu de bois, à Louviers.</p>
     <nav class="footer__links" aria-label="Pied de page">
       <a href="#menu">La carte</a>
