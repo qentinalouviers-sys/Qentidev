@@ -75,7 +75,7 @@ var GOOGLE_REVIEWS = {
       return;
     }
     var list = reviews.slice(0, 5);
-    grid.innerHTML = list.map(function (r) {
+    var cards = list.map(function (r) {
       var photo = r.profile_photo_url
         ? '<img src="' + escapeHtml(r.profile_photo_url) + '" alt="" loading="lazy" referrerpolicy="no-referrer" />'
         : '<span class="review__avatar-fallback">' + escapeHtml((r.author_name || "?").charAt(0)) + "</span>";
@@ -92,7 +92,20 @@ var GOOGLE_REVIEWS = {
           '<p class="review__text">' + escapeHtml(r.text) + "</p>" +
         "</article>"
       );
-    }).join("");
+    });
+
+    // 6e tuile : invitation à laisser un avis (équilibre la grille et incite au dépôt)
+    var writeEl = document.getElementById("reviewWrite");
+    var writeHref = writeEl ? writeEl.getAttribute("href") : "#";
+    var cta =
+      '<a class="review review--cta reveal" href="' + escapeHtml(writeHref) + '" target="_blank" rel="noopener">' +
+        '<span class="review--cta__plus" aria-hidden="true">+</span>' +
+        '<p class="review--cta__title">Vous aussi&nbsp;?</p>' +
+        '<p class="review--cta__text">Partagez votre expérience et régalez les gourmands de Louviers.</p>' +
+        '<span class="review--cta__link">Laisser un avis&nbsp;→</span>' +
+      "</a>";
+
+    grid.innerHTML = cards.join("") + cta;
 
     grid.querySelectorAll(".reveal").forEach(function (el, i) {
       el.style.setProperty("--d", (i * 0.06) + "s");

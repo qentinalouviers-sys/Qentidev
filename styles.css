@@ -567,6 +567,33 @@ section { position: relative; z-index: 2; }
   display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
 }
 
+/* 6e tuile : appel à laisser un avis */
+.review--cta {
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: .55rem;
+  color: var(--paper);
+  background:
+    radial-gradient(circle at 80% 15%, rgba(200, 144, 47, 0.4), transparent 45%),
+    linear-gradient(155deg, #0f5460, #093540);
+  border-color: transparent;
+  text-align: left;
+}
+.review--cta:hover { box-shadow: 0 26px 52px -28px rgba(9, 53, 64, 0.7); }
+.review--cta__plus {
+  display: grid; place-items: center;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: rgba(246, 241, 234, 0.14);
+  color: var(--gold);
+  font-size: 1.6rem;
+  font-weight: 300;
+  line-height: 1;
+}
+.review--cta__title { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; margin-top: .3rem; }
+.review--cta__text { font-size: .92rem; opacity: .85; }
+.review--cta__link { margin-top: auto; font-weight: 600; color: var(--gold); font-size: .95rem; }
+
 /* ---------- Carte de fidélité ---------- */
 .loyalty {
   max-width: var(--maxw);
