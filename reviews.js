@@ -49,11 +49,26 @@ var GOOGLE_REVIEWS = {
 
   function renderRating(place) {
     if (!place.rating) return;
+    var score = place.rating.toFixed(1).replace(".", ",");
     var total = place.user_ratings_total ? " · " + place.user_ratings_total + " avis" : "";
     ratingEl.innerHTML =
-      '<span class="reviews__score">' + place.rating.toFixed(1).replace(".", ",") + "</span>" +
+      '<span class="reviews__score">' + score + "</span>" +
       stars(place.rating) +
       '<span class="reviews__count">' + total + "</span>";
+
+    // Badge flottant de la note, mis en avant dès l'ouverture
+    var badge = document.getElementById("heroRating");
+    if (badge) {
+      var num = document.getElementById("heroRatingNum");
+      var st = document.getElementById("heroRatingStars");
+      var cnt = document.getElementById("heroRatingCount");
+      if (num) num.textContent = score;
+      if (st) st.innerHTML = stars(place.rating);
+      if (cnt) cnt.textContent = place.user_ratings_total ? place.user_ratings_total + " avis Google" : "sur Google";
+      if (place.url) badge.href = place.url;
+      badge.hidden = false;
+      requestAnimationFrame(function () { badge.classList.add("is-in"); });
+    }
   }
 
   function renderPhotos(photos) {

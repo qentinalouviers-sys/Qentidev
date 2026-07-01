@@ -284,6 +284,44 @@ section { position: relative; z-index: 2; }
   border: 1px solid var(--line-soft);
 }
 
+/* Badge flottant de la note Google */
+.hero__rating {
+  position: absolute;
+  top: 5%;
+  left: -6%;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .7rem .95rem .7rem .75rem;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  box-shadow: 0 22px 45px -18px rgba(23, 48, 51, 0.55);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(-8px) scale(.9);
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+  animation: badgefloat 5.5s ease-in-out infinite;
+  z-index: 3;
+}
+.hero__rating.is-in { opacity: 1; transform: translateY(0) scale(1); }
+.hero__rating-num {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--terra);
+}
+.hero__rating-body { display: flex; flex-direction: column; gap: .15rem; }
+.hero__rating-stars { font-size: .82rem; letter-spacing: 1px; }
+.hero__rating-stars .on { color: var(--gold); }
+.hero__rating-stars .off { color: rgba(33, 28, 23, 0.18); }
+.hero__rating-count { font-size: .72rem; color: var(--ink-soft); }
+@keyframes badgefloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+
 /* ---------- Bandeau valeurs ---------- */
 .strip {
   border-top: 1px solid var(--line);
@@ -871,6 +909,7 @@ section { position: relative; z-index: 2; }
   .hero, .story, .contact__inner, .loyalty__inner { grid-template-columns: 1fr; }
   .hero { padding-top: 7.5rem; text-align: left; }
   .hero__visual { order: -1; max-width: 360px; }
+  .hero__rating { left: 2%; top: 4%; }
   .story__media { max-width: 420px; }
 }
 @media (max-width: 620px) {
