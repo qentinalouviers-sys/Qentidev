@@ -75,6 +75,24 @@
     reveals.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
+  /* Photo d'accueil : parallaxe doux au défilement (désactivé si mouvement réduit) */
+  var heroPhoto = document.querySelector(".hero__photo");
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (heroPhoto && !reduceMotion) {
+    var ticking = false;
+    window.addEventListener("scroll", function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        var y = window.scrollY;
+        if (y < window.innerHeight * 1.3) {
+          heroPhoto.style.transform = "translateY(" + (y * 0.07).toFixed(1) + "px)";
+        }
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
   /* Visualiseur d'images de la carte (lightbox) */
   var cards = Array.prototype.slice.call(document.querySelectorAll(".menu-card"));
   var lightbox = document.getElementById("lightbox");
