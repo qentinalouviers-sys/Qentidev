@@ -385,9 +385,9 @@ section { position: relative; z-index: 2; }
 }
 .menu__gallery {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(1.2rem, 3vw, 2.4rem);
-  max-width: 860px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2.5vw, 1.8rem);
+  max-width: 1000px;
   margin: 0 auto;
 }
 .menu-card {
