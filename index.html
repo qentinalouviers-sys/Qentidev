@@ -45,14 +45,19 @@
   </div>
 
   <main>
-    <!-- Bandeau photo -->
-    <section class="banner" aria-label="Nos pizzas cuites au feu de bois">
-      <img src="banner.jpg" alt="Trois pizzas napolitaines cuites au feu de bois chez QENTINA" width="1800" height="830" />
-    </section>
-
-    <!-- Hero -->
+    <!-- Hero pleine largeur -->
     <section class="hero" id="accueil">
-      <div class="hero__text">
+      <div class="hero__bg">
+        <img src="banner.jpg" alt="Trois pizzas napolitaines cuites au feu de bois chez QENTINA" width="1800" height="830" />
+      </div>
+      <div class="hero__inner">
+        <a class="hero__rating" id="heroRating" href="https://www.google.com/maps/search/?api=1&query=QENTINA%20pizzeria%2020%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener" aria-label="Notre note sur Google" hidden>
+          <span class="hero__rating-num" id="heroRatingNum"></span>
+          <span class="hero__rating-body">
+            <span class="hero__rating-stars" id="heroRatingStars"></span>
+            <span class="hero__rating-count" id="heroRatingCount">sur Google</span>
+          </span>
+        </a>
         <p class="eyebrow reveal">De Naples à Lisbonne · Louviers</p>
         <h1 class="hero__title reveal" style="--d:.05s">
           L'art du<br /><em>feu de bois</em>
@@ -63,27 +68,14 @@
           au bord de l'Eure, au cœur de Louviers.
         </p>
         <div class="hero__actions reveal" style="--d:.18s">
-          <a href="#menu" class="btn btn--primary">Découvrir la carte</a>
-          <a href="#contact" class="btn btn--ghost">Réserver une table</a>
+          <a href="#menu" class="btn btn--light">Découvrir la carte</a>
+          <a href="#contact" class="btn btn--outline-light">Réserver une table</a>
         </div>
         <dl class="hero__meta reveal" style="--d:.24s">
           <div><dt>Feu de bois</dt><dd>notre unique four</dd></div>
           <div><dt>Panuozzo</dt><dd>&amp; salades du four</dd></div>
           <div><dt>Terrasse</dt><dd>au bord de l'Eure</dd></div>
         </dl>
-      </div>
-      <div class="hero__visual reveal" style="--d:.1s">
-        <div class="hero__photo">
-          <img src="hero-pizza.jpg" alt="Pizza artisanale QENTINA en terrasse à Louviers, à l'heure bleue" width="1100" height="1467" />
-        </div>
-        <span class="hero__tag">Cuite au feu de bois</span>
-        <a class="hero__rating" id="heroRating" href="https://www.google.com/maps/search/?api=1&query=QENTINA%20pizzeria%2020%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener" aria-label="Notre note sur Google" hidden>
-          <span class="hero__rating-num" id="heroRatingNum"></span>
-          <span class="hero__rating-body">
-            <span class="hero__rating-stars" id="heroRatingStars"></span>
-            <span class="hero__rating-count" id="heroRatingCount">sur Google</span>
-          </span>
-        </a>
       </div>
     </section>
 
@@ -193,8 +185,8 @@
 
     <!-- La maison -->
     <section class="story" id="histoire">
-      <div class="story__media reveal" aria-hidden="true">
-        <div class="story__panel"></div>
+      <div class="story__media reveal">
+        <img class="story__photo" src="hero-pizza.jpg" alt="Terrasse de la pizzeria QENTINA au bord de l'Eure, à la tombée de la nuit" width="1100" height="1467" />
         <span class="story__badge">Depuis 2018</span>
       </div>
       <div class="story__content reveal" style="--d:.08s">
