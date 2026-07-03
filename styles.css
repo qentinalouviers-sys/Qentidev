@@ -202,11 +202,39 @@ section { position: relative; z-index: 2; }
 .mobile-menu.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
 .mobile-menu a { font-family: var(--serif); font-size: 1.9rem; }
 
+/* ---------- Bandeau photo ---------- */
+.banner {
+  position: relative;
+  width: 100%;
+  height: clamp(300px, 56vh, 600px);
+  overflow: hidden;
+  z-index: 2;
+}
+.banner img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+/* voile clair en haut : garde la navigation lisible */
+.banner::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 150px;
+  background: linear-gradient(to bottom, rgba(244, 236, 217, 0.92), rgba(244, 236, 217, 0));
+  pointer-events: none;
+}
+/* fondu vers le fond crème en bas */
+.banner::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 90px;
+  background: linear-gradient(to top, var(--paper), rgba(244, 236, 217, 0));
+  pointer-events: none;
+}
+
 /* ---------- Hero ---------- */
 .hero {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 9rem clamp(1.2rem, 5vw, 3rem) 4.5rem;
+  padding: 4rem clamp(1.2rem, 5vw, 3rem) 4.5rem;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
@@ -376,6 +404,41 @@ section { position: relative; z-index: 2; }
 .feature__icon svg { width: 26px; height: 26px; }
 .feature h3 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; margin-bottom: .5rem; }
 .feature p { color: var(--ink-soft); font-size: .97rem; }
+
+/* ---------- Nos spécialités ---------- */
+.specials {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 2rem clamp(1.2rem, 5vw, 3rem) 2rem;
+}
+.specials__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+.special {
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 2.2rem;
+  text-align: center;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+.special:hover { transform: translateY(-5px); box-shadow: 0 24px 50px -30px rgba(23,48,51,0.35); }
+.special__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(200,144,47,0.25), transparent 70%),
+    var(--paper-2);
+  color: var(--terra);
+  margin-bottom: 1.1rem;
+}
+.special__icon svg { width: 32px; height: 32px; }
+.special h3 { font-family: var(--serif); font-weight: 500; font-size: 1.4rem; margin-bottom: .5rem; }
+.special p { color: var(--ink-soft); font-size: .97rem; }
 
 /* ---------- Menu (liste éditoriale) ---------- */
 .menu {
@@ -904,10 +967,10 @@ section { position: relative; z-index: 2; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
-  .features, .infos__grid, .reviews__grid { grid-template-columns: 1fr 1fr; }
+  .features, .infos__grid, .reviews__grid, .specials__grid { grid-template-columns: 1fr 1fr; }
   .reviews__photos { grid-template-columns: repeat(3, 1fr); }
   .hero, .story, .contact__inner, .loyalty__inner { grid-template-columns: 1fr; }
-  .hero { padding-top: 7.5rem; text-align: left; }
+  .hero { padding-top: 3rem; text-align: left; }
   .hero__visual { order: -1; max-width: 360px; }
   .hero__rating { left: 2%; top: 4%; }
   .story__media { max-width: 420px; }
@@ -915,7 +978,7 @@ section { position: relative; z-index: 2; }
 @media (max-width: 620px) {
   .nav__links { display: none; }
   .nav__burger { display: flex; }
-  .features, .infos__grid, .reviews__grid, .menu__gallery { grid-template-columns: 1fr; }
+  .features, .infos__grid, .reviews__grid, .menu__gallery, .specials__grid { grid-template-columns: 1fr; }
   .field--row { grid-template-columns: 1fr; }
   .hero__meta { gap: 1.5rem; }
 }

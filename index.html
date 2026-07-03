@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QENTINA — Pizzeria artisanale à Louviers</title>
-  <meta name="description" content="QENTINA, pizzeria artisanale à Louviers. D'inspiration napolitaine contemporaine, produits d'exception, cuisson au feu de bois. Terrasse au bord de l'Eure, sur place, à emporter et en livraison." />
+  <title>QENTINA — Pizzas, panuozzo & feu de bois à Louviers</title>
+  <meta name="description" content="QENTINA, cuisine au feu de bois à Louviers : pizzas napolitaines, panuozzo et salades aux légumes grillés. Terrasse au bord de l'Eure, sur place, à emporter et en livraison." />
   <meta name="theme-color" content="#f4ecd9" />
   <meta property="og:title" content="QENTINA — Pizzeria artisanale à Louviers" />
-  <meta property="og:description" content="D'inspiration napolitaine contemporaine, produits d'exception, cuisson au feu de bois. Terrasse au bord de l'Eure, au cœur de Louviers." />
+  <meta property="og:description" content="Cuisine au feu de bois : pizzas napolitaines, panuozzo et salades aux légumes grillés. Terrasse au bord de l'Eure, au cœur de Louviers." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,25 +45,30 @@
   </div>
 
   <main>
+    <!-- Bandeau photo -->
+    <section class="banner" aria-label="Nos pizzas cuites au feu de bois">
+      <img src="banner.jpg" alt="Pizzas napolitaines cuites au feu de bois chez QENTINA" width="1600" height="760" />
+    </section>
+
     <!-- Hero -->
     <section class="hero" id="accueil">
       <div class="hero__text">
         <p class="eyebrow reveal">De Naples à Lisbonne · Louviers</p>
         <h1 class="hero__title reveal" style="--d:.05s">
-          L'art de la<br /><em>vraie pizza</em>
+          L'art du<br /><em>feu de bois</em>
         </h1>
         <p class="hero__lead reveal" style="--d:.12s">
-          D'inspiration napolitaine contemporaine&nbsp;: farine italienne, mozzarella
-          fior&nbsp;di&nbsp;latte et tomates San&nbsp;Marzano, cuites au feu de bois.
-          À savourer sur notre terrasse au bord de l'Eure, au cœur de Louviers.
+          Pizzas napolitaines, panuozzo et salades aux légumes grillés&nbsp;: chez QENTINA,
+          tout est cuit au feu de bois, notre unique four. À savourer sur notre terrasse
+          au bord de l'Eure, au cœur de Louviers.
         </p>
         <div class="hero__actions reveal" style="--d:.18s">
           <a href="#menu" class="btn btn--primary">Découvrir la carte</a>
           <a href="#contact" class="btn btn--ghost">Réserver une table</a>
         </div>
         <dl class="hero__meta reveal" style="--d:.24s">
-          <div><dt>Napolitaine</dt><dd>inspiration contemporaine</dd></div>
-          <div><dt>Feu de bois</dt><dd>cuisson napolitaine</dd></div>
+          <div><dt>Feu de bois</dt><dd>notre unique four</dd></div>
+          <div><dt>Panuozzo</dt><dd>&amp; salades du four</dd></div>
           <div><dt>Terrasse</dt><dd>au bord de l'Eure</dd></div>
         </dl>
       </div>
@@ -85,11 +90,11 @@
     <!-- Bandeau valeurs -->
     <div class="strip" aria-hidden="true">
       <div class="strip__track">
-        <span>Feu de bois</span><i></i><span>Terrasse au bord de l'Eure</span><i></i>
-        <span>Inspiration napolitaine contemporaine</span><i></i><span>Fior di latte</span><i></i>
+        <span>Feu de bois</span><i></i><span>Panuozzo</span><i></i>
+        <span>Salades &amp; légumes grillés</span><i></i><span>Terrasse au bord de l'Eure</span><i></i>
         <span>Fait avec passion</span><i></i>
-        <span>Feu de bois</span><i></i><span>Terrasse au bord de l'Eure</span><i></i>
-        <span>Inspiration napolitaine contemporaine</span><i></i><span>Fior di latte</span><i></i>
+        <span>Feu de bois</span><i></i><span>Panuozzo</span><i></i>
+        <span>Salades &amp; légumes grillés</span><i></i><span>Terrasse au bord de l'Eure</span><i></i>
         <span>Fait avec passion</span><i></i>
       </div>
     </div>
@@ -100,8 +105,8 @@
         <span class="feature__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3-1 4-1 6a3 3 0 0 0 6 0c0-1-.4-2-1-2.7C16.5 9 18 11 18 14a6 6 0 0 1-12 0c0-4 3-6 4-8 .7 1 1.3 1.7 2 2 0-2 0-3 0-5Z"/></svg>
         </span>
-        <h3>Le feu de bois, notre signature</h3>
-        <p>90&nbsp;secondes à 450&nbsp;°C dans notre four napolitain&nbsp;: une pâte gonflée, croustillante dehors, fondante dedans. Le vrai geste artisanal.</p>
+        <h3>Tout au feu de bois</h3>
+        <p>Notre four à bois est notre unique outil de cuisson. Pizzas, panuozzo et même nos légumes y sont grillés&nbsp;: un goût inimitable et une cuisine plus saine.</p>
       </article>
       <article class="feature reveal" style="--d:.08s">
         <span class="feature__icon" aria-hidden="true">
@@ -119,12 +124,44 @@
       </article>
     </section>
 
+    <!-- Nos spécialités -->
+    <section class="specials" id="specialites">
+      <div class="section-head reveal">
+        <p class="eyebrow">Nos spécialités</p>
+        <h2 class="section-title">Bien plus que la pizza</h2>
+        <p class="section-lead">Un seul outil de cuisson chez QENTINA&nbsp;: le feu de bois. Même nos légumes y sont grillés — pour un goût unique et une cuisine plus saine.</p>
+      </div>
+      <div class="specials__grid">
+        <article class="special reveal">
+          <span class="special__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6c6-3 12-3 18 0l-9 15Z"/><circle cx="10" cy="9.5" r=".6" fill="currentColor"/><circle cx="13.5" cy="12.5" r=".6" fill="currentColor"/><circle cx="9.5" cy="13.5" r=".6" fill="currentColor"/></svg>
+          </span>
+          <h3>Pizzas napolitaines</h3>
+          <p>Notre pâte d'inspiration napolitaine contemporaine, cuite au feu de bois. Croustillante, légère et généreuse.</p>
+        </article>
+        <article class="special reveal" style="--d:.08s">
+          <span class="special__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10c0-1.7 1.6-3 4-3h4c2.4 0 4 1.3 4 3M4 10h12M4 10c-1.1 0-2 .9-2 2s.9 2 2 2h12c1.1 0 2-.9 2-2s-.9-2-2-2M6 14l1.5 3h7L16 14"/></svg>
+          </span>
+          <h3>Panuozzo</h3>
+          <p>Le sandwich napolitain par excellence&nbsp;: notre pâte dorée au four, garnie de produits frais et savoureux.</p>
+        </article>
+        <article class="special reveal" style="--d:.16s">
+          <span class="special__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11h17a8.5 8.5 0 0 1-17 0Z"/><path d="M8 8c.5-2 2.5-2.5 4-1M12 7.5c1-1.8 3-1.8 4 .2M6.5 8.5c-.6-1.4.3-2.6 1.7-2.8"/></svg>
+          </span>
+          <h3>Salades &amp; légumes grillés</h3>
+          <p>Des salades généreuses et des légumes grillés au feu de bois. Tout, chez nous, passe par le four.</p>
+        </article>
+      </div>
+    </section>
+
     <!-- Menu -->
     <section class="menu" id="menu">
       <div class="section-head reveal">
         <p class="eyebrow">Notre carte</p>
-        <h2 class="section-title">Les pizzas signature</h2>
-        <p class="section-lead">Une pâte d'exception, des produits choisis avec soin&nbsp;: des grands classiques napolitains aux créations de la maison, chaque pizza est une invitation au voyage.</p>
+        <h2 class="section-title">Découvrez la carte</h2>
+        <p class="section-lead">Pizzas napolitaines, panuozzo et salades aux légumes grillés au feu de bois&nbsp;: des grands classiques aux créations de la maison, une invitation au voyage.</p>
       </div>
 
       <div class="menu__gallery">
@@ -170,16 +207,17 @@
           aérienne et incroyablement digeste.
         </p>
         <p>
-          Installée au bord de l'Eure, au cœur de Louviers, notre pizzeria vous
-          accueille dans un cadre chaleureux et sur sa terrasse au fil de l'eau.
-          Ici, on prend le temps de bien faire&nbsp;: de beaux produits, un vrai
-          feu de bois, et le sourire en plus.
+          Ici, tout se cuit au feu de bois — c'est notre unique four, et notre
+          signature. Nos légumes y sont grillés, nos panuozzo dorés, nos pizzas
+          saisies&nbsp;: une cuisine authentique, plus saine et pleine de caractère.
+          Installée au bord de l'Eure, au cœur de Louviers, la maison vous accueille
+          dans un cadre chaleureux et sur sa terrasse au fil de l'eau.
         </p>
         <ul class="story__list">
-          <li>Four à bois napolitain traditionnel</li>
-          <li>Farine italienne &amp; produits d'origine contrôlée</li>
-          <li>Terrasse au bord de l'Eure, au cœur de Louviers</li>
-          <li>À emporter &amp; en livraison à Louviers et alentours</li>
+          <li>Four à bois napolitain&nbsp;: notre seul outil de cuisson</li>
+          <li>Légumes grillés au four, produits frais et de saison</li>
+          <li>Pizzas napolitaines, panuozzo &amp; salades généreuses</li>
+          <li>Terrasse au bord de l'Eure · à emporter &amp; en livraison</li>
         </ul>
       </div>
     </section>
