@@ -173,23 +173,61 @@
     updateFab();
   }
 
-  /* Formulaire de réservation */
+  /* Formulaire de réservation → envoi par email via Web3Forms */
   var form = document.getElementById("reservationForm");
   var feedback = document.getElementById("formFeedback");
   if (form) {
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var submitLabel = submitBtn ? submitBtn.textContent : "";
+
+    function setFeedback(msg, ok) {
+      feedback.style.color = ok ? "var(--olive)" : "var(--terra)";
+      feedback.textContent = msg;
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var name = form.name.value.trim();
       var phone = form.phone.value.trim();
       var datetime = form.datetime.value;
       if (!name || !phone || !datetime) {
-        feedback.style.color = "var(--terra)";
-        feedback.textContent = "Merci de renseigner votre nom, téléphone et la date souhaitée.";
+        setFeedback("Merci de renseigner votre nom, téléphone et la date souhaitée.", false);
         return;
       }
-      feedback.style.color = "var(--olive)";
-      feedback.textContent = "Merci " + name + " ! Votre demande de réservation a bien été enregistrée. À très vite chez QENTINA.";
-      form.reset();
+
+      var keyField = form.querySelector('[name="access_key"]');
+      var key = keyField ? keyField.value : "";
+
+      // Tant que la clé Web3Forms n'est pas configurée : confirmation locale
+      if (!key || key.indexOf("__") === 0) {
+        setFeedback("Merci " + name + " ! Votre demande a bien été enregistrée. À très vite chez QENTINA.", true);
+        form.reset();
+        return;
+      }
+
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Envoi…"; }
+      setFeedback("Envoi de votre demande…", true);
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form)
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (json) {
+          if (json && json.success) {
+            setFeedback("Merci " + name + " ! Votre demande de réservation nous a bien été envoyée. Nous vous recontactons rapidement.", true);
+            form.reset();
+          } else {
+            setFeedback("Oups, l'envoi a échoué. Merci de nous appeler au 02 59 16 20 93.", false);
+          }
+        })
+        .catch(function () {
+          setFeedback("Oups, l'envoi a échoué. Merci de nous appeler au 02 59 16 20 93.", false);
+        })
+        .then(function () {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitLabel; }
+        });
     });
   }
 })();
