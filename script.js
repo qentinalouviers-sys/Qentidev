@@ -187,11 +187,12 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var name = form.name.value.trim();
-      var phone = form.phone.value.trim();
-      var datetime = form.datetime.value;
-      if (!name || !phone || !datetime) {
-        setFeedback("Merci de renseigner votre nom, téléphone et la date souhaitée.", false);
+      var name = (document.getElementById("r-name").value || "").trim();
+      var phone = (document.getElementById("r-phone").value || "").trim();
+      var datetime = document.getElementById("r-datetime").value;
+      var guests = document.getElementById("r-guests").value;
+      if (!name || !phone || !datetime || !guests) {
+        setFeedback("Merci d'indiquer votre nom, téléphone, la date/heure et le nombre de couverts.", false);
         return;
       }
 

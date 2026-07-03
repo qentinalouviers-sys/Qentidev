@@ -321,29 +321,62 @@
           <input type="hidden" name="subject" value="Nouvelle demande de réservation — QENTINA" />
           <input type="hidden" name="from_name" value="Site QENTINA" />
           <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
+
           <div class="field">
-            <input type="text" id="name" name="name" required placeholder=" " />
-            <label for="name">Votre nom</label>
+            <input type="text" id="r-name" name="Nom" required placeholder=" " autocomplete="name" />
+            <label for="r-name">Votre nom</label>
           </div>
+
           <div class="field--row">
             <div class="field">
-              <input type="tel" id="phone" name="phone" required placeholder=" " />
-              <label for="phone">Téléphone</label>
+              <input type="tel" id="r-phone" name="Téléphone" required placeholder=" " autocomplete="tel" />
+              <label for="r-phone">Téléphone</label>
             </div>
             <div class="field">
-              <input type="number" id="guests" name="guests" min="1" max="30" placeholder=" " />
-              <label for="guests">Couverts</label>
+              <input type="email" id="r-email" name="Email" placeholder=" " autocomplete="email" />
+              <label for="r-email">Email (facultatif)</label>
             </div>
           </div>
-          <div class="field">
-            <input type="datetime-local" id="datetime" name="datetime" required />
-            <label for="datetime" class="label--static">Date &amp; heure</label>
+
+          <div class="field--row">
+            <div class="field">
+              <input type="datetime-local" id="r-datetime" name="Date et heure" required />
+              <label for="r-datetime" class="label--static">Date &amp; heure</label>
+            </div>
+            <div class="field">
+              <select id="r-guests" name="Couverts" required>
+                <option value="" disabled selected>Choisir…</option>
+                <option>1 personne</option>
+                <option>2 personnes</option>
+                <option>3 personnes</option>
+                <option>4 personnes</option>
+                <option>5 personnes</option>
+                <option>6 personnes</option>
+                <option>7 personnes</option>
+                <option>8 personnes</option>
+                <option>9 personnes</option>
+                <option>10 personnes</option>
+                <option>Plus de 10 (groupe)</option>
+              </select>
+              <label for="r-guests" class="label--static">Nombre de couverts</label>
+            </div>
           </div>
+
+          <fieldset class="segmented">
+            <legend>Où souhaitez-vous vous installer&nbsp;?</legend>
+            <div class="segmented__options">
+              <label><input type="radio" name="Emplacement" value="Terrasse (bord de l'Eure)" checked /><span>Terrasse</span></label>
+              <label><input type="radio" name="Emplacement" value="Intérieur" /><span>Intérieur</span></label>
+              <label><input type="radio" name="Emplacement" value="Sans préférence" /><span>Sans préférence</span></label>
+            </div>
+          </fieldset>
+
           <div class="field">
-            <textarea id="message" name="message" rows="3" placeholder=" "></textarea>
-            <label for="message">Un message (facultatif)</label>
+            <textarea id="r-message" name="Message" rows="3" placeholder=" "></textarea>
+            <label for="r-message">Occasion, allergies, demande particulière… (facultatif)</label>
           </div>
-          <button type="submit" class="btn btn--primary btn--full">Envoyer la demande</button>
+
+          <button type="submit" class="btn btn--primary btn--full">Demander ma réservation</button>
           <p class="contact__feedback" id="formFeedback" role="status"></p>
         </form>
       </div>
