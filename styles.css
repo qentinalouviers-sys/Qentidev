@@ -79,6 +79,8 @@ img { max-width: 100%; display: block; }
 .section-head { max-width: 640px; margin: 0 auto 3rem; text-align: center; }
 .section-head .section-lead { margin: 0 auto; }
 section { position: relative; z-index: 2; }
+/* Les ancres de navigation ne passent plus sous le menu fixe */
+[id] { scroll-margin-top: 84px; }
 
 /* ---------- Boutons ---------- */
 .btn {
@@ -1051,7 +1053,21 @@ section { position: relative; z-index: 2; }
   .nav__burger { display: flex; }
   .features, .infos__grid, .reviews__grid, .menu__gallery, .specials__grid { grid-template-columns: 1fr; }
   .field--row { grid-template-columns: 1fr; }
-  .hero__meta { gap: 1.5rem; }
+
+  /* Espacements resserrés sur mobile */
+  .features, .specials, .menu, .story, .reviews, .infos, .loyalty {
+    padding-top: 3.4rem;
+    padding-bottom: 3.4rem;
+  }
+  .contact { padding-top: 3.6rem; padding-bottom: 3.6rem; }
+  .section-head { margin-bottom: 2.2rem; }
+  .feature, .special, .info-card, .review, .field input, .field textarea, .field select { font-size: 1rem; }
+
+  /* Métadonnées du hero : 3 colonnes nettes */
+  .hero__meta { gap: 1.2rem 1.4rem; }
+  .hero__meta div { flex: 1 1 28%; }
+  .hero__meta dt { font-size: 1.15rem; }
+
   /* Note Google : intégrée au flux du texte sur mobile (pas de chevauchement) */
   .hero__rating {
     position: static;
@@ -1061,6 +1077,13 @@ section { position: relative; z-index: 2; }
     animation: none;
   }
   .hero__rating.is-in { transform: none; }
+}
+
+@media (max-width: 380px) {
+  body { font-size: 16px; }
+  .nav { padding-left: 1rem; padding-right: 1rem; }
+  .nav__logo-text { font-size: 1.1rem; }
+  .btn { padding: .8rem 1.3rem; }
 }
 
 /* ---------- Accessibilité : réduction des animations ---------- */
