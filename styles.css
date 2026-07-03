@@ -961,6 +961,18 @@ section { position: relative; z-index: 2; }
 .footer__links { display: flex; gap: 1.6rem; flex-wrap: wrap; justify-content: center; }
 .footer__links a { color: var(--ink-soft); font-size: .94rem; transition: color .25s var(--ease); }
 .footer__links a:hover { color: var(--terra); }
+.footer__social { display: flex; gap: .8rem; justify-content: center; }
+.footer__social a {
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  transition: background .25s var(--ease), color .25s var(--ease), transform .25s var(--ease), border-color .25s var(--ease);
+}
+.footer__social a:hover { background: var(--terra); border-color: var(--terra); color: #fff; transform: translateY(-3px); }
+.footer__social svg { width: 20px; height: 20px; }
 .footer__copy {
   border-top: 1px solid var(--line);
   padding-top: 1.6rem;
