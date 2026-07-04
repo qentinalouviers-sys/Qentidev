@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>QENTINA — Plan de salle & réservations</title>
+  <meta name="description" content="Outil interne de gestion des réservations et du plan de salle." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="salle.css" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ================= EN-TÊTE ================= -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">Q</span>
+        <div class="brand-txt">
+          <strong>QENTINA</strong>
+          <span>Plan de salle</span>
+        </div>
+      </div>
+
+      <div class="date-nav">
+        <button class="icon-btn" id="prevDay" title="Jour précédent" aria-label="Jour précédent">‹</button>
+        <div class="date-center">
+          <input type="date" id="dateInput" />
+          <span class="date-label" id="dateLabel"></span>
+        </div>
+        <button class="icon-btn" id="nextDay" title="Jour suivant" aria-label="Jour suivant">›</button>
+        <button class="btn ghost sm" id="todayBtn">Aujourd'hui</button>
+      </div>
+
+      <div class="mode-switch" role="tablist" aria-label="Mode">
+        <button class="mode-btn active" id="modePlace" role="tab">Réservations</button>
+        <button class="mode-btn" id="modeEdit" role="tab">Éditer le plan</button>
+      </div>
+    </header>
+
+    <div class="body">
+      <!-- ================= PANNEAU RÉSERVATIONS ================= -->
+      <aside class="sidebar">
+        <div class="side-head">
+          <h2>Réservations</h2>
+          <div class="service-tabs">
+            <button class="svc-btn active" data-svc="midi">Midi</button>
+            <button class="svc-btn" data-svc="soir">Soir</button>
+          </div>
+        </div>
+
+        <form class="resa-form" id="resaForm">
+          <div class="row">
+            <input type="text" id="fName" placeholder="Nom du client" autocomplete="off" required />
+          </div>
+          <div class="row two">
+            <label class="mini">
+              <span>Heure</span>
+              <input type="time" id="fTime" value="20:00" required />
+            </label>
+            <label class="mini">
+              <span>Couverts</span>
+              <input type="number" id="fParty" min="1" max="40" value="2" required />
+            </label>
+          </div>
+          <div class="row">
+            <input type="tel" id="fPhone" placeholder="Téléphone (facultatif)" autocomplete="off" />
+          </div>
+          <div class="row">
+            <input type="text" id="fNote" placeholder="Note (allergie, anniversaire…)" autocomplete="off" />
+          </div>
+          <button type="submit" class="btn primary full">+ Ajouter la réservation</button>
+        </form>
+
+        <div class="resa-lists">
+          <div class="list-block">
+            <h3>En attente <span class="count" id="waitCount">0</span></h3>
+            <div class="resa-col" id="waitList"></div>
+          </div>
+          <div class="list-block">
+            <h3>Placées <span class="count" id="seatCount">0</span></h3>
+            <div class="resa-col" id="seatList"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ================= PLAN DE SALLE ================= -->
+      <main class="stage-wrap">
+        <div class="stage-toolbar" id="editToolbar" hidden>
+          <button class="btn ghost sm" id="addSquare">▢ Table carrée</button>
+          <button class="btn ghost sm" id="addRound">◯ Table ronde</button>
+          <button class="btn ghost sm" id="addRect">▭ Table longue</button>
+          <span class="sep"></span>
+          <button class="btn ghost sm" id="groupBtn" disabled>⛓ Composer une grande table</button>
+          <button class="btn ghost sm" id="ungroupBtn" disabled>✂ Dissocier</button>
+          <span class="sep"></span>
+          <button class="btn ghost sm danger" id="deleteBtn" disabled>🗑 Supprimer</button>
+          <span class="sep"></span>
+          <button class="btn ghost sm" id="copyPlanBtn">⧉ Reprendre un plan</button>
+          <button class="btn ghost sm" id="clearPlanBtn">Vider le plan</button>
+        </div>
+
+        <div class="stage-scroll" id="stageScroll">
+          <div class="stage" id="stage">
+            <div class="stage-grid"></div>
+            <!-- tables & overlays injectées ici -->
+          </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar"></div>
+        <div class="hint" id="planHint" hidden></div>
+      </main>
+    </div>
+
+    <!-- Panneau de réglage d'une table (mode édition) -->
+    <div class="table-panel" id="tablePanel" hidden>
+      <div class="tp-head">
+        <span id="tpTitle">Table</span>
+        <button class="icon-btn sm" id="tpClose" aria-label="Fermer">×</button>
+      </div>
+      <label class="tp-row">
+        <span>Nom / N°</span>
+        <input type="text" id="tpLabel" />
+      </label>
+      <label class="tp-row">
+        <span>Couverts</span>
+        <input type="number" id="tpSeats" min="1" max="20" />
+      </label>
+      <div class="tp-row">
+        <span>Taille</span>
+        <div class="tp-size">
+          <button class="icon-btn sm" data-size="-">−</button>
+          <button class="icon-btn sm" data-size="+">+</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- élément fantôme pour le glisser d'une réservation -->
+  <div class="drag-ghost" id="dragGhost" hidden></div>
+
+  <script src="salle.js"></script>
+</body>
+</html>
