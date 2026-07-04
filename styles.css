@@ -941,6 +941,9 @@ section { position: relative; z-index: 2; }
 }
 .label--static { top: .5rem; }
 .contact__feedback { font-size: .92rem; color: var(--olive); min-height: 1.2em; }
+.form-note { font-size: .82rem; color: var(--ink-soft); margin: -.35rem 0 .1rem; }
+.form-note--warn { color: var(--terra); }
+.field select:disabled { opacity: .6; cursor: not-allowed; }
 
 /* ---------- Footer ---------- */
 .footer {

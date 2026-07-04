@@ -339,26 +339,33 @@
 
           <div class="field--row">
             <div class="field">
-              <input type="datetime-local" id="r-datetime" name="Date et heure" required />
-              <label for="r-datetime" class="label--static">Date &amp; heure</label>
+              <input type="date" id="r-date" name="Date" required />
+              <label for="r-date" class="label--static">Date</label>
             </div>
             <div class="field">
-              <select id="r-guests" name="Couverts" required>
-                <option value="" disabled selected>Choisir…</option>
-                <option>1 personne</option>
-                <option>2 personnes</option>
-                <option>3 personnes</option>
-                <option>4 personnes</option>
-                <option>5 personnes</option>
-                <option>6 personnes</option>
-                <option>7 personnes</option>
-                <option>8 personnes</option>
-                <option>9 personnes</option>
-                <option>10 personnes</option>
-                <option>Plus de 10 (groupe)</option>
+              <select id="r-time" name="Heure" required disabled>
+                <option value="" disabled selected>Choisir une date</option>
               </select>
-              <label for="r-guests" class="label--static">Nombre de couverts</label>
+              <label for="r-time" class="label--static">Heure d'arrivée</label>
             </div>
+          </div>
+          <p class="form-note" id="hoursNote">Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.). Fermé dimanche et lundi.</p>
+          <div class="field">
+            <select id="r-guests" name="Couverts" required>
+              <option value="" disabled selected>Choisir…</option>
+              <option>1 personne</option>
+              <option>2 personnes</option>
+              <option>3 personnes</option>
+              <option>4 personnes</option>
+              <option>5 personnes</option>
+              <option>6 personnes</option>
+              <option>7 personnes</option>
+              <option>8 personnes</option>
+              <option>9 personnes</option>
+              <option>10 personnes</option>
+              <option>Plus de 10 (groupe)</option>
+            </select>
+            <label for="r-guests" class="label--static">Nombre de couverts</label>
           </div>
 
           <fieldset class="segmented">

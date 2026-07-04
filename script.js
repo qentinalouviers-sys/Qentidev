@@ -185,14 +185,89 @@
       feedback.textContent = msg;
     }
 
+    /* Créneaux de réservation selon les horaires d'ouverture (fiche Google) */
+    var dateInput = document.getElementById("r-date");
+    var timeSelect = document.getElementById("r-time");
+    var hoursNote = document.getElementById("hoursNote");
+    if (dateInput && timeSelect) {
+      // Jour (0=dim … 6=sam). Fermé dimanche (0) et lundi (1).
+      // Services en minutes : midi 12h00–14h30, soir 19h00–22h30 (23h00 ven & sam).
+      var SERVICES = {
+        2: [[720, 870], [1140, 1350]],
+        3: [[720, 870], [1140, 1350]],
+        4: [[720, 870], [1140, 1350]],
+        5: [[720, 870], [1140, 1380]],
+        6: [[720, 870], [1140, 1380]]
+      };
+      var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
+
+      function pad(n) { return (n < 10 ? "0" : "") + n; }
+      function fmt(min) { return pad(Math.floor(min / 60)) + "h" + pad(min % 60); }
+
+      var now = new Date();
+      var todayStr = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+      dateInput.min = todayStr;
+
+      function buildSlots(dateStr) {
+        timeSelect.innerHTML = "";
+        var day = new Date(dateStr + "T00:00:00").getDay();
+        var svc = SERVICES[day];
+        if (!svc) {
+          var closed = new Option("Fermé ce jour-là", "");
+          closed.disabled = true; closed.selected = true;
+          timeSelect.add(closed);
+          timeSelect.disabled = true;
+          hoursNote.textContent = "Nous sommes fermés le dimanche et le lundi. Merci de choisir un jour du mardi au samedi.";
+          hoursNote.classList.add("form-note--warn");
+          return;
+        }
+        hoursNote.textContent = "Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven. & sam.).";
+        hoursNote.classList.remove("form-note--warn");
+
+        var ph = new Option("Choisir…", "");
+        ph.disabled = true; ph.selected = true;
+        timeSelect.add(ph);
+
+        var isToday = dateStr === todayStr;
+        var nowMin = now.getHours() * 60 + now.getMinutes();
+        var labels = ["Midi", "Soir"];
+        var count = 0;
+        svc.forEach(function (win, i) {
+          var grp = document.createElement("optgroup");
+          grp.label = labels[i] || "Service";
+          var last = win[1] - LAST_ARRIVAL;
+          for (var m = win[0]; m <= last; m += 30) {
+            if (isToday && m <= nowMin + 30) continue; // au moins 30 min à l'avance
+            grp.appendChild(new Option(fmt(m), fmt(m)));
+            count++;
+          }
+          if (grp.children.length) timeSelect.appendChild(grp);
+        });
+
+        if (count === 0) {
+          timeSelect.innerHTML = "";
+          var no = new Option("Plus de créneau ce jour", "");
+          no.disabled = true; no.selected = true;
+          timeSelect.add(no);
+          timeSelect.disabled = true;
+        } else {
+          timeSelect.disabled = false;
+        }
+      }
+      dateInput.addEventListener("change", function () {
+        if (dateInput.value) buildSlots(dateInput.value);
+      });
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var name = (document.getElementById("r-name").value || "").trim();
       var phone = (document.getElementById("r-phone").value || "").trim();
-      var datetime = document.getElementById("r-datetime").value;
+      var date = document.getElementById("r-date").value;
+      var time = document.getElementById("r-time").value;
       var guests = document.getElementById("r-guests").value;
-      if (!name || !phone || !datetime || !guests) {
-        setFeedback("Merci d'indiquer votre nom, téléphone, la date/heure et le nombre de couverts.", false);
+      if (!name || !phone || !date || !time || !guests) {
+        setFeedback("Merci d'indiquer votre nom, téléphone, la date, l'heure et le nombre de couverts.", false);
         return;
       }
 
