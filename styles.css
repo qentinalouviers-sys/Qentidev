@@ -416,6 +416,17 @@ section { position: relative; z-index: 2; }
 .feature h3 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; margin-bottom: .5rem; }
 .feature p { color: var(--ink-soft); font-size: .97rem; }
 
+/* ---------- Contenu éditorial (pages SEO) ---------- */
+.prose {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4rem clamp(1.2rem, 5vw, 3rem);
+}
+.prose .section-title { margin-bottom: 1.4rem; }
+.prose__body p { color: var(--ink-soft); margin-bottom: 1.1rem; font-size: 1.05rem; }
+.prose__body strong { color: var(--ink); font-weight: 600; }
+.prose__body a { color: var(--terra); text-decoration: underline; text-underline-offset: 3px; }
+
 /* ---------- Nos spécialités ---------- */
 .specials {
   max-width: var(--maxw);
