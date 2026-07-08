@@ -215,6 +215,46 @@ input:focus, select:focus { border-color: var(--terra); }
 .modal__row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .modal__actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
 
+/* ---------- Espace salarié (en-tête d'avancement) ---------- */
+.staff-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 18px; }
+.staff-progress { min-width: 200px; flex: 1 1 200px; max-width: 320px; }
+.staff-progress__pct { display: block; text-align: right; font-family: var(--serif); font-weight: 700; font-size: 22px; margin-bottom: 6px; color: var(--terra); }
+.notice { background: rgba(95,122,78,.12); border: 1px solid rgba(95,122,78,.3); color: var(--olive); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 14px; font-weight: 600; margin-bottom: 18px; }
+.foot-link { color: var(--terra); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------- Verrou d'accès (admin) ---------- */
+.gate { position: fixed; inset: 0; display: grid; place-items: center; padding: 20px; background: var(--paper); z-index: 100; }
+.gate[hidden] { display: none; }
+[hidden] { display: none !important; }
+.gate__box { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 34px 30px; width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.gate__box .brand__mark { width: 54px; height: 54px; font-size: 28px; margin-bottom: 4px; }
+.gate__box h1 { font-family: var(--serif); font-size: 24px; font-weight: 600; }
+.gate__box p { color: var(--ink-soft); font-size: 14px; margin-top: -6px; }
+.gate__box input { width: 100%; text-align: center; }
+.gate__box .btn { width: 100%; }
+.gate__err { color: var(--danger); font-size: 13.5px; font-weight: 600; }
+.gate__box .foot-link { font-size: 13px; margin-top: 4px; }
+
+/* ---------- Bloc partage du lien ---------- */
+.share { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow); margin-bottom: 12px; }
+.share__txt { display: flex; flex-direction: column; }
+.share__txt strong { font-family: var(--serif); font-size: 17px; }
+.share__txt span { font-size: 13px; color: var(--ink-soft); max-width: 460px; }
+.share__field { width: 100%; margin-bottom: 8px; font-size: 13px; color: var(--ink-soft); }
+.share__ok { display: inline-block; font-size: 13.5px; font-weight: 600; color: var(--olive); margin-bottom: 12px; }
+
+/* ---------- Éditeur de postes (admin) ---------- */
+.ed-poste { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.ed-poste-head { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.ed-icon { width: 52px; text-align: center; font-size: 18px; }
+.ed-name { flex: 1; font-family: var(--serif); font-weight: 600; font-size: 17px; }
+.ed-items { display: flex; flex-direction: column; gap: 8px; }
+.ed-item { display: flex; gap: 6px; align-items: center; }
+.ed-item-input { flex: 1; }
+.ed-add { display: flex; gap: 8px; margin-top: 12px; }
+.ed-new { flex: 1; }
+.editor-foot { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+
 /* ---------- Pied ---------- */
 .foot { text-align: center; color: var(--ink-soft); font-size: 12.5px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
 

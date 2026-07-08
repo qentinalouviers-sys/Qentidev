@@ -1,38 +1,72 @@
 # Mise en Place — QENTINA 🍕
 
-Petit outil interne (« sas ») dédié à la **bonne gestion et à la mise en place**
-du restaurant QENTINA. Aucune dépendance, aucun build : une app web autonome
-qui fonctionne directement dans le navigateur.
+Petit outil interne dédié à la **bonne gestion et à la mise en place** du
+restaurant QENTINA. Aucune dépendance, aucun build : app web statique qui
+fonctionne directement dans le navigateur (et se déploie telle quelle).
 
-## Modules
+Il y a **deux espaces** :
 
-- **Tableau de bord** — vue d'ensemble avant le service : avancement de la mise
-  en place, stocks à surveiller, tâches ouvertes et alertes.
-- **Mise en place** — checklists par poste (ouverture, pizza, froid/salades,
-  salle, bar, fermeture). Les cases se **réinitialisent automatiquement chaque
-  jour**.
-- **Stocks** — inventaire avec quantités, unités et seuils mini. Ajustement
-  rapide (+ / −), ajout/modif/suppression, et **alertes de seuil bas / rupture**.
-- **Tâches** — liste de tâches avec priorités (basse / normale / haute).
+| Espace | Fichier | Pour qui | Rôle |
+|--------|---------|----------|------|
+| **Salarié** | `index.html` | le salarié | Voit et coche les mises en place du jour. Rien d'autre. |
+| **Responsable** | `admin.html` | vous | Crée/modifie les postes et leurs tâches, gère stocks & tâches, et **génère le lien à envoyer au salarié**. |
 
-## Lancer l'outil
+## Comment ça marche
+
+Le site étant **statique** (pas de serveur ni de base de données), la
+configuration des postes voyage **dans le lien** que vous transmettez :
+
+1. Ouvrez `admin.html`, saisissez le **code d'accès**.
+2. Dans l'onglet **Mise en place**, créez vos postes et leurs tâches
+   (ajouter / renommer / réordonner / supprimer). Tout s'enregistre au fur
+   et à mesure.
+3. Cliquez sur **« Copier le lien salarié »** et envoyez ce lien au salarié
+   (SMS, WhatsApp…).
+4. Le salarié ouvre le lien : il voit les checklists et coche au fil du
+   service. Sa progression **se remet à zéro chaque jour**.
+
+> À chaque modification des postes, **renvoyez le lien** pour transmettre la
+> mise à jour (le salarié verra un bandeau « Liste mise à jour »).
+
+## Code d'accès de l'espace responsable
+
+Le code par défaut est `qentina`. **Changez-le** en modifiant la constante
+`ADMIN_PASSCODE` en haut de `admin.js`.
+
+> ⚠️ Cette protection est **légère** (côté navigateur, sur un site public).
+> Elle empêche un accès accidentel, mais n'est pas une sécurité forte. Le
+> vrai garde-fou : ne communiquez au salarié **que** le lien `index.html`,
+> jamais l'adresse `admin.html`. Pour une vraie authentification, il
+> faudrait un serveur.
+
+## Lancer en local
 
 ```bash
 # depuis la racine du dépôt
 python3 -m http.server 8000
-# puis ouvrir http://localhost:8000/mise-en-place/
+# salarié     → http://localhost:8000/mise-en-place/
+# responsable → http://localhost:8000/mise-en-place/admin.html
 ```
-
-Ou ouvrir simplement `mise-en-place/index.html` dans un navigateur.
 
 ## Données
 
-Tout est enregistré **localement** sur l'appareil via `localStorage`
-(clé `qentina.miseenplace.v1`). Rien n'est envoyé sur un serveur. Les données
-restent donc propres à chaque navigateur / appareil.
+- **Config des postes** : `localStorage` (`qentina.mep.config`) + transmise
+  via le lien.
+- **Avancement du jour** (cases cochées) : propre à chaque appareil,
+  réinitialisé chaque jour.
+- **Stocks / tâches** du responsable : `localStorage`, sur son appareil.
 
-## Personnalisation
+Rien n'est envoyé sur un serveur.
 
-- **Postes & checklists par défaut** : constante `DEFAULT_STATIONS` dans `app.js`
-- **Inventaire de départ** : constante `SEED_STOCK` dans `app.js`
-- **Couleurs & polices** : variables CSS `:root` dans `app.css` (identité QENTINA)
+## Fichiers
+
+```
+mise-en-place/
+├── index.html   # espace salarié
+├── staff.js     # logique salarié
+├── admin.html   # espace responsable
+├── admin.js     # logique responsable (éditeur, lien, stocks, tâches)
+├── shared.js    # modèle de config commun (encodage du lien, utilitaires)
+├── app.css      # styles (identité QENTINA)
+└── README.md
+```

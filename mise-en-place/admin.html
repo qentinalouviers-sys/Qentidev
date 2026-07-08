@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espace responsable · Mise en Place QENTINA</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0f5460" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <!-- ==================== VERROU D'ACCÈS ==================== -->
+  <div class="gate" id="gate">
+    <form class="gate__box" id="gate-form">
+      <span class="brand__mark">Q</span>
+      <h1>Espace responsable</h1>
+      <p>Accès réservé à la gestion de la mise en place.</p>
+      <input type="password" id="gate-code" placeholder="Code d'accès" autocomplete="current-password" />
+      <button class="btn" type="submit">Entrer</button>
+      <span class="gate__err" id="gate-err" hidden>Code incorrect.</span>
+      <a class="foot-link" href="index.html">← Retour à l'espace salarié</a>
+    </form>
+  </div>
+
+  <div class="app" id="app" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand__mark">Q</span>
+        <div class="brand__txt">
+          <strong>Espace responsable</strong>
+          <span>QENTINA · Mise en Place</span>
+        </div>
+      </div>
+      <div class="topbar__right">
+        <a class="link-site" href="index.html">↗ Vue salarié</a>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab is-active" data-view="prep" role="tab">Mise en place</button>
+      <button class="tab" data-view="stock" role="tab">Stocks</button>
+      <button class="tab" data-view="tasks" role="tab">Tâches</button>
+    </nav>
+
+    <main class="main">
+      <!-- ============ ÉDITEUR DE POSTES ============ -->
+      <section class="view is-active" id="view-prep">
+        <div class="view__head">
+          <div>
+            <h1 class="view__title">Mises en place par poste</h1>
+            <p class="view__sub">Créez et modifiez les tâches à cocher pour chaque poste, puis partagez le lien à votre salarié.</p>
+          </div>
+        </div>
+
+        <div class="share">
+          <div class="share__txt">
+            <strong>Lien pour le salarié</strong>
+            <span>À envoyer par SMS ou WhatsApp. Renvoyez-le après chaque modification pour transmettre la mise à jour.</span>
+          </div>
+          <div class="share__actions">
+            <button class="btn" id="copy-link">📋 Copier le lien salarié</button>
+          </div>
+        </div>
+        <input class="share__field" id="link-field" readonly hidden />
+        <span class="share__ok" id="copy-ok" hidden>Lien copié ✅</span>
+
+        <div id="editor"></div>
+
+        <div class="editor-foot">
+          <button class="btn btn--ghost" id="add-poste">+ Ajouter un poste</button>
+          <button class="btn btn--ghost" id="reset-default" title="Repartir des postes proposés par défaut">↺ Réinitialiser aux postes par défaut</button>
+        </div>
+      </section>
+
+      <!-- ============ STOCKS ============ -->
+      <section class="view" id="view-stock">
+        <div class="view__head">
+          <h1 class="view__title">Inventaire &amp; stocks</h1>
+          <button class="btn" id="stock-add">+ Ajouter un article</button>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl" id="stock-table">
+            <thead>
+              <tr>
+                <th>Article</th><th>Catégorie</th>
+                <th class="num">Quantité</th><th class="num">Seuil mini</th>
+                <th>État</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="stock-body"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="stock-empty" hidden>Aucun article. Cliquez sur « Ajouter un article ».</p>
+      </section>
+
+      <!-- ============ TÂCHES ============ -->
+      <section class="view" id="view-tasks">
+        <div class="view__head"><h1 class="view__title">Tâches</h1></div>
+        <form class="task-add" id="task-form">
+          <input type="text" id="task-input" placeholder="Nouvelle tâche (ex : appeler le fournisseur farine)" maxlength="120" required />
+          <select id="task-prio" aria-label="Priorité">
+            <option value="normale">Normale</option>
+            <option value="haute">Haute</option>
+            <option value="basse">Basse</option>
+          </select>
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+        <ul class="task-list" id="task-list"></ul>
+        <p class="empty" id="task-empty" hidden>Aucune tâche en cours. 🎉</p>
+      </section>
+    </main>
+
+    <footer class="foot">Données de gestion enregistrées sur cet appareil · QENTINA</footer>
+  </div>
+
+  <!-- ==================== MODALE STOCK ==================== -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h2 class="modal__title" id="modal-title">Ajouter un article</h2>
+      <form id="stock-form">
+        <label>Nom de l'article
+          <input type="text" id="f-name" required maxlength="60" placeholder="Mozzarella fior di latte" />
+        </label>
+        <label>Catégorie
+          <select id="f-cat">
+            <option>Fromages</option><option>Charcuterie</option><option>Légumes</option>
+            <option>Farine &amp; pâtes</option><option>Sauces &amp; conserves</option>
+            <option>Boissons</option><option>Épicerie</option><option>Consommables</option><option>Autre</option>
+          </select>
+        </label>
+        <div class="modal__row">
+          <label>Quantité<input type="number" id="f-qty" min="0" step="0.5" value="0" required /></label>
+          <label>Unité<input type="text" id="f-unit" maxlength="10" placeholder="kg, L, u…" value="u" /></label>
+          <label>Seuil mini<input type="number" id="f-min" min="0" step="0.5" value="1" required /></label>
+        </div>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--ghost" id="modal-cancel">Annuler</button>
+          <button type="submit" class="btn">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
