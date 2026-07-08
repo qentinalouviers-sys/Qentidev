@@ -52,11 +52,79 @@
     }));
 
     renderEditor();
+    renderHaccp();
     renderStock();
     renderTasks();
     wireShare();
+    wireHaccp();
     wireStockModal();
     wireTasks();
+  }
+
+  /* ==================== ÉDITEUR HACCP ==================== */
+  function renderHaccp() {
+    const h = config.haccp;
+    // Moments
+    const mWrap = $("#hc-moments");
+    mWrap.innerHTML = h.moments.map((m, i) =>
+      '<div class="ed-item">' +
+        '<input type="text" class="hc-m-name" data-i="' + i + '" value="' + attr(m.name) + '" placeholder="Nom du moment" />' +
+        '<button class="icon-btn" data-hc="m-up" data-i="' + i + '" title="Monter">↑</button>' +
+        '<button class="icon-btn" data-hc="m-down" data-i="' + i + '" title="Descendre">↓</button>' +
+        '<button class="icon-btn" data-hc="m-del" data-i="' + i + '" title="Supprimer">🗑</button>' +
+      "</div>"
+    ).join("");
+    // Points
+    const pWrap = $("#hc-points");
+    pWrap.innerHTML = h.points.map((pt, i) =>
+      '<div class="hc-cfg-row">' +
+        '<input type="text" class="hc-p-name" data-i="' + i + '" value="' + attr(pt.name) + '" placeholder="Équipement" />' +
+        '<input type="number" step="0.1" class="hc-p-min num" data-i="' + i + '" value="' + pt.min + '" aria-label="Seuil mini" />' +
+        '<input type="number" step="0.1" class="hc-p-max num" data-i="' + i + '" value="' + pt.max + '" aria-label="Seuil maxi" />' +
+        '<button class="icon-btn" data-hc="p-del" data-i="' + i + '" title="Supprimer">🗑</button>' +
+      "</div>"
+    ).join("");
+    wireHaccpRows();
+  }
+
+  function wireHaccpRows() {
+    $$(".hc-m-name").forEach((el) => el.addEventListener("input", () => {
+      config.haccp.moments[+el.dataset.i].name = el.value; MEP.saveConfig(config); refreshLink();
+    }));
+    $$(".hc-p-name").forEach((el) => el.addEventListener("input", () => {
+      config.haccp.points[+el.dataset.i].name = el.value; MEP.saveConfig(config); refreshLink();
+    }));
+    $$(".hc-p-min").forEach((el) => el.addEventListener("input", () => {
+      config.haccp.points[+el.dataset.i].min = Number(el.value); MEP.saveConfig(config); refreshLink();
+    }));
+    $$(".hc-p-max").forEach((el) => el.addEventListener("input", () => {
+      config.haccp.points[+el.dataset.i].max = Number(el.value); MEP.saveConfig(config); refreshLink();
+    }));
+    $$('[data-hc]').forEach((btn) => btn.addEventListener("click", () => {
+      const act = btn.dataset.hc, i = +btn.dataset.i, h = config.haccp;
+      if (act === "m-up") move(h.moments, i, -1);
+      else if (act === "m-down") move(h.moments, i, 1);
+      else if (act === "m-del") {
+        if (h.moments.length <= 1) { alert("Gardez au moins un moment de relevé."); return; }
+        h.moments.splice(i, 1);
+      } else if (act === "p-del") h.points.splice(i, 1);
+      MEP.saveConfig(config); renderHaccp(); refreshLink();
+    }));
+  }
+
+  function wireHaccp() {
+    const addMoment = () => {
+      const input = $("#hc-moment-new");
+      const name = (input.value || "").trim() || "Nouveau moment";
+      config.haccp.moments.push({ id: MEP.uid("m"), name: name });
+      input.value = ""; MEP.saveConfig(config); renderHaccp(); refreshLink();
+    };
+    $("#hc-moment-add").addEventListener("click", addMoment);
+    $("#hc-moment-new").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addMoment(); } });
+    $("#hc-point-add").addEventListener("click", () => {
+      config.haccp.points.push({ id: MEP.uid("h"), name: "Nouvel équipement", min: 0, max: 4 });
+      MEP.saveConfig(config); renderHaccp(); refreshLink();
+    });
   }
 
   /* ==================== ÉDITEUR DE POSTES ==================== */

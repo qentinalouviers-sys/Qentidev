@@ -255,6 +255,45 @@ input:focus, select:focus { border-color: var(--terra); }
 .ed-new { flex: 1; }
 .editor-foot { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
 
+/* ---------- Relevés HACCP (salarié) ---------- */
+.section-h { font-family: var(--serif); font-weight: 600; font-size: 20px; margin: 30px 0 14px; }
+.haccp { background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--flame); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow); margin-bottom: 8px; }
+.haccp__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+.haccp__title { font-family: var(--serif); font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.haccp__title .req { font-family: var(--sans); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #fff; background: var(--flame); padding: 3px 9px; border-radius: 999px; }
+.haccp__sub { color: var(--ink-soft); font-size: 13.5px; max-width: 640px; margin-top: 4px; }
+.haccp__status { font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 999px; white-space: nowrap; }
+.haccp__status.ok { background: rgba(95,122,78,.16); color: var(--olive); }
+.haccp__status.todo { background: rgba(224,122,46,.14); color: var(--flame); }
+.hc-moment { margin-bottom: 18px; }
+.hc-moment__name { font-family: var(--serif); font-size: 16px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line-soft); }
+.hc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.hc-point { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px 14px; background: var(--paper); transition: border-color .2s var(--ease), background .2s var(--ease); }
+.hc-point__top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.hc-name { font-weight: 600; font-size: 14px; }
+.hc-range { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+.hc-point__row { display: flex; align-items: center; gap: 10px; }
+.hc-temp { width: 92px; text-align: center; font-weight: 600; }
+.hc-badge { font-size: 12.5px; font-weight: 700; }
+.hc-action { width: 100%; margin-top: 9px; border-color: var(--flame); }
+.hc-empty .hc-badge { color: var(--ink-soft); }
+.hc-empty .hc-action { display: none; }
+.hc-ok { border-color: rgba(95,122,78,.5); background: rgba(95,122,78,.07); }
+.hc-ok .hc-badge { color: var(--olive); }
+.hc-ok .hc-action { display: none; }
+.hc-bad { border-color: var(--danger); background: rgba(192,57,43,.06); }
+.hc-bad .hc-badge { color: var(--danger); }
+.hc-bad .hc-action { display: block; }
+.haccp__tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+.haccp__note { font-size: 12.5px; color: var(--ink-soft); }
+
+/* ---------- Éditeur HACCP (admin) ---------- */
+.hc-cfg-head, .hc-cfg-row { display: grid; grid-template-columns: 1fr 90px 90px 34px; gap: 8px; align-items: center; }
+.hc-cfg-head { font-size: 12px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .03em; padding: 0 2px 8px; }
+.hc-cfg-head .num { text-align: center; }
+.hc-cfg-row { margin-bottom: 8px; }
+.hc-cfg-row .num { text-align: center; }
+
 /* ---------- Pied ---------- */
 .foot { text-align: center; color: var(--ink-soft); font-size: 12.5px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
 

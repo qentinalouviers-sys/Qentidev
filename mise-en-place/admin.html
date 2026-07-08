@@ -41,6 +41,7 @@
 
     <nav class="tabs" role="tablist">
       <button class="tab is-active" data-view="prep" role="tab">Mise en place</button>
+      <button class="tab" data-view="haccp" role="tab">HACCP</button>
       <button class="tab" data-view="stock" role="tab">Stocks</button>
       <button class="tab" data-view="tasks" role="tab">Tâches</button>
     </nav>
@@ -72,6 +73,34 @@
         <div class="editor-foot">
           <button class="btn btn--ghost" id="add-poste">+ Ajouter un poste</button>
           <button class="btn btn--ghost" id="reset-default" title="Repartir des postes proposés par défaut">↺ Réinitialiser aux postes par défaut</button>
+        </div>
+      </section>
+
+      <!-- ============ HACCP ============ -->
+      <section class="view" id="view-haccp">
+        <div class="view__head">
+          <div>
+            <h1 class="view__title">Relevés de température HACCP</h1>
+            <p class="view__sub">Points de contrôle et seuils de conformité, relevés obligatoires avant/après service par le salarié. Ces réglages sont inclus dans le lien salarié.</p>
+          </div>
+        </div>
+
+        <div class="ed-poste">
+          <div class="ed-poste-head"><span class="ed-name">🕑 Moments de relevé</span></div>
+          <div class="ed-items" id="hc-moments"></div>
+          <div class="ed-add">
+            <input type="text" class="ed-new" id="hc-moment-new" placeholder="Ajouter un moment (ex : Avant service soir)" />
+            <button class="btn btn--ghost" id="hc-moment-add">+ Moment</button>
+          </div>
+        </div>
+
+        <div class="ed-poste">
+          <div class="ed-poste-head"><span class="ed-name">🌡️ Équipements / points de contrôle</span></div>
+          <div class="hc-cfg-head"><span>Équipement</span><span class="num">Mini °C</span><span class="num">Maxi °C</span><span></span></div>
+          <div id="hc-points"></div>
+          <div class="ed-add">
+            <button class="btn btn--ghost" id="hc-point-add">+ Ajouter un équipement</button>
+          </div>
         </div>
       </section>
 

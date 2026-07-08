@@ -38,6 +38,24 @@
 
     <div class="notice" id="notice" hidden></div>
 
+    <!-- ==================== RELEVÉS HACCP (OBLIGATOIRE) ==================== -->
+    <section class="haccp" id="haccp">
+      <div class="haccp__head">
+        <div>
+          <h2 class="haccp__title">🌡️ Relevés de température <span class="req">Obligatoire</span></h2>
+          <p class="haccp__sub">Normes HACCP · à faire <b>avant</b> et <b>après</b> chaque service. Notez la température lue ; en cas de dépassement, indiquez l'action corrective.</p>
+        </div>
+        <span class="haccp__status" id="haccp-status"></span>
+      </div>
+      <div id="haccp-body"></div>
+      <div class="haccp__tools">
+        <button class="btn btn--ghost" id="haccp-copy">📋 Copier le relevé du jour</button>
+        <button class="btn btn--ghost" id="haccp-csv">📥 Télécharger l'historique (CSV)</button>
+        <span class="haccp__note">Relevés datés et conservés sur cet appareil pour la traçabilité.</span>
+      </div>
+    </section>
+
+    <h2 class="section-h">Postes à préparer</h2>
     <div class="stations" id="stations"></div>
 
     <p class="empty" id="empty" hidden>Aucun poste n'a encore été configuré.<br />Demandez le lien à jour au responsable.</p>

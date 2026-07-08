@@ -28,6 +28,30 @@ configuration des postes voyage **dans le lien** que vous transmettez :
 > À chaque modification des postes, **renvoyez le lien** pour transmettre la
 > mise à jour (le salarié verra un bandeau « Liste mise à jour »).
 
+## Relevés de température HACCP (obligatoires)
+
+Un bloc **obligatoire** figure en tête de l'espace salarié : les relevés de
+température **avant** et **après** chaque service.
+
+- Le salarié **saisit la température lue** pour chaque équipement. L'app
+  affiche automatiquement **Conforme** ou **Hors seuil** selon les seuils.
+- En cas de dépassement, un champ **action corrective** apparaît et doit être
+  rempli — sinon le relevé n'est pas considéré comme fait (il bloque le 100 %).
+- **Traçabilité** : chaque journée est datée et conservée localement. Deux
+  exports sont proposés au salarié :
+  - **Copier le relevé du jour** (à envoyer par message pour le registre) ;
+  - **Télécharger l'historique (CSV)**, ouvrable dans Excel.
+- Côté responsable, l'onglet **HACCP** permet de configurer les
+  **équipements**, leurs **seuils mini/maxi** et les **moments de relevé**
+  (par défaut : *Avant service* / *Après service*, modifiables — p. ex.
+  ajouter midi et soir). Ces réglages voyagent dans le lien salarié.
+
+> ⚠️ Les seuils par défaut (frigos 0–4 °C, congélateur ≤ −18 °C…) sont des
+> repères courants : **ajustez-les** à vos équipements et à votre plan de
+> maîtrise sanitaire. La traçabilité étant conservée sur l'appareil du
+> salarié (site sans serveur), pensez à récupérer régulièrement l'export CSV
+> pour votre registre HACCP.
+
 ## Code d'accès de l'espace responsable
 
 Le code par défaut est `qentina`. **Changez-le** en modifiant la constante
