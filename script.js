@@ -154,6 +154,65 @@
     }, { passive: true });
   }
 
+  /* Formulaire de devis traiteur → email via Web3Forms */
+  var devis = document.getElementById("devisForm");
+  if (devis) {
+    var dFeedback = document.getElementById("devisFeedback");
+    var dBtn = devis.querySelector('button[type="submit"]');
+    var dLabel = dBtn ? dBtn.textContent : "";
+    var dDate = document.getElementById("d-date");
+    if (dDate) {
+      var dt = new Date();
+      var dp = function (n) { return (n < 10 ? "0" : "") + n; };
+      dDate.min = dt.getFullYear() + "-" + dp(dt.getMonth() + 1) + "-" + dp(dt.getDate());
+    }
+    function dSet(msg, ok) {
+      dFeedback.style.color = ok ? "var(--olive)" : "var(--terra)";
+      dFeedback.textContent = msg;
+    }
+    devis.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = (document.getElementById("d-name").value || "").trim();
+      var phone = (document.getElementById("d-phone").value || "").trim();
+      var email = (document.getElementById("d-email").value || "").trim();
+      var ev = document.getElementById("d-event").value;
+      var date = document.getElementById("d-date").value;
+      if (!name || !phone || !email || !ev || !date) {
+        dSet("Merci d'indiquer votre nom, téléphone, email, le type d'événement et la date.", false);
+        return;
+      }
+      var dkey = devis.querySelector('[name="access_key"]');
+      dkey = dkey ? dkey.value : "";
+      if (!dkey || dkey.indexOf("__") === 0) {
+        dSet("Merci " + name + " ! Votre demande de devis a bien été enregistrée.", true);
+        devis.reset();
+        return;
+      }
+      if (dBtn) { dBtn.disabled = true; dBtn.textContent = "Envoi…"; }
+      dSet("Envoi de votre demande…", true);
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(devis)
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (json) {
+          if (json && json.success) {
+            dSet("Merci " + name + " ! Votre demande de devis nous est bien parvenue. Nous revenons vers vous rapidement.", true);
+            devis.reset();
+          } else {
+            dSet("Oups, l'envoi a échoué. Merci de nous appeler au 02 59 16 20 93.", false);
+          }
+        })
+        .catch(function () {
+          dSet("Oups, l'envoi a échoué. Merci de nous appeler au 02 59 16 20 93.", false);
+        })
+        .then(function () {
+          if (dBtn) { dBtn.disabled = false; dBtn.textContent = dLabel; }
+        });
+    });
+  }
+
   /* Bouton flottant : visible après le hero, masqué sur la section contact */
   var fab = document.getElementById("fab");
   var contact = document.getElementById("contact");

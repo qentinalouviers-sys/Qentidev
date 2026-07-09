@@ -219,18 +219,98 @@
       </div>
     </section>
 
-    <!-- CTA devis -->
+    <!-- Formulaire de devis -->
     <section class="contact" id="devis">
-      <div class="contact__inner contact__inner--center">
+      <div class="contact__inner">
         <div class="contact__text reveal">
           <p class="eyebrow">Devis gratuit</p>
           <h2 class="section-title">Organisons votre événement</h2>
-          <p>Parlez-nous de votre projet&nbsp;: nous vous préparons une proposition sur mesure, sans engagement.</p>
-          <div class="hero__actions" style="margin-bottom:0">
-            <a href="index.html#contact" class="btn btn--primary">Demander un devis</a>
-            <a href="tel:+33259162093" class="btn btn--ghost">02 59 16 20 93</a>
+          <p>Parlez-nous de votre projet — à domicile ou en entreprise. Nous vous préparons une proposition sur mesure, sans engagement, et revenons vers vous rapidement.</p>
+          <div class="contact__social">
+            <a href="tel:+33259162093">Appeler : 02 59 16 20 93</a>
+            <a href="https://www.facebook.com/share/1BHUtqxe6N/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook</a>
           </div>
         </div>
+        <form class="contact__form reveal" style="--d:.08s" id="devisForm" novalidate>
+          <input type="hidden" name="access_key" value="2c3a840b-0355-4f30-af2e-756045b3f2f6" />
+          <input type="hidden" name="subject" value="Nouvelle demande de devis traiteur — QENTINA" />
+          <input type="hidden" name="from_name" value="Site QENTINA — Traiteur" />
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
+
+          <fieldset class="segmented">
+            <legend>Vous êtes&nbsp;?</legend>
+            <div class="segmented__options">
+              <label><input type="radio" name="Type de client" value="Particulier" checked /><span>Particulier</span></label>
+              <label><input type="radio" name="Type de client" value="Entreprise" /><span>Entreprise</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <input type="text" id="d-name" name="Nom" required placeholder=" " autocomplete="name" />
+            <label for="d-name">Votre nom (ou société)</label>
+          </div>
+
+          <div class="field--row">
+            <div class="field">
+              <input type="tel" id="d-phone" name="Téléphone" required placeholder=" " autocomplete="tel" />
+              <label for="d-phone">Téléphone</label>
+            </div>
+            <div class="field">
+              <input type="email" id="d-email" name="Email" required placeholder=" " autocomplete="email" />
+              <label for="d-email">Email</label>
+            </div>
+          </div>
+
+          <div class="field--row">
+            <div class="field">
+              <select id="d-event" name="Type d'événement" required>
+                <option value="" disabled selected>Choisir…</option>
+                <option>Anniversaire</option>
+                <option>Mariage / fiançailles</option>
+                <option>Communion / baptême</option>
+                <option>Soirée entre amis / famille</option>
+                <option>Crémaillère</option>
+                <option>Séminaire</option>
+                <option>Afterwork / team building</option>
+                <option>Inauguration / lancement</option>
+                <option>Repas d'entreprise</option>
+                <option>Autre</option>
+              </select>
+              <label for="d-event" class="label--static">Type d'événement</label>
+            </div>
+            <div class="field">
+              <select id="d-guests" name="Nombre d'invités" required>
+                <option value="" disabled selected>Choisir…</option>
+                <option>Moins de 10</option>
+                <option>10 à 20</option>
+                <option>20 à 40</option>
+                <option>40 à 60</option>
+                <option>60 à 100</option>
+                <option>Plus de 100</option>
+              </select>
+              <label for="d-guests" class="label--static">Nombre d'invités</label>
+            </div>
+          </div>
+
+          <div class="field--row">
+            <div class="field">
+              <input type="date" id="d-date" name="Date de l'événement" required />
+              <label for="d-date" class="label--static">Date de l'événement</label>
+            </div>
+            <div class="field">
+              <input type="text" id="d-place" name="Lieu / commune" placeholder=" " />
+              <label for="d-place">Lieu / commune</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <textarea id="d-message" name="Votre projet" rows="3" placeholder=" "></textarea>
+            <label for="d-message">Votre projet (détails, envies…)</label>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--full">Demander mon devis</button>
+          <p class="contact__feedback" id="devisFeedback" role="status"></p>
+        </form>
       </div>
     </section>
   </main>
