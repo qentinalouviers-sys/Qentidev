@@ -208,6 +208,27 @@ section { position: relative; z-index: 2; }
 .mobile-menu.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
 .mobile-menu a { font-family: var(--serif); font-size: 1.9rem; }
 
+/* Pages à en-tête clair : navigation sombre + barre crème en permanence */
+body.nav-dark { padding-top: 84px; }
+body.nav-dark .nav {
+  background: rgba(246, 241, 234, 0.92);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 var(--line-soft);
+}
+body.nav-dark .nav__logo-text { color: var(--ink); }
+body.nav-dark .nav__links a { color: var(--ink-soft); }
+body.nav-dark .nav__links a:not(.nav__cta):hover { color: var(--ink); }
+body.nav-dark .nav__cta { border-color: var(--ink); color: var(--ink) !important; }
+body.nav-dark .nav__cta:hover { background: var(--ink); color: var(--paper) !important; }
+body.nav-dark .nav__burger span { background: var(--ink); }
+
+.contact__inner--center {
+  grid-template-columns: 1fr;
+  max-width: 620px;
+  text-align: center;
+}
+.contact__inner--center .hero__actions { justify-content: center; }
+
 /* ---------- Bandeau photo ---------- */
 .banner {
   position: relative;
@@ -217,6 +238,10 @@ section { position: relative; z-index: 2; }
   z-index: 2;
 }
 .banner img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+/* Bandeau affichant l'image entière (affiche traiteur) */
+.banner--tall { height: auto; }
+.banner--tall img { height: auto; }
+.banner--tall::before { display: none; }
 /* voile clair en haut : garde la navigation lisible */
 .banner::before {
   content: "";
