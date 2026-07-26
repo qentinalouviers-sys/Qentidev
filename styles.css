@@ -441,6 +441,43 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .feature h3 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; margin-bottom: .5rem; }
 .feature p { color: var(--ink-soft); font-size: .97rem; }
 
+/* Hero raccourci pour les pages intérieures */
+.hero--short { min-height: min(64vh, 560px); }
+
+/* ---------- Frise chronologique ---------- */
+.timeline {
+  margin-top: 2rem;
+  border-left: 2px solid var(--line);
+  padding-left: 1.6rem;
+  display: grid;
+  gap: 1.6rem;
+}
+.timeline__item { position: relative; }
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.6rem - 6px);
+  top: .5em;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--terra);
+  box-shadow: 0 0 0 3px var(--paper);
+}
+.timeline__year {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--terra);
+  display: block;
+  margin-bottom: .2rem;
+}
+.timeline__item p { color: var(--ink-soft); }
+.timeline__item strong { color: var(--ink); font-weight: 600; }
+
+.specials__grid.specials__grid--4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .specials__grid.specials__grid--4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px) { .specials__grid.specials__grid--4 { grid-template-columns: 1fr; } }
+
 /* ---------- Contenu éditorial (pages SEO) ---------- */
 .prose {
   max-width: 760px;
@@ -651,6 +688,9 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   border-radius: 50%;
   background: var(--terra);
 }
+.story__more { margin-top: 1.4rem; }
+.story__more a { color: var(--terra); font-weight: 500; transition: opacity .25s var(--ease); }
+.story__more a:hover { opacity: .7; }
 
 /* ---------- Avis Google ---------- */
 .reviews { max-width: var(--maxw); margin: 0 auto; padding: 5rem clamp(1.2rem, 5vw, 3rem) 1rem; }
