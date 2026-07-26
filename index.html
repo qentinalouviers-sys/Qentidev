@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Restaurant & pizzeria à Louviers — QENTINA, feu de bois</title>
-  <meta name="description" content="QENTINA, restaurant & pizzeria à Louviers : pizzas napolitaines au feu de bois, panuozzo, salades et desserts maison. Terrasse au bord de l'Eure. Sur place, à emporter et en livraison à Louviers et Val-de-Reuil." />
+  <meta name="description" content="QENTINA, restaurant & pizzeria à Louviers : pizzas napolitaines au feu de bois, panuozzo et salades maison. Terrasse au bord de l'Eure. Livraison à Louviers et Val-de-Reuil." />
   <meta name="keywords" content="restaurant Louviers, pizza Louviers, pizzeria Louviers, restaurant italien Louviers, pizza feu de bois Louviers, pizza napolitaine Louviers, pizza Val-de-Reuil, pizzeria Val-de-Reuil, restaurant Acquigny, panuozzo Louviers, terrasse Louviers, pizza à emporter Louviers, livraison pizza Louviers" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#f4ecd9" />
@@ -37,6 +37,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="logo.jpg" />
+  <link rel="preload" as="image" href="banner.webp" type="image/webp" />
+  <link rel="preload" as="image" href="banner.jpg" type="image/jpeg" />
 
   <!-- Données structurées : restaurant (rich results Google) -->
   <script type="application/ld+json">
@@ -119,7 +121,10 @@
     <!-- Hero pleine largeur -->
     <section class="hero" id="accueil">
       <div class="hero__bg">
-        <img src="banner.jpg" alt="Trois pizzas napolitaines cuites au feu de bois chez QENTINA" width="1800" height="830" />
+        <picture>
+          <source srcset="banner.webp" type="image/webp" />
+          <img src="banner.jpg" alt="Trois pizzas napolitaines cuites au feu de bois chez QENTINA" width="1800" height="830" fetchpriority="high" />
+        </picture>
       </div>
       <div class="hero__inner">
         <a class="hero__rating" id="heroRating" href="https://www.google.com/maps/search/?api=1&query=QENTINA%20pizzeria%2020%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener" aria-label="Notre note sur Google" hidden>
@@ -229,21 +234,30 @@
 
       <div class="menu__gallery">
         <button type="button" class="menu-card reveal" data-index="0" data-full="carte-1.jpg" aria-label="Agrandir la carte : les pizzas">
-          <img src="carte-1.jpg" alt="Carte QENTINA — Les pizzas napolitaines" loading="lazy" />
+          <picture>
+            <source srcset="carte-1.webp" type="image/webp" />
+            <img src="carte-1.jpg" alt="Carte QENTINA — Les pizzas napolitaines" loading="lazy" />
+          </picture>
           <span class="menu-card__hint" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
             Cliquer pour agrandir
           </span>
         </button>
         <button type="button" class="menu-card reveal" style="--d:.08s" data-index="1" data-full="carte-2.jpg" aria-label="Agrandir la carte : salades, assiettes et panuozzo">
-          <img src="carte-2.jpg" alt="Carte QENTINA — Salades, assiettes & panuozzo" loading="lazy" />
+          <picture>
+            <source srcset="carte-2.webp" type="image/webp" />
+            <img src="carte-2.jpg" alt="Carte QENTINA — Salades, assiettes & panuozzo" loading="lazy" />
+          </picture>
           <span class="menu-card__hint" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
             Cliquer pour agrandir
           </span>
         </button>
         <button type="button" class="menu-card reveal" style="--d:.16s" data-index="2" data-full="carte-3.jpg" aria-label="Agrandir la carte : les boissons">
-          <img src="carte-3.jpg" alt="Carte QENTINA — Les boissons" loading="lazy" />
+          <picture>
+            <source srcset="carte-3.webp" type="image/webp" />
+            <img src="carte-3.jpg" alt="Carte QENTINA — Les boissons" loading="lazy" />
+          </picture>
           <span class="menu-card__hint" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
             Cliquer pour agrandir
@@ -256,7 +270,10 @@
     <!-- La maison -->
     <section class="story" id="histoire">
       <div class="story__media reveal">
-        <img class="story__photo" src="hero-pizza.jpg" alt="Terrasse de la pizzeria QENTINA au bord de l'Eure, à la tombée de la nuit" width="1100" height="1467" />
+        <picture>
+          <source srcset="hero-pizza.webp" type="image/webp" />
+          <img class="story__photo" src="hero-pizza.jpg" alt="Terrasse de la pizzeria QENTINA au bord de l'Eure, à la tombée de la nuit" width="1100" height="1467" loading="lazy" />
+        </picture>
         <span class="story__badge">Depuis avril 2026</span>
       </div>
       <div class="story__content reveal" style="--d:.08s">
@@ -462,7 +479,10 @@
   </main>
 
   <footer class="footer">
-    <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" />
+    <picture>
+      <source srcset="logo.webp" type="image/webp" />
+      <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
+    </picture>
     <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.</p>
     <nav class="footer__links" aria-label="Pied de page">
       <a href="#menu">La carte</a>

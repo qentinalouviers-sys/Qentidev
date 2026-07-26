@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Traiteur pizza à domicile & entreprise à Louviers — QENTINA</title>
-  <meta name="description" content="QENTINA s'invite chez vous : traiteur pizza napolitaine au feu de bois à domicile et en entreprise, à Louviers, Val-de-Reuil et dans l'Eure. Pizzaiolo et four Ooni sur place. Anniversaire, mariage, séminaire, afterwork… Devis gratuit." />
+  <meta name="description" content="QENTINA traiteur pizza napolitaine à domicile et en entreprise à Louviers et dans l'Eure. Pizzaiolo et four Ooni sur place. Mariage, séminaire, anniversaire. Devis gratuit." />
   <meta name="keywords" content="traiteur pizza Louviers, pizza à domicile Louviers, pizzaiolo à domicile, traiteur pizza entreprise, traiteur événement Louviers, animation pizza mariage, soirée pizza à domicile, traiteur pizza Eure, pizza séminaire entreprise, traiteur pizza Val-de-Reuil, food truck pizza Normandie" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#f4ecd9" />
@@ -28,6 +28,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="logo.jpg" />
+  <link rel="preload" href="traiteur.webp" as="image" type="image/webp" />
+  <link rel="preload" href="traiteur.jpg" as="image" />
 
   <script type="application/ld+json">
   {
@@ -104,7 +106,10 @@
   <main>
     <!-- Bandeau -->
     <section class="banner banner--tall">
-      <img src="traiteur.jpg" alt="QENTINA s'invite chez vous : pizza napolitaine au feu de bois à domicile et en entreprise" width="1376" height="768" />
+      <picture>
+        <source srcset="traiteur.webp" type="image/webp" />
+        <img src="traiteur.jpg" alt="QENTINA s'invite chez vous : pizza napolitaine au feu de bois à domicile et en entreprise" width="1376" height="768" />
+      </picture>
     </section>
 
     <!-- Intro -->
@@ -321,7 +326,10 @@
   </main>
 
   <footer class="footer">
-    <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" />
+    <picture>
+      <source srcset="logo.webp" type="image/webp" />
+      <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
+    </picture>
     <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.</p>
     <nav class="footer__links" aria-label="Pied de page">
       <a href="index.html">Accueil</a>

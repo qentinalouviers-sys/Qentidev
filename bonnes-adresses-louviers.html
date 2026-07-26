@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nos bonnes adresses à Louviers : hôtels, restaurants & caves — QENTINA</title>
-  <meta name="description" content="Les bonnes adresses de QENTINA à Louviers et alentours : le Manoir de Surville, Le Pré Saint-Germain, La Table d'Alva, Le Vin Cœur, la brasserie Le Parvis et la Maison Clet. Où dormir, dîner et bien boire en Seine-Eure." />
+  <meta name="description" content="Nos bonnes adresses à Louviers : Manoir de Surville, Pré Saint-Germain, La Table d'Alva, Le Vin Cœur, Le Parvis. Où dormir, dîner et bien boire en Seine-Eure." />
   <meta name="keywords" content="bonnes adresses Louviers, hôtel Louviers, restaurant Louviers, brasserie Louviers, caviste Louviers, où dormir Louviers, Manoir de Surville, Le Pré Saint-Germain, La Table d'Alva, Le Vin Cœur, Le Parvis Louviers, Maison Clet, hôtel de charme Eure, restaurant Le Vaudreuil" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#f4ecd9" />
@@ -28,6 +28,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="logo.jpg" />
+  <link rel="preload" as="image" href="banner.webp" type="image/webp" />
+  <link rel="preload" as="image" href="banner.jpg" type="image/jpeg" />
 
   <script type="application/ld+json">
   {
@@ -138,7 +140,10 @@
     <!-- Hero -->
     <section class="hero hero--short" id="accueil">
       <div class="hero__bg">
-        <img src="banner.jpg" alt="Les pizzas au feu de bois de QENTINA à Louviers" width="1800" height="830" />
+        <picture>
+          <source srcset="banner.webp" type="image/webp" />
+          <img src="banner.jpg" alt="Les pizzas au feu de bois de QENTINA à Louviers" width="1800" height="830" fetchpriority="high" />
+        </picture>
       </div>
       <div class="hero__inner">
         <p class="eyebrow reveal">On joue collectif · Louviers &amp; Seine-Eure</p>
@@ -302,7 +307,10 @@
   </main>
 
   <footer class="footer">
-    <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" />
+    <picture>
+      <source srcset="logo.webp" type="image/webp" />
+      <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
+    </picture>
     <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.</p>
     <nav class="footer__links" aria-label="Pied de page">
       <a href="index.html">Accueil</a>
