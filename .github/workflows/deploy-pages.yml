@@ -3,7 +3,8 @@ name: Déploiement GitHub Pages
 on:
   push:
     branches:
-      - claude/qentina-pizzeria-website-ywvq3q
+      - main
+      - claude/**
   workflow_dispatch:
 
 permissions:
