@@ -149,7 +149,12 @@ section { position: relative; z-index: 2; }
   font-size: 1.25rem;
   letter-spacing: .06em;
 }
-.nav__links { display: flex; align-items: center; gap: 2rem; }
+.nav__links { display: flex; align-items: center; gap: 1.6rem; }
+/* Page active : soulignée et mise en avant */
+.nav__links a[aria-current="page"] { color: #fff; }
+.nav__links a[aria-current="page"]::after { width: 100%; background: var(--gold); }
+.nav.is-scrolled .nav__links a[aria-current="page"],
+body.nav-dark .nav__links a[aria-current="page"] { color: var(--ink); }
 .nav__links a {
   font-size: .96rem;
   font-weight: 500;
@@ -304,6 +309,26 @@ body.nav-dark .nav__burger span { background: var(--ink); }
     linear-gradient(to right, rgba(11, 34, 38, 0.82), rgba(11, 34, 38, 0.32) 58%, rgba(11, 34, 38, 0.05));
 }
 .hero__inner { position: relative; z-index: 3; max-width: 620px; color: var(--paper); }
+
+/* ---------- Ouverture cinématique (canvas) ---------- */
+.intro-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Pendant l'intro, le hero attend en coulisses pour rejouer sa cascade */
+.has-intro .hero .reveal,
+.has-intro .hero .reveal.is-visible {
+  opacity: 0 !important;
+  transform: translateY(34px) !important;
+  transition: none !important;
+}
+.has-intro .hero__title { filter: blur(6px); }
+.hero__title { transition: filter 1s var(--ease) .1s; }
 
 /* Calque des braises (three.js / canvas) */
 .embers {
