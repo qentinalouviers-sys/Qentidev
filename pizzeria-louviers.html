@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pizzeria à Louviers — QENTINA, pizza au feu de bois</title>
-  <meta name="description" content="QENTINA, votre pizzeria à Louviers : pizzas napolitaines au feu de bois, panuozzo et salades. Sur place, à emporter et en livraison à Louviers et alentours. Terrasse au bord de l'Eure." />
+  <meta name="description" content="QENTINA, votre pizzeria à Louviers : pizzas napolitaines au feu de bois, panuozzo et salades maison. Terrasse au bord de l'Eure. Livraison à Louviers." />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#f4ecd9" />
   <link rel="canonical" href="https://qentina.fr/pizzeria-louviers.html" />
@@ -27,6 +27,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="logo.jpg" />
+  <link rel="preload" href="banner.webp" as="image" type="image/webp" fetchpriority="high" />
+  <link rel="preload" href="banner.jpg" as="image" type="image/jpeg" fetchpriority="high" />
 
   <script type="application/ld+json">
   {
@@ -74,7 +76,10 @@
     <!-- Hero -->
     <section class="hero" id="accueil">
       <div class="hero__bg">
-        <img src="banner.jpg" alt="Pizzas napolitaines au feu de bois de la pizzeria QENTINA à Louviers" width="1800" height="830" />
+        <picture>
+          <source srcset="banner.webp" type="image/webp" />
+          <img src="banner.jpg" alt="Pizzas napolitaines au feu de bois de la pizzeria QENTINA à Louviers" width="1800" height="830" fetchpriority="high" />
+        </picture>
       </div>
       <div class="hero__inner">
         <p class="eyebrow reveal">Pizzeria · Louviers (27400)</p>
@@ -189,7 +194,10 @@
   </main>
 
   <footer class="footer">
-    <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" />
+    <picture>
+      <source srcset="logo.webp" type="image/webp" />
+      <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
+    </picture>
     <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.</p>
     <nav class="footer__links" aria-label="Pied de page">
       <a href="index.html">Accueil</a>

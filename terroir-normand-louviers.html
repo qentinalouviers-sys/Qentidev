@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Notre terroir normand & l'histoire de Louviers — QENTINA</title>
-  <meta name="description" content="QENTINA, pizzeria au bord de l'Eure, vous raconte Louviers : la cité drapière, l'église Notre-Dame, le cloître des Pénitents bâti sur l'eau… et le terroir normand qui inspire notre cuisine au feu de bois." />
+  <meta name="description" content="Louviers et son terroir normand racontés par QENTINA : cité drapière, église Notre-Dame, cloître des Pénitents. La Normandie qui inspire notre cuisine au feu de bois." />
   <meta name="keywords" content="Louviers histoire, cité drapière Louviers, Notre-Dame Louviers, cloître des Pénitents, terroir normand, produits normands, restaurant terroir Louviers, Eure Normandie, que visiter Louviers, Château-Gaillard, Giverny, Acquigny" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#f4ecd9" />
@@ -28,6 +28,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="logo.jpg" />
+  <link rel="preload" as="image" href="hero-pizza.webp" type="image/webp" />
+  <link rel="preload" as="image" href="hero-pizza.jpg" type="image/jpeg" />
 
   <script type="application/ld+json">
   {
@@ -92,7 +94,10 @@
     <!-- Hero : la terrasse au bord de l'Eure, à l'heure bleue -->
     <section class="hero hero--short" id="accueil">
       <div class="hero__bg">
-        <img src="hero-pizza.jpg" alt="La terrasse de QENTINA au bord de l'Eure, à Louviers, à la tombée de la nuit" width="1100" height="1467" />
+        <picture>
+          <source srcset="hero-pizza.webp" type="image/webp" />
+          <img src="hero-pizza.jpg" alt="La terrasse de QENTINA au bord de l'Eure, à Louviers, à la tombée de la nuit" width="1100" height="1467" fetchpriority="high" />
+        </picture>
       </div>
       <div class="hero__inner">
         <p class="eyebrow reveal">Nos racines · Louviers, Normandie</p>
@@ -283,7 +288,10 @@
   </main>
 
   <footer class="footer">
-    <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" />
+    <picture>
+      <source srcset="logo.webp" type="image/webp" />
+      <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
+    </picture>
     <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.</p>
     <nav class="footer__links" aria-label="Pied de page">
       <a href="index.html">Accueil</a>
