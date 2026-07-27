@@ -1252,6 +1252,8 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   justify-content: center;
   padding: clamp(.8rem, 3vw, 2rem);
 }
+/* Fenêtre fermée : totalement retirée (sinon elle intercepte tous les clics) */
+.resa[hidden] { display: none !important; }
 .resa__backdrop {
   position: absolute;
   inset: 0;
