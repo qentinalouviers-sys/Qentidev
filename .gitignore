@@ -5,3 +5,10 @@ apercu-*.png
 shot.js
 _shot.js
 _opt.js
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
