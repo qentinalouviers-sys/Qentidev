@@ -530,6 +530,29 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   box-shadow: 0 30px 60px -35px rgba(23, 48, 51, 0.45);
   border-color: rgba(15, 84, 96, 0.3);
 }
+.friend__category {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: 1rem;
+}
+.friend__category-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: var(--paper-2);
+  color: var(--terra);
+  flex-shrink: 0;
+}
+.friend__category-icon svg { width: 18px; height: 18px; }
+.friend__category-label {
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--terra);
+}
 .friend__head { margin-bottom: 1rem; }
 .friend__head h2 {
   font-family: var(--serif);
