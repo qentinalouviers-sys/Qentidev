@@ -374,8 +374,8 @@
       cookieBanner.className = "cookie-banner";
       cookieBanner.setAttribute("role", "status");
       cookieBanner.innerHTML =
-        '<span class="cookie-banner__emoji" aria-hidden="true">🍕</span>' +
-        '<div class="cookie-banner__body">' +
+        '<div class="cookie-banner__inner">' +
+          '<span class="cookie-banner__emoji" aria-hidden="true">🍕</span>' +
           '<p class="cookie-banner__text">Ici, on n’a pas laissé Google manger des cookies sur notre site. Chez QENTINA, <strong>on mange des pizzas</strong> — et on protège vos données.</p>' +
           '<button type="button" class="cookie-banner__close">Miam, compris&nbsp;!</button>' +
         '</div>';
