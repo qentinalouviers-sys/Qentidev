@@ -1259,10 +1259,10 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 /* ---------- Petit clin d'œil "cookies" (pas un vrai bandeau RGPD) ---------- */
 .cookie-banner {
   position: fixed;
-  left: clamp(1rem, 4vw, 2rem);
-  bottom: clamp(1rem, 4vw, 2rem);
+  right: clamp(1rem, 4vw, 2rem);
+  top: 6.5rem;
   z-index: 95;
-  max-width: 380px;
+  max-width: 340px;
   display: flex;
   gap: .9rem;
   align-items: flex-start;
@@ -1296,7 +1296,7 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .cookie-banner__close:hover { background: var(--terra-deep); transform: translateY(-2px); }
 
 @media (max-width: 620px) {
-  .cookie-banner { left: 1rem; right: 1rem; bottom: calc(1rem + 70px); max-width: none; }
+  .cookie-banner { left: 1rem; right: 1rem; top: 5.2rem; max-width: none; }
 }
 
 /* ---------- Apparition au défilement ---------- */
