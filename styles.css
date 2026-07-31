@@ -1256,6 +1256,49 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   .fab__book { flex: 1; justify-content: center; }
 }
 
+/* ---------- Petit clin d'œil "cookies" (pas un vrai bandeau RGPD) ---------- */
+.cookie-banner {
+  position: fixed;
+  left: clamp(1rem, 4vw, 2rem);
+  bottom: clamp(1rem, 4vw, 2rem);
+  z-index: 95;
+  max-width: 380px;
+  display: flex;
+  gap: .9rem;
+  align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.3rem;
+  box-shadow: 0 24px 50px -20px rgba(23, 48, 51, 0.45);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.cookie-banner.is-shown { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.cookie-banner__emoji { font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
+.cookie-banner__body { display: flex; flex-direction: column; gap: .7rem; }
+.cookie-banner__text { font-size: .88rem; line-height: 1.55; color: var(--ink-soft); }
+.cookie-banner__text strong { color: var(--ink); font-weight: 600; }
+.cookie-banner__close {
+  align-self: flex-start;
+  background: var(--terra);
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  padding: .55rem 1.1rem;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .3s var(--ease), transform .3s var(--ease);
+}
+.cookie-banner__close:hover { background: var(--terra-deep); transform: translateY(-2px); }
+
+@media (max-width: 620px) {
+  .cookie-banner { left: 1rem; right: 1rem; bottom: calc(1rem + 70px); max-width: none; }
+}
+
 /* ---------- Apparition au défilement ---------- */
 .reveal {
   opacity: 0;
