@@ -330,15 +330,6 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .has-intro .hero__title { filter: blur(6px); }
 .hero__title { transition: filter 1s var(--ease) .1s; }
 
-/* Calque des braises (three.js / canvas) */
-.embers {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: .9;
-}
-.embers canvas { width: 100%; height: 100%; display: block; }
 .hero .eyebrow { color: var(--gold); }
 .hero__title {
   font-family: var(--serif);
