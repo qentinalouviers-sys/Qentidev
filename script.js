@@ -256,7 +256,6 @@
     };
     var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
     var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
-    var TEL_LINK = '<a href="tel:+33259162093">02&nbsp;59&nbsp;16&nbsp;20&nbsp;93</a>';
 
     function pad(n) { return (n < 10 ? "0" : "") + n; }
     function fmt(min) { return pad(Math.floor(min / 60)) + "h" + pad(min % 60); }
@@ -290,6 +289,8 @@
     var dateInput = document.getElementById("r-date");
     var timeSelect = document.getElementById("r-time");
     var hoursNote = document.getElementById("hoursNote");
+    var callBox = document.getElementById("callBox");
+    var callBoxText = document.getElementById("callBoxText");
     var buildSlots = null; // défini plus bas, réutilisé à l'envoi du formulaire
     if (dateInput && timeSelect) {
       dateInput.min = dayKey(new Date());
@@ -297,6 +298,17 @@
       var setNote = function (html, warn) {
         hoursNote.innerHTML = html;
         hoursNote.classList.toggle("form-note--warn", !!warn);
+      };
+
+      // Encart « appelez-nous » : proposé dès que la réservation en ligne est close,
+      // parce qu'il reste souvent une table même au dernier moment.
+      var showCall = function (text) {
+        if (!callBox) return;
+        if (callBoxText && text) callBoxText.textContent = text;
+        callBox.hidden = false;
+      };
+      var hideCall = function () {
+        if (callBox) callBox.hidden = true;
       };
 
       buildSlots = function (dateStr) {
@@ -309,6 +321,7 @@
           timeSelect.add(closed);
           timeSelect.disabled = true;
           setNote("Nous sommes fermés le dimanche et le lundi. Merci de choisir un jour du mardi au samedi.", true);
+          hideCall();
           return;
         }
 
@@ -344,21 +357,26 @@
           no.disabled = true; no.selected = true;
           timeSelect.add(no);
           timeSelect.disabled = true;
-          setNote(
-            "Les réservations en ligne ferment 2&nbsp;h avant le début du service. Pour une table aujourd'hui, appelez-nous au " + TEL_LINK + " : on fait toujours au mieux.",
-            true
-          );
+          if (tooLate.length) {
+            setNote("Les réservations en ligne ferment 2&nbsp;h avant le début du service.", true);
+            showCall("Trop tard pour réserver en ligne aujourd'hui — mais il reste parfois une table.");
+          } else {
+            setNote("Plus de créneau disponible pour cette date.", true);
+            showCall("Plus de créneau en ligne pour cette date — appelez-nous, on regarde tout de suite.");
+          }
           return;
         }
 
         timeSelect.disabled = false;
         if (tooLate.length) {
           setNote(
-            "Le service du " + tooLate.join(" et du ") + " est clôturé en ligne (fermeture 2&nbsp;h avant le service). Pour ce service, appelez-nous au " + TEL_LINK + ".",
+            "Le service du " + tooLate.join(" et du ") + " est clôturé en ligne (fermeture 2&nbsp;h avant le service).",
             true
           );
+          showCall("Vous vouliez une table pour le " + tooLate.join(" ou le ") + " ? Appelez-nous, il reste parfois de la place.");
         } else {
           setNote("Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.).", false);
+          hideCall();
         }
       };
       dateInput.addEventListener("change", function () {
