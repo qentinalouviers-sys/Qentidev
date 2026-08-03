@@ -1159,6 +1159,55 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .contact__feedback { font-size: .92rem; color: var(--olive); min-height: 1.2em; }
 .form-note { font-size: .82rem; color: var(--ink-soft); margin: -.35rem 0 .1rem; }
 .form-note--warn { color: var(--terra); }
+
+/* Encart d'appel : affiché quand la réservation en ligne est close */
+.call-box {
+  display: grid;
+  gap: .55rem;
+  padding: 1rem 1.1rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--card), var(--paper));
+  text-align: center;
+  animation: callBoxIn .45s var(--ease) both;
+}
+.call-box[hidden] { display: none; }
+.call-box__text { font-size: .88rem; color: var(--ink); margin: 0; }
+.call-box__actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .5rem;
+}
+@media (min-width: 520px) {
+  .call-box__actions { grid-template-columns: 1.35fr 1fr; }
+}
+.call-box__btn {
+  font-size: 1.02rem;
+  letter-spacing: .02em;
+  justify-content: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.call-box__btn--wa {
+  background: #fff;
+  color: #0f7a4a;
+  border-color: rgba(15, 122, 74, .38);
+}
+.call-box__btn--wa:hover {
+  background: #0f7a4a;
+  color: #fff;
+  border-color: #0f7a4a;
+  transform: translateY(-2px);
+}
+.call-box__wa-icon { width: 1.15em; height: 1.15em; flex: none; }
+.call-box__hint { font-size: .76rem; color: var(--ink-soft); margin: 0; }
+@keyframes callBoxIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .call-box { animation: none; }
+}
 .field select:disabled { opacity: .6; cursor: not-allowed; }
 
 /* ---------- Footer ---------- */
