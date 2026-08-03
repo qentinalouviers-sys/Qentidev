@@ -245,29 +245,61 @@
     }
 
     /* Créneaux de réservation selon les horaires d'ouverture (fiche Google) */
+    // Jour (0=dim … 6=sam). Fermé dimanche (0) et lundi (1).
+    // Services en minutes : midi 12h00–14h30, soir 19h00–22h30 (23h00 ven & sam).
+    var SERVICES = {
+      2: [[720, 870], [1140, 1350]],
+      3: [[720, 870], [1140, 1350]],
+      4: [[720, 870], [1140, 1350]],
+      5: [[720, 870], [1140, 1380]],
+      6: [[720, 870], [1140, 1380]]
+    };
+    var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
+    var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
+    var TEL_LINK = '<a href="tel:+33259162093">02&nbsp;59&nbsp;16&nbsp;20&nbsp;93</a>';
+
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    function fmt(min) { return pad(Math.floor(min / 60)) + "h" + pad(min % 60); }
+    function dayKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+
+    // Un service n'est réservable en ligne que tant qu'il reste CUTOFF minutes
+    // avant son ouverture. Passé ce délai, c'est par téléphone.
+    function serviceOpen(win, isToday, nowMin) {
+      return !isToday || nowMin <= win[0] - CUTOFF;
+    }
+
+    // Vérification côté envoi : le créneau choisi est-il encore ouvert ?
+    // (garde-fou si la page est restée ouverte longtemps)
+    function slotTooLate(dateStr, timeStr) {
+      var svc = SERVICES[new Date(dateStr + "T00:00:00").getDay()];
+      if (!svc) return true;
+      var parts = /^(\d{1,2})h(\d{2})$/.exec(timeStr);
+      if (!parts) return false;
+      var m = parseInt(parts[1], 10) * 60 + parseInt(parts[2], 10);
+      var now = new Date();
+      var todayStr = dayKey(now);
+      if (dateStr < todayStr) return true;
+      if (dateStr > todayStr) return false;
+      var nowMin = now.getHours() * 60 + now.getMinutes();
+      for (var i = 0; i < svc.length; i++) {
+        if (m >= svc[i][0] && m <= svc[i][1]) return !serviceOpen(svc[i], true, nowMin);
+      }
+      return true;
+    }
+
     var dateInput = document.getElementById("r-date");
     var timeSelect = document.getElementById("r-time");
     var hoursNote = document.getElementById("hoursNote");
+    var buildSlots = null; // défini plus bas, réutilisé à l'envoi du formulaire
     if (dateInput && timeSelect) {
-      // Jour (0=dim … 6=sam). Fermé dimanche (0) et lundi (1).
-      // Services en minutes : midi 12h00–14h30, soir 19h00–22h30 (23h00 ven & sam).
-      var SERVICES = {
-        2: [[720, 870], [1140, 1350]],
-        3: [[720, 870], [1140, 1350]],
-        4: [[720, 870], [1140, 1350]],
-        5: [[720, 870], [1140, 1380]],
-        6: [[720, 870], [1140, 1380]]
+      dateInput.min = dayKey(new Date());
+
+      var setNote = function (html, warn) {
+        hoursNote.innerHTML = html;
+        hoursNote.classList.toggle("form-note--warn", !!warn);
       };
-      var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
 
-      function pad(n) { return (n < 10 ? "0" : "") + n; }
-      function fmt(min) { return pad(Math.floor(min / 60)) + "h" + pad(min % 60); }
-
-      var now = new Date();
-      var todayStr = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
-      dateInput.min = todayStr;
-
-      function buildSlots(dateStr) {
+      buildSlots = function (dateStr) {
         timeSelect.innerHTML = "";
         var day = new Date(dateStr + "T00:00:00").getDay();
         var svc = SERVICES[day];
@@ -276,27 +308,30 @@
           closed.disabled = true; closed.selected = true;
           timeSelect.add(closed);
           timeSelect.disabled = true;
-          hoursNote.textContent = "Nous sommes fermés le dimanche et le lundi. Merci de choisir un jour du mardi au samedi.";
-          hoursNote.classList.add("form-note--warn");
+          setNote("Nous sommes fermés le dimanche et le lundi. Merci de choisir un jour du mardi au samedi.", true);
           return;
         }
-        hoursNote.textContent = "Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven. & sam.).";
-        hoursNote.classList.remove("form-note--warn");
 
         var ph = new Option("Choisir…", "");
         ph.disabled = true; ph.selected = true;
         timeSelect.add(ph);
 
-        var isToday = dateStr === todayStr;
+        // Recalculé à chaque fois : l'heure a pu tourner depuis l'ouverture de la page.
+        var now = new Date();
+        var isToday = dateStr === dayKey(now);
         var nowMin = now.getHours() * 60 + now.getMinutes();
         var labels = ["Midi", "Soir"];
         var count = 0;
+        var tooLate = [];
         svc.forEach(function (win, i) {
+          if (!serviceOpen(win, isToday, nowMin)) {
+            tooLate.push((labels[i] || "Service").toLowerCase());
+            return;
+          }
           var grp = document.createElement("optgroup");
           grp.label = labels[i] || "Service";
           var last = win[1] - LAST_ARRIVAL;
           for (var m = win[0]; m <= last; m += 30) {
-            if (isToday && m <= nowMin + 30) continue; // au moins 30 min à l'avance
             grp.appendChild(new Option(fmt(m), fmt(m)));
             count++;
           }
@@ -305,14 +340,27 @@
 
         if (count === 0) {
           timeSelect.innerHTML = "";
-          var no = new Option("Plus de créneau ce jour", "");
+          var no = new Option(tooLate.length ? "Trop tard pour aujourd'hui" : "Plus de créneau ce jour", "");
           no.disabled = true; no.selected = true;
           timeSelect.add(no);
           timeSelect.disabled = true;
-        } else {
-          timeSelect.disabled = false;
+          setNote(
+            "Les réservations en ligne ferment 2&nbsp;h avant le début du service. Pour une table aujourd'hui, appelez-nous au " + TEL_LINK + " : on fait toujours au mieux.",
+            true
+          );
+          return;
         }
-      }
+
+        timeSelect.disabled = false;
+        if (tooLate.length) {
+          setNote(
+            "Le service du " + tooLate.join(" et du ") + " est clôturé en ligne (fermeture 2&nbsp;h avant le service). Pour ce service, appelez-nous au " + TEL_LINK + ".",
+            true
+          );
+        } else {
+          setNote("Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.).", false);
+        }
+      };
       dateInput.addEventListener("change", function () {
         if (dateInput.value) buildSlots(dateInput.value);
       });
@@ -327,6 +375,12 @@
       var guests = document.getElementById("r-guests").value;
       if (!name || !phone || !date || !time || !guests) {
         setFeedback("Merci d'indiquer votre nom, téléphone, la date, l'heure et le nombre de couverts.", false);
+        return;
+      }
+
+      if (slotTooLate(date, time)) {
+        setFeedback("Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution.", false);
+        if (buildSlots && dateInput.value) buildSlots(dateInput.value);
         return;
       }
 
