@@ -190,10 +190,16 @@
       }
       if (dBtn) { dBtn.disabled = true; dBtn.textContent = "Envoi…"; }
       dSet("Envoi de votre demande…", true);
+
+      // Case décochée = non transmise par le navigateur : on force Oui/Non.
+      var dOptin = document.getElementById("d-optin");
+      var dData = new FormData(devis);
+      dData.set("Newsletter", dOptin && dOptin.checked ? "Oui" : "Non");
+
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(devis)
+        body: dData
       })
         .then(function (r) { return r.json(); })
         .then(function (json) {
