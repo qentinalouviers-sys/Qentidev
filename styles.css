@@ -1173,11 +1173,33 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 }
 .call-box[hidden] { display: none; }
 .call-box__text { font-size: .88rem; color: var(--ink); margin: 0; }
+.call-box__actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .5rem;
+}
+@media (min-width: 520px) {
+  .call-box__actions { grid-template-columns: 1.35fr 1fr; }
+}
 .call-box__btn {
-  font-size: 1.08rem;
+  font-size: 1.02rem;
   letter-spacing: .02em;
   justify-content: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
+.call-box__btn--wa {
+  background: #fff;
+  color: #0f7a4a;
+  border-color: rgba(15, 122, 74, .38);
+}
+.call-box__btn--wa:hover {
+  background: #0f7a4a;
+  color: #fff;
+  border-color: #0f7a4a;
+  transform: translateY(-2px);
+}
+.call-box__wa-icon { width: 1.15em; height: 1.15em; flex: none; }
 .call-box__hint { font-size: .76rem; color: var(--ink-soft); margin: 0; }
 @keyframes callBoxIn {
   from { opacity: 0; transform: translateY(6px); }

@@ -300,11 +300,28 @@
         hoursNote.classList.toggle("form-note--warn", !!warn);
       };
 
-      // Encart « appelez-nous » : proposé dès que la réservation en ligne est close,
+      // Encart « contactez-nous » : proposé dès que la réservation en ligne est close,
       // parce qu'il reste souvent une table même au dernier moment.
-      var showCall = function (text) {
+      var callBoxWa = document.getElementById("callBoxWa");
+      var WA_BASE = callBoxWa ? callBoxWa.getAttribute("href") : "";
+
+      function humanDate(dateStr) {
+        var d = new Date(dateStr + "T00:00:00");
+        try {
+          return d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+        } catch (e) {
+          return dateStr;
+        }
+      }
+
+      var showCall = function (text, waAsk) {
         if (!callBox) return;
         if (callBoxText && text) callBoxText.textContent = text;
+        if (callBoxWa && WA_BASE) {
+          // Message pré-rempli : le client n'a plus qu'à appuyer sur « envoyer ».
+          callBoxWa.href = WA_BASE + "?text=" +
+            encodeURIComponent("Bonjour QENTINA ! Reste-t-il une table " + waAsk + " ?");
+        }
         callBox.hidden = false;
       };
       var hideCall = function () {
@@ -359,10 +376,10 @@
           timeSelect.disabled = true;
           if (tooLate.length) {
             setNote("Les réservations en ligne ferment 2&nbsp;h avant le début du service.", true);
-            showCall("Trop tard pour réserver en ligne aujourd'hui — mais il reste parfois une table.");
+            showCall("Trop tard pour réserver en ligne aujourd'hui — mais il reste parfois une table.", "pour aujourd'hui");
           } else {
             setNote("Plus de créneau disponible pour cette date.", true);
-            showCall("Plus de créneau en ligne pour cette date — appelez-nous, on regarde tout de suite.");
+            showCall("Plus de créneau en ligne pour cette date — contactez-nous, on regarde tout de suite.", "pour " + humanDate(dateStr));
           }
           return;
         }
@@ -373,7 +390,10 @@
             "Le service du " + tooLate.join(" et du ") + " est clôturé en ligne (fermeture 2&nbsp;h avant le service).",
             true
           );
-          showCall("Vous vouliez une table pour le " + tooLate.join(" ou le ") + " ? Appelez-nous, il reste parfois de la place.");
+          showCall(
+            "Vous vouliez une table pour le " + tooLate.join(" ou le ") + " ? Contactez-nous, il reste parfois de la place.",
+            tooLate[0] === "midi" ? "pour ce midi" : "pour ce soir"
+          );
         } else {
           setNote("Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.).", false);
           hideCall();
