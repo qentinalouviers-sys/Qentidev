@@ -416,6 +416,14 @@
         return;
       }
 
+      // Sans email, l'inscription aux nouveautés n'a aucun sens : on le signale.
+      var optin = document.getElementById("r-optin");
+      var email = (document.getElementById("r-email").value || "").trim();
+      if (optin && optin.checked && !email) {
+        setFeedback("Pour recevoir les nouveautés QENTINA, merci d'indiquer votre email — ou décochez la case.", false);
+        return;
+      }
+
       if (slotTooLate(date, time)) {
         setFeedback("Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution.", false);
         if (buildSlots && dateInput.value) buildSlots(dateInput.value);
@@ -435,10 +443,15 @@
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Envoi…"; }
       setFeedback("Envoi de votre demande…", true);
 
+      // Une case décochée n'est pas envoyée par le navigateur : on force la valeur
+      // pour que chaque email indique explicitement Oui ou Non.
+      var data = new FormData(form);
+      data.set("Newsletter", optin && optin.checked ? "Oui" : "Non");
+
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(form)
+        body: data
       })
         .then(function (r) { return r.json(); })
         .then(function (json) {
