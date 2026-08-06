@@ -252,13 +252,14 @@
 
     /* Créneaux de réservation selon les horaires d'ouverture (fiche Google) */
     // Jour (0=dim … 6=sam). Fermé dimanche (0) et lundi (1).
-    // Services en minutes : midi 12h00–14h30, soir 19h00–22h30 (23h00 ven & sam).
+    // Services en minutes : midi 12h00–14h30 (mardi → vendredi seulement),
+    // soir 19h00–22h30 (23h00 ven & sam). Pas de service le samedi midi.
     var SERVICES = {
       2: [[720, 870], [1140, 1350]],
       3: [[720, 870], [1140, 1350]],
       4: [[720, 870], [1140, 1350]],
       5: [[720, 870], [1140, 1380]],
-      6: [[720, 870], [1140, 1380]]
+      6: [[1140, 1380]]
     };
     var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
     var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
@@ -267,30 +268,42 @@
     function fmt(min) { return pad(Math.floor(min / 60)) + "h" + pad(min % 60); }
     function dayKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
 
+    // Le libellé vient de l'heure du service, pas de sa position : le samedi
+    // n'a qu'un seul service et c'est celui du soir.
+    function serviceLabel(win) { return win[0] < 900 ? "Midi" : "Soir"; }
+
     // Un service n'est réservable en ligne que tant qu'il reste CUTOFF minutes
     // avant son ouverture. Passé ce délai, c'est par téléphone.
     function serviceOpen(win, isToday, nowMin) {
       return !isToday || nowMin <= win[0] - CUTOFF;
     }
 
-    // Vérification côté envoi : le créneau choisi est-il encore ouvert ?
-    // (garde-fou si la page est restée ouverte longtemps)
-    function slotTooLate(dateStr, timeStr) {
+    // Vérification côté envoi (garde-fou si la page est restée ouverte
+    // longtemps). Renvoie "" si le créneau est valide, sinon la raison :
+    //   "inexistant" → aucun service à cette heure-là ce jour-là
+    //   "tard"       → service existant mais clôturé en ligne
+    function slotProblem(dateStr, timeStr) {
       var svc = SERVICES[new Date(dateStr + "T00:00:00").getDay()];
-      if (!svc) return true;
+      if (!svc) return "inexistant";
       var parts = /^(\d{1,2})h(\d{2})$/.exec(timeStr);
-      if (!parts) return false;
+      if (!parts) return "";
       var m = parseInt(parts[1], 10) * 60 + parseInt(parts[2], 10);
+
+      // L'heure doit tomber dans un service qui existe ce jour-là — quelle que
+      // soit la date (le samedi midi n'existe pas, même dans trois semaines).
+      var win = null;
+      for (var i = 0; i < svc.length; i++) {
+        if (m >= svc[i][0] && m <= svc[i][1]) { win = svc[i]; break; }
+      }
+      if (!win) return "inexistant";
+
       var now = new Date();
       var todayStr = dayKey(now);
-      if (dateStr < todayStr) return true;
-      if (dateStr > todayStr) return false;
-      var nowMin = now.getHours() * 60 + now.getMinutes();
-      for (var i = 0; i < svc.length; i++) {
-        if (m >= svc[i][0] && m <= svc[i][1]) return !serviceOpen(svc[i], true, nowMin);
-      }
-      return true;
+      if (dateStr < todayStr) return "tard";
+      if (dateStr > todayStr) return "";
+      return serviceOpen(win, true, now.getHours() * 60 + now.getMinutes()) ? "" : "tard";
     }
+    function slotTooLate(dateStr, timeStr) { return slotProblem(dateStr, timeStr) !== ""; }
 
     var dateInput = document.getElementById("r-date");
     var timeSelect = document.getElementById("r-time");
@@ -356,16 +369,15 @@
         var now = new Date();
         var isToday = dateStr === dayKey(now);
         var nowMin = now.getHours() * 60 + now.getMinutes();
-        var labels = ["Midi", "Soir"];
         var count = 0;
         var tooLate = [];
-        svc.forEach(function (win, i) {
+        svc.forEach(function (win) {
           if (!serviceOpen(win, isToday, nowMin)) {
-            tooLate.push((labels[i] || "Service").toLowerCase());
+            tooLate.push(serviceLabel(win).toLowerCase());
             return;
           }
           var grp = document.createElement("optgroup");
-          grp.label = labels[i] || "Service";
+          grp.label = serviceLabel(win);
           var last = win[1] - LAST_ARRIVAL;
           for (var m = win[0]; m <= last; m += 30) {
             grp.appendChild(new Option(fmt(m), fmt(m)));
@@ -401,7 +413,12 @@
             tooLate[0] === "midi" ? "pour ce midi" : "pour ce soir"
           );
         } else {
-          setNote("Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.).", false);
+          setNote(
+            day === 6
+              ? "Le samedi, nous servons uniquement le soir · 19h00–23h00 (fermé le samedi midi)."
+              : "Midi 12h00–14h30 (mardi → vendredi) · Soir 19h00–22h30, jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.",
+            false
+          );
           hideCall();
         }
       };
@@ -430,8 +447,14 @@
         return;
       }
 
-      if (slotTooLate(date, time)) {
-        setFeedback("Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution.", false);
+      var problem = slotProblem(date, time);
+      if (problem) {
+        setFeedback(
+          problem === "tard"
+            ? "Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution."
+            : "Nous ne servons pas à cette heure-là ce jour-là. Merci de choisir un autre créneau dans la liste, ou appelez-nous au 02 59 16 20 93.",
+          false
+        );
         if (buildSlots && dateInput.value) buildSlots(dateInput.value);
         return;
       }
