@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Restaurant & pizzeria à Louviers — QENTINA, feu de bois</title>
-  <meta name="description" content="QENTINA, restaurant & pizzeria à Louviers : pizzas napolitaines au feu de bois, panuozzo et salades maison. Terrasse au bord de l'Eure. Livraison à Louviers et Val-de-Reuil." />
-  <meta name="keywords" content="restaurant Louviers, pizza Louviers, pizzeria Louviers, restaurant italien Louviers, pizza feu de bois Louviers, pizza napolitaine Louviers, pizza Val-de-Reuil, pizzeria Val-de-Reuil, restaurant Acquigny, panuozzo Louviers, terrasse Louviers, pizza à emporter Louviers, livraison pizza Louviers" />
+  <meta name="description" content="QENTINA, restaurant &amp; pizzeria à Louviers : pizzas napolitaines au feu de bois. Sur place en terrasse, à emporter ou en livraison Uber Eats à Louviers et Val-de-Reuil." />
+  <meta name="keywords" content="restaurant Louviers, pizza Louviers, pizzeria Louviers, restaurant italien Louviers, pizza feu de bois Louviers, pizza napolitaine Louviers, pizza Val-de-Reuil, pizzeria Val-de-Reuil, restaurant Acquigny, panuozzo Louviers, terrasse Louviers, pizza à emporter Louviers, livraison pizza Louviers, Uber Eats Louviers, pizza livrée Louviers, click and collect Louviers" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#f4ecd9" />
   <link rel="canonical" href="https://qentina.fr/" />
@@ -19,7 +19,7 @@
   <!-- Open Graph (partages Facebook, etc.) -->
   <meta property="og:site_name" content="QENTINA" />
   <meta property="og:title" content="Restaurant & pizzeria à Louviers — QENTINA, feu de bois" />
-  <meta property="og:description" content="Pizzas napolitaines au feu de bois, panuozzo, salades et desserts maison. Terrasse au bord de l'Eure, à Louviers. Livraison à Louviers et Val-de-Reuil." />
+  <meta property="og:description" content="Pizzas napolitaines au feu de bois, panuozzo et salades. Sur place, à emporter ou en livraison Uber Eats. Terrasse au bord de l'Eure, à Louviers." />
   <meta property="og:type" content="restaurant" />
   <meta property="og:url" content="https://qentina.fr/" />
   <meta property="og:locale" content="fr_FR" />
@@ -29,7 +29,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Restaurant & pizzeria à Louviers — QENTINA" />
-  <meta name="twitter:description" content="Pizzas napolitaines au feu de bois, panuozzo, salades. Terrasse au bord de l'Eure, à Louviers." />
+  <meta name="twitter:description" content="Pizzas napolitaines au feu de bois. Sur place, à emporter ou en livraison Uber Eats. Terrasse au bord de l'Eure, à Louviers." />
   <meta name="twitter:image" content="https://qentina.fr/banner.jpg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -47,7 +47,7 @@
     "@type": "Restaurant",
     "@id": "https://qentina.fr/#restaurant",
     "name": "QENTINA",
-    "description": "Restaurant & pizzeria au feu de bois à Louviers : pizzas napolitaines, panuozzo, salades et desserts maison. Terrasse au bord de l'Eure. Livraison à Louviers et Val-de-Reuil.",
+    "description": "Restaurant & pizzeria au feu de bois à Louviers : pizzas napolitaines, panuozzo, salades et desserts maison. Sur place en terrasse au bord de l'Eure, à emporter ou en livraison Uber Eats à Louviers et Val-de-Reuil.",
     "url": "https://qentina.fr/",
     "logo": "https://qentina.fr/logo.jpg",
     "image": "https://qentina.fr/banner.jpg",
@@ -80,6 +80,38 @@
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "12:00", "closes": "14:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday"], "opens": "19:00", "closes": "22:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday", "Saturday"], "opens": "19:00", "closes": "23:00" }
+    ],
+    "potentialAction": [
+      {
+        "@type": "OrderAction",
+        "name": "Commander en livraison",
+        "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeOwnFleet",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.ubereats.com/fr/search?q=QENTINA%20Louviers",
+          "inLanguage": "fr-FR",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform",
+            "http://schema.org/IOSPlatform",
+            "http://schema.org/AndroidPlatform"
+          ]
+        }
+      },
+      {
+        "@type": "OrderAction",
+        "name": "Commander à emporter",
+        "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModePickUp",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://qentina.fr/#commander",
+          "inLanguage": "fr-FR",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        }
+      }
     ]
   }
   </script>
@@ -96,6 +128,7 @@
     </a>
     <nav class="nav__links" aria-label="Navigation principale">
       <a href="#menu">La carte</a>
+      <a href="#commander">Commander</a>
       <a href="traiteur.html">Traiteur</a>
       <a href="terroir-normand-louviers.html">Louviers</a>
       <a href="bonnes-adresses-louviers.html">Bonnes adresses</a>
@@ -110,6 +143,7 @@
 
   <div class="mobile-menu" id="mobileMenu">
     <a href="#menu">La carte</a>
+    <a href="#commander">Commander</a>
     <a href="traiteur.html">Traiteur</a>
     <a href="terroir-normand-louviers.html">Louviers</a>
     <a href="bonnes-adresses-louviers.html">Bonnes adresses</a>
@@ -143,16 +177,17 @@
         <p class="hero__lead reveal" style="--d:.12s">
           Pizzas napolitaines, panuozzo et salades aux légumes grillés&nbsp;: chez QENTINA,
           tout est cuit au feu de bois, notre unique four. À savourer sur notre terrasse
-          au bord de l'Eure, au cœur de Louviers.
+          au bord de l'Eure, à emporter ou en livraison, au cœur de Louviers.
         </p>
         <div class="hero__actions reveal" style="--d:.18s">
           <a href="#menu" class="btn btn--light">Découvrir la carte</a>
           <a href="#contact" class="btn btn--outline-light">Réserver une table</a>
+          <a href="#commander" class="btn btn--outline-light">À emporter &amp; livraison</a>
         </div>
         <dl class="hero__meta reveal" style="--d:.24s">
           <div><dt>Feu de bois</dt><dd>notre unique four</dd></div>
           <div><dt>Panuozzo</dt><dd>&amp; salades du four</dd></div>
-          <div><dt>Terrasse</dt><dd>au bord de l'Eure</dd></div>
+          <div><dt>À emporter</dt><dd>&amp; livraison Uber Eats</dd></div>
         </dl>
       </div>
     </section>
@@ -162,9 +197,11 @@
       <div class="strip__track">
         <span>Feu de bois</span><i></i><span>Panuozzo</span><i></i>
         <span>Salades &amp; légumes grillés</span><i></i><span>Terrasse au bord de l'Eure</span><i></i>
+        <span>À emporter</span><i></i><span>Livraison Uber Eats</span><i></i>
         <span>Fait avec passion</span><i></i>
         <span>Feu de bois</span><i></i><span>Panuozzo</span><i></i>
         <span>Salades &amp; légumes grillés</span><i></i><span>Terrasse au bord de l'Eure</span><i></i>
+        <span>À emporter</span><i></i><span>Livraison Uber Eats</span><i></i>
         <span>Fait avec passion</span><i></i>
       </div>
     </div>
@@ -267,6 +304,46 @@
         </button>
       </div>
 
+    </section>
+
+    <!-- Commander : à emporter & livraison -->
+    <section class="order" id="commander">
+      <div class="section-head reveal">
+        <p class="eyebrow">Commander</p>
+        <h2 class="section-title">À emporter ou livré chez vous</h2>
+        <p class="section-lead">
+          Nos pizzas sortent du four à bois et repartent avec vous — ou arrivent
+          directement à votre porte, à Louviers et alentours.
+        </p>
+      </div>
+      <div class="order__grid">
+        <article class="order__card reveal">
+          <span class="order__icon" aria-hidden="true">🥡</span>
+          <h3>Pizza à emporter</h3>
+          <p>
+            Appelez-nous, on prépare votre commande et on vous dit dans combien de
+            temps elle est prête. Vous la récupérez au 20 rue Maréchal Foch.
+          </p>
+          <a class="btn btn--primary btn--full order__btn" href="tel:+33259162093">
+            <span aria-hidden="true">📞</span> 02&nbsp;59&nbsp;16&nbsp;20&nbsp;93
+          </a>
+          <p class="order__hint">Aux horaires de service, du mardi au samedi.</p>
+        </article>
+        <article class="order__card reveal" style="--d:.08s">
+          <span class="order__icon" aria-hidden="true">🛵</span>
+          <h3>Livraison</h3>
+          <p>
+            Vos pizzas napolitaines livrées chez vous à Louviers, Val-de-Reuil et
+            aux alentours, avec notre partenaire Uber&nbsp;Eats.
+          </p>
+          <a class="btn btn--full order__btn order__btn--uber"
+             href="https://www.ubereats.com/fr/search?q=QENTINA%20Louviers"
+             target="_blank" rel="noopener">
+            Commander sur Uber&nbsp;Eats
+          </a>
+          <p class="order__hint">Délais et frais de livraison selon Uber&nbsp;Eats.</p>
+        </article>
+      </div>
     </section>
 
     <!-- La maison -->
@@ -376,6 +453,10 @@
         <div class="info reveal" style="--d:.12s">
           <h3>Téléphone</h3>
           <p><a href="tel:+33259162093">02 59 16 20 93</a><br />Commandes &amp; réservations</p>
+        </div>
+        <div class="info reveal" style="--d:.18s">
+          <h3>Commander</h3>
+          <p>Sur place, à emporter<br /><a href="#commander">ou en livraison Uber&nbsp;Eats</a><br /><span class="info__closed">Louviers, Val-de-Reuil &amp; alentours</span></p>
         </div>
       </div>
 
@@ -509,9 +590,10 @@
       <source srcset="logo.webp" type="image/webp" />
       <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
     </picture>
-    <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.</p>
+    <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.<br />Sur place, à emporter ou en livraison Uber&nbsp;Eats.</p>
     <nav class="footer__links" aria-label="Pied de page">
       <a href="#menu">La carte</a>
+      <a href="#commander">À emporter &amp; livraison</a>
       <a href="#histoire">La maison</a>
       <a href="#avis">Avis</a>
       <a href="#infos">Infos</a>

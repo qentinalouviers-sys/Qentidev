@@ -1009,8 +1009,33 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .lcard__foot { font-size: .8rem; opacity: .85; letter-spacing: .02em; }
 
 /* ---------- Infos ---------- */
+/* ---------- Commander : à emporter & livraison ---------- */
+.order { max-width: var(--maxw); margin: 0 auto; padding: 5rem clamp(1.2rem, 5vw, 3rem); }
+.order__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+.order__card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 2rem clamp(1.2rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  text-align: center;
+}
+.order__icon { font-size: 2.1rem; line-height: 1; }
+.order__card h3 { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; }
+.order__card > p { color: var(--ink-soft); }
+.order__btn { margin-top: auto; font-size: 1.02rem; }
+.order__btn--uber { background: #06c167; color: #0b1b12; font-weight: 600; }
+.order__btn--uber:hover { background: #04a256; color: #fff; transform: translateY(-2px); }
+.order__hint { font-size: .78rem; color: var(--ink-soft); margin: 0; }
+/* Paire de boutons sur les pages locales (hors cartes) */
+.order__actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
+.order__actions .order__btn { flex: 1 1 240px; }
+
 .infos { max-width: var(--maxw); margin: 0 auto; padding: 5rem clamp(1.2rem, 5vw, 3rem); }
-.infos__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+/* auto-fit : 3 cartes sur les pages locales, 4 sur l'accueil */
+.infos__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.4rem; }
 .info {
   border-top: 2px solid var(--ink);
   padding-top: 1.2rem;
@@ -1404,6 +1429,7 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   .nav__links { display: none; }
   .nav__burger { display: flex; }
   .features, .infos__grid, .reviews__grid, .menu__gallery, .specials__grid { grid-template-columns: 1fr; }
+  .order__grid { grid-template-columns: 1fr; }
   .field--row { grid-template-columns: 1fr; }
 
   /* Espacements resserrés sur mobile */
