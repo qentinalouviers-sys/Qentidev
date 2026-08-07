@@ -1026,8 +1026,20 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .order__card h3 { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; }
 .order__card > p { color: var(--ink-soft); }
 .order__btn { margin-top: auto; font-size: 1.02rem; }
-.order__btn--uber { background: #06c167; color: #0b1b12; font-weight: 600; }
-.order__btn--uber:hover { background: #04a256; color: #fff; transform: translateY(-2px); }
+/* Logo officiel Uber Eats : noir + vert, il lui faut un fond clair */
+.order__btn--uber {
+  background: #fff;
+  color: var(--ink);
+  border-color: rgba(5, 193, 103, .45);
+  gap: .45rem;
+}
+.order__btn--uber:hover {
+  background: #f1fbf5;
+  border-color: #05c167;
+  transform: translateY(-2px);
+}
+.order__btn-label { font-weight: 500; }
+.order__uber-logo { height: 1.15rem; width: auto; display: block; }
 .order__hint { font-size: .78rem; color: var(--ink-soft); margin: 0; }
 /* Paire de boutons sur les pages locales (hors cartes) */
 .order__actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
