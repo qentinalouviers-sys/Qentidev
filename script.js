@@ -4,6 +4,81 @@
 (function () {
   "use strict";
 
+  /* ============================================================
+     FERMETURES EXCEPTIONNELLES — seul endroit à modifier.
+     Le bandeau d'alerte et le blocage des réservations en découlent,
+     et disparaissent tout seuls une fois la date "to" passée.
+     Dates au format AAAA-MM-JJ, "to" inclus.
+     Pour une seule journée : mettre la même date dans "from" et "to".
+     ============================================================ */
+  var CLOSURES = [
+    { from: "2026-08-11", to: "2026-08-12", reason: "travaux" }
+  ];
+
+  function padNum(n) { return (n < 10 ? "0" : "") + n; }
+  function isoDay(d) { return d.getFullYear() + "-" + padNum(d.getMonth() + 1) + "-" + padNum(d.getDate()); }
+
+  // La fermeture qui couvre cette date, sinon null.
+  function closureFor(dateStr) {
+    for (var i = 0; i < CLOSURES.length; i++) {
+      if (dateStr >= CLOSURES[i].from && dateStr <= CLOSURES[i].to) return CLOSURES[i];
+    }
+    return null;
+  }
+
+  function frDate(dateStr, withMonth) {
+    var d = new Date(dateStr + "T00:00:00");
+    try {
+      var opts = withMonth
+        ? { weekday: "long", day: "numeric", month: "long" }
+        : { weekday: "long", day: "numeric" };
+      return d.toLocaleDateString("fr-FR", opts);
+    } catch (e) { return dateStr; }
+  }
+
+  // Premier jour de service après la fermeture.
+  // Fermé le dimanche (0) et le lundi (1) — cf. SERVICES plus bas.
+  function reopenDay(closure) {
+    var d = new Date(closure.to + "T00:00:00");
+    for (var guard = 0; guard < 60; guard++) {
+      d.setDate(d.getDate() + 1);
+      if (d.getDay() !== 0 && d.getDay() !== 1 && !closureFor(isoDay(d))) return isoDay(d);
+    }
+    return null;
+  }
+
+  /* Bandeau d'alerte, affiché tant que la fermeture n'est pas passée */
+  (function closureBanner() {
+    var today = isoDay(new Date());
+    var next = null;
+    for (var i = 0; i < CLOSURES.length; i++) {
+      if (CLOSURES[i].to >= today && (!next || CLOSURES[i].from < next.from)) next = CLOSURES[i];
+    }
+    if (!next) return;
+
+    var when = next.from === next.to
+      ? "le " + frDate(next.from, true)
+      : "du " + frDate(next.from, false) + " au " + frDate(next.to, true);
+    var reopen = reopenDay(next);
+
+    var bar = document.createElement("div");
+    bar.className = "notice";
+    bar.setAttribute("role", "status");
+    bar.innerHTML =
+      '<span class="notice__icon" aria-hidden="true">🔧</span>' +
+      '<span><strong>Fermeture exceptionnelle pour ' + next.reason + "</strong> " + when +
+      (reopen ? ". Réouverture " + frDate(reopen, true) : "") +
+      ". Merci de votre compréhension&nbsp;!</span>";
+    document.body.insertBefore(bar, document.body.firstChild);
+    document.body.classList.add("has-notice");
+
+    var setHeight = function () {
+      document.documentElement.style.setProperty("--notice-h", bar.offsetHeight + "px");
+    };
+    setHeight();
+    window.addEventListener("resize", setHeight, { passive: true });
+  })();
+
   /* Toujours ouvrir le site tout en haut (sauf si un lien #ancre est utilisé) */
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   if (!location.hash) {
@@ -283,6 +358,7 @@
     //   "inexistant" → aucun service à cette heure-là ce jour-là
     //   "tard"       → service existant mais clôturé en ligne
     function slotProblem(dateStr, timeStr) {
+      if (closureFor(dateStr)) return "fermeture";
       var svc = SERVICES[new Date(dateStr + "T00:00:00").getDay()];
       if (!svc) return "inexistant";
       var parts = /^(\d{1,2})h(\d{2})$/.exec(timeStr);
@@ -349,6 +425,24 @@
 
       buildSlots = function (dateStr) {
         timeSelect.innerHTML = "";
+
+        // Fermeture exceptionnelle : aucun créneau, et inutile d'appeler.
+        var closure = closureFor(dateStr);
+        if (closure) {
+          var shut = new Option("Fermé (" + closure.reason + ")", "");
+          shut.disabled = true; shut.selected = true;
+          timeSelect.add(shut);
+          timeSelect.disabled = true;
+          var reopen = reopenDay(closure);
+          setNote(
+            "Nous sommes fermés pour " + closure.reason + " ce jour-là." +
+            (reopen ? " Réouverture " + frDate(reopen, true) + " — les réservations sont ouvertes à partir de cette date." : ""),
+            true
+          );
+          hideCall();
+          return;
+        }
+
         var day = new Date(dateStr + "T00:00:00").getDay();
         var svc = SERVICES[day];
         if (!svc) {
@@ -449,10 +543,13 @@
 
       var problem = slotProblem(date, time);
       if (problem) {
+        var closed = closureFor(date);
         setFeedback(
-          problem === "tard"
-            ? "Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution."
-            : "Nous ne servons pas à cette heure-là ce jour-là. Merci de choisir un autre créneau dans la liste, ou appelez-nous au 02 59 16 20 93.",
+          problem === "fermeture"
+            ? "Nous sommes fermés pour " + (closed ? closed.reason : "travaux") + " à cette date. Merci de choisir un autre jour."
+            : problem === "tard"
+              ? "Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution."
+              : "Nous ne servons pas à cette heure-là ce jour-là. Merci de choisir un autre créneau dans la liste, ou appelez-nous au 02 59 16 20 93.",
           false
         );
         if (buildSlots && dateInput.value) buildSlots(dateInput.value);

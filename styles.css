@@ -108,6 +108,27 @@ section { position: relative; z-index: 2; }
 .btn--full { width: 100%; }
 
 /* ---------- Navigation ---------- */
+/* ---------- Bandeau de fermeture exceptionnelle ---------- */
+.notice {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .7rem clamp(1rem, 4vw, 2rem);
+  background: var(--terra);
+  color: #fff;
+  font-size: .88rem;
+  line-height: 1.4;
+  text-align: center;
+}
+.notice strong { font-weight: 600; }
+.notice__icon { font-size: 1.05rem; flex: none; }
+/* La navigation fixe descend sous le bandeau */
+body.has-notice .nav { top: var(--notice-h, 44px); }
+
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -149,7 +170,7 @@ section { position: relative; z-index: 2; }
   font-size: 1.25rem;
   letter-spacing: .06em;
 }
-.nav__links { display: flex; align-items: center; gap: 1.6rem; }
+.nav__links { display: flex; align-items: center; gap: 1.6rem; white-space: nowrap; }
 /* Page active : soulignée et mise en avant */
 .nav__links a[aria-current="page"] { color: #fff; }
 .nav__links a[aria-current="page"]::after { width: 100%; background: var(--gold); }
@@ -1437,9 +1458,13 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   .hero__inner { align-self: flex-end; }
   .story__media { max-width: 420px; }
 }
-@media (max-width: 620px) {
+/* La barre de navigation compte 8 entrées : en dessous de ~1024px elle ne
+   tient plus sur une ligne sans couper les libellés → menu burger. */
+@media (max-width: 1024px) {
   .nav__links { display: none; }
   .nav__burger { display: flex; }
+}
+@media (max-width: 620px) {
   .features, .infos__grid, .reviews__grid, .menu__gallery, .specials__grid { grid-template-columns: 1fr; }
   .order__grid { grid-template-columns: 1fr; }
   .field--row { grid-template-columns: 1fr; }
