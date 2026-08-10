@@ -108,6 +108,27 @@ section { position: relative; z-index: 2; }
 .btn--full { width: 100%; }
 
 /* ---------- Navigation ---------- */
+/* ---------- Bandeau de fermeture exceptionnelle ---------- */
+.notice {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .7rem clamp(1rem, 4vw, 2rem);
+  background: var(--terra);
+  color: #fff;
+  font-size: .88rem;
+  line-height: 1.4;
+  text-align: center;
+}
+.notice strong { font-weight: 600; }
+.notice__icon { font-size: 1.05rem; flex: none; }
+/* La navigation fixe descend sous le bandeau */
+body.has-notice .nav { top: var(--notice-h, 44px); }
+
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -149,7 +170,7 @@ section { position: relative; z-index: 2; }
   font-size: 1.25rem;
   letter-spacing: .06em;
 }
-.nav__links { display: flex; align-items: center; gap: 1.6rem; }
+.nav__links { display: flex; align-items: center; gap: 1.6rem; white-space: nowrap; }
 /* Page active : soulignée et mise en avant */
 .nav__links a[aria-current="page"] { color: #fff; }
 .nav__links a[aria-current="page"]::after { width: 100%; background: var(--gold); }
@@ -1009,8 +1030,45 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .lcard__foot { font-size: .8rem; opacity: .85; letter-spacing: .02em; }
 
 /* ---------- Infos ---------- */
+/* ---------- Commander : à emporter & livraison ---------- */
+.order { max-width: var(--maxw); margin: 0 auto; padding: 5rem clamp(1.2rem, 5vw, 3rem); }
+.order__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+.order__card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 2rem clamp(1.2rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  text-align: center;
+}
+.order__icon { font-size: 2.1rem; line-height: 1; }
+.order__card h3 { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; }
+.order__card > p { color: var(--ink-soft); }
+.order__btn { margin-top: auto; font-size: 1.02rem; }
+/* Logo officiel Uber Eats : noir + vert, il lui faut un fond clair */
+.order__btn--uber {
+  background: #fff;
+  color: var(--ink);
+  border-color: rgba(5, 193, 103, .45);
+  gap: .45rem;
+}
+.order__btn--uber:hover {
+  background: #f1fbf5;
+  border-color: #05c167;
+  transform: translateY(-2px);
+}
+.order__btn-label { font-weight: 500; }
+.order__uber-logo { height: 1.15rem; width: auto; display: block; }
+.order__hint { font-size: .78rem; color: var(--ink-soft); margin: 0; }
+/* Paire de boutons sur les pages locales (hors cartes) */
+.order__actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
+.order__actions .order__btn { flex: 1 1 240px; }
+
 .infos { max-width: var(--maxw); margin: 0 auto; padding: 5rem clamp(1.2rem, 5vw, 3rem); }
-.infos__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+/* auto-fit : 3 cartes sur les pages locales, 4 sur l'accueil */
+.infos__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.4rem; }
 .info {
   border-top: 2px solid var(--ink);
   padding-top: 1.2rem;
@@ -1200,6 +1258,32 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   transform: translateY(-2px);
 }
 .call-box__wa-icon { width: 1.15em; height: 1.15em; flex: none; }
+
+/* Consentement newsletter — jamais coché par défaut (RGPD) */
+.optin {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  font-size: .86rem;
+  line-height: 1.45;
+  color: var(--ink);
+  cursor: pointer;
+  padding: .15rem 0;
+}
+.optin input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: .12rem 0 0;
+  flex: none;
+  accent-color: var(--terra);
+  cursor: pointer;
+}
+.optin small {
+  display: block;
+  margin-top: .2rem;
+  font-size: .76rem;
+  color: var(--ink-soft);
+}
 .call-box__hint { font-size: .76rem; color: var(--ink-soft); margin: 0; }
 @keyframes callBoxIn {
   from { opacity: 0; transform: translateY(6px); }
@@ -1374,10 +1458,15 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   .hero__inner { align-self: flex-end; }
   .story__media { max-width: 420px; }
 }
-@media (max-width: 620px) {
+/* La barre de navigation compte 8 entrées : en dessous de ~1024px elle ne
+   tient plus sur une ligne sans couper les libellés → menu burger. */
+@media (max-width: 1024px) {
   .nav__links { display: none; }
   .nav__burger { display: flex; }
+}
+@media (max-width: 620px) {
   .features, .infos__grid, .reviews__grid, .menu__gallery, .specials__grid { grid-template-columns: 1fr; }
+  .order__grid { grid-template-columns: 1fr; }
   .field--row { grid-template-columns: 1fr; }
 
   /* Espacements resserrés sur mobile */

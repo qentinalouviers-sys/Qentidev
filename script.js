@@ -4,6 +4,81 @@
 (function () {
   "use strict";
 
+  /* ============================================================
+     FERMETURES EXCEPTIONNELLES — seul endroit à modifier.
+     Le bandeau d'alerte et le blocage des réservations en découlent,
+     et disparaissent tout seuls une fois la date "to" passée.
+     Dates au format AAAA-MM-JJ, "to" inclus.
+     Pour une seule journée : mettre la même date dans "from" et "to".
+     ============================================================ */
+  var CLOSURES = [
+    { from: "2026-08-11", to: "2026-08-12", reason: "travaux" }
+  ];
+
+  function padNum(n) { return (n < 10 ? "0" : "") + n; }
+  function isoDay(d) { return d.getFullYear() + "-" + padNum(d.getMonth() + 1) + "-" + padNum(d.getDate()); }
+
+  // La fermeture qui couvre cette date, sinon null.
+  function closureFor(dateStr) {
+    for (var i = 0; i < CLOSURES.length; i++) {
+      if (dateStr >= CLOSURES[i].from && dateStr <= CLOSURES[i].to) return CLOSURES[i];
+    }
+    return null;
+  }
+
+  function frDate(dateStr, withMonth) {
+    var d = new Date(dateStr + "T00:00:00");
+    try {
+      var opts = withMonth
+        ? { weekday: "long", day: "numeric", month: "long" }
+        : { weekday: "long", day: "numeric" };
+      return d.toLocaleDateString("fr-FR", opts);
+    } catch (e) { return dateStr; }
+  }
+
+  // Premier jour de service après la fermeture.
+  // Fermé le dimanche (0) et le lundi (1) — cf. SERVICES plus bas.
+  function reopenDay(closure) {
+    var d = new Date(closure.to + "T00:00:00");
+    for (var guard = 0; guard < 60; guard++) {
+      d.setDate(d.getDate() + 1);
+      if (d.getDay() !== 0 && d.getDay() !== 1 && !closureFor(isoDay(d))) return isoDay(d);
+    }
+    return null;
+  }
+
+  /* Bandeau d'alerte, affiché tant que la fermeture n'est pas passée */
+  (function closureBanner() {
+    var today = isoDay(new Date());
+    var next = null;
+    for (var i = 0; i < CLOSURES.length; i++) {
+      if (CLOSURES[i].to >= today && (!next || CLOSURES[i].from < next.from)) next = CLOSURES[i];
+    }
+    if (!next) return;
+
+    var when = next.from === next.to
+      ? "le " + frDate(next.from, true)
+      : "du " + frDate(next.from, false) + " au " + frDate(next.to, true);
+    var reopen = reopenDay(next);
+
+    var bar = document.createElement("div");
+    bar.className = "notice";
+    bar.setAttribute("role", "status");
+    bar.innerHTML =
+      '<span class="notice__icon" aria-hidden="true">🔧</span>' +
+      '<span><strong>Fermeture exceptionnelle pour ' + next.reason + "</strong> " + when +
+      (reopen ? ". Réouverture " + frDate(reopen, true) : "") +
+      ". Merci de votre compréhension&nbsp;!</span>";
+    document.body.insertBefore(bar, document.body.firstChild);
+    document.body.classList.add("has-notice");
+
+    var setHeight = function () {
+      document.documentElement.style.setProperty("--notice-h", bar.offsetHeight + "px");
+    };
+    setHeight();
+    window.addEventListener("resize", setHeight, { passive: true });
+  })();
+
   /* Toujours ouvrir le site tout en haut (sauf si un lien #ancre est utilisé) */
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   if (!location.hash) {
@@ -190,10 +265,16 @@
       }
       if (dBtn) { dBtn.disabled = true; dBtn.textContent = "Envoi…"; }
       dSet("Envoi de votre demande…", true);
+
+      // Case décochée = non transmise par le navigateur : on force Oui/Non.
+      var dOptin = document.getElementById("d-optin");
+      var dData = new FormData(devis);
+      dData.set("Newsletter", dOptin && dOptin.checked ? "Oui" : "Non");
+
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(devis)
+        body: dData
       })
         .then(function (r) { return r.json(); })
         .then(function (json) {
@@ -246,13 +327,14 @@
 
     /* Créneaux de réservation selon les horaires d'ouverture (fiche Google) */
     // Jour (0=dim … 6=sam). Fermé dimanche (0) et lundi (1).
-    // Services en minutes : midi 12h00–14h30, soir 19h00–22h30 (23h00 ven & sam).
+    // Services en minutes : midi 12h00–14h30 (mardi → vendredi seulement),
+    // soir 19h00–22h30 (23h00 ven & sam). Pas de service le samedi midi.
     var SERVICES = {
       2: [[720, 870], [1140, 1350]],
       3: [[720, 870], [1140, 1350]],
       4: [[720, 870], [1140, 1350]],
       5: [[720, 870], [1140, 1380]],
-      6: [[720, 870], [1140, 1380]]
+      6: [[1140, 1380]]
     };
     var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
     var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
@@ -261,30 +343,43 @@
     function fmt(min) { return pad(Math.floor(min / 60)) + "h" + pad(min % 60); }
     function dayKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
 
+    // Le libellé vient de l'heure du service, pas de sa position : le samedi
+    // n'a qu'un seul service et c'est celui du soir.
+    function serviceLabel(win) { return win[0] < 900 ? "Midi" : "Soir"; }
+
     // Un service n'est réservable en ligne que tant qu'il reste CUTOFF minutes
     // avant son ouverture. Passé ce délai, c'est par téléphone.
     function serviceOpen(win, isToday, nowMin) {
       return !isToday || nowMin <= win[0] - CUTOFF;
     }
 
-    // Vérification côté envoi : le créneau choisi est-il encore ouvert ?
-    // (garde-fou si la page est restée ouverte longtemps)
-    function slotTooLate(dateStr, timeStr) {
+    // Vérification côté envoi (garde-fou si la page est restée ouverte
+    // longtemps). Renvoie "" si le créneau est valide, sinon la raison :
+    //   "inexistant" → aucun service à cette heure-là ce jour-là
+    //   "tard"       → service existant mais clôturé en ligne
+    function slotProblem(dateStr, timeStr) {
+      if (closureFor(dateStr)) return "fermeture";
       var svc = SERVICES[new Date(dateStr + "T00:00:00").getDay()];
-      if (!svc) return true;
+      if (!svc) return "inexistant";
       var parts = /^(\d{1,2})h(\d{2})$/.exec(timeStr);
-      if (!parts) return false;
+      if (!parts) return "";
       var m = parseInt(parts[1], 10) * 60 + parseInt(parts[2], 10);
+
+      // L'heure doit tomber dans un service qui existe ce jour-là — quelle que
+      // soit la date (le samedi midi n'existe pas, même dans trois semaines).
+      var win = null;
+      for (var i = 0; i < svc.length; i++) {
+        if (m >= svc[i][0] && m <= svc[i][1]) { win = svc[i]; break; }
+      }
+      if (!win) return "inexistant";
+
       var now = new Date();
       var todayStr = dayKey(now);
-      if (dateStr < todayStr) return true;
-      if (dateStr > todayStr) return false;
-      var nowMin = now.getHours() * 60 + now.getMinutes();
-      for (var i = 0; i < svc.length; i++) {
-        if (m >= svc[i][0] && m <= svc[i][1]) return !serviceOpen(svc[i], true, nowMin);
-      }
-      return true;
+      if (dateStr < todayStr) return "tard";
+      if (dateStr > todayStr) return "";
+      return serviceOpen(win, true, now.getHours() * 60 + now.getMinutes()) ? "" : "tard";
     }
+    function slotTooLate(dateStr, timeStr) { return slotProblem(dateStr, timeStr) !== ""; }
 
     var dateInput = document.getElementById("r-date");
     var timeSelect = document.getElementById("r-time");
@@ -330,6 +425,24 @@
 
       buildSlots = function (dateStr) {
         timeSelect.innerHTML = "";
+
+        // Fermeture exceptionnelle : aucun créneau, et inutile d'appeler.
+        var closure = closureFor(dateStr);
+        if (closure) {
+          var shut = new Option("Fermé (" + closure.reason + ")", "");
+          shut.disabled = true; shut.selected = true;
+          timeSelect.add(shut);
+          timeSelect.disabled = true;
+          var reopen = reopenDay(closure);
+          setNote(
+            "Nous sommes fermés pour " + closure.reason + " ce jour-là." +
+            (reopen ? " Réouverture " + frDate(reopen, true) + " — les réservations sont ouvertes à partir de cette date." : ""),
+            true
+          );
+          hideCall();
+          return;
+        }
+
         var day = new Date(dateStr + "T00:00:00").getDay();
         var svc = SERVICES[day];
         if (!svc) {
@@ -350,16 +463,15 @@
         var now = new Date();
         var isToday = dateStr === dayKey(now);
         var nowMin = now.getHours() * 60 + now.getMinutes();
-        var labels = ["Midi", "Soir"];
         var count = 0;
         var tooLate = [];
-        svc.forEach(function (win, i) {
+        svc.forEach(function (win) {
           if (!serviceOpen(win, isToday, nowMin)) {
-            tooLate.push((labels[i] || "Service").toLowerCase());
+            tooLate.push(serviceLabel(win).toLowerCase());
             return;
           }
           var grp = document.createElement("optgroup");
-          grp.label = labels[i] || "Service";
+          grp.label = serviceLabel(win);
           var last = win[1] - LAST_ARRIVAL;
           for (var m = win[0]; m <= last; m += 30) {
             grp.appendChild(new Option(fmt(m), fmt(m)));
@@ -395,7 +507,12 @@
             tooLate[0] === "midi" ? "pour ce midi" : "pour ce soir"
           );
         } else {
-          setNote("Ouvert mardi → samedi · 12h00–14h30 et 19h00–22h30 (jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.).", false);
+          setNote(
+            day === 6
+              ? "Le samedi, nous servons uniquement le soir · 19h00–23h00 (fermé le samedi midi)."
+              : "Midi 12h00–14h30 (mardi → vendredi) · Soir 19h00–22h30, jusqu'à 23h ven.&nbsp;&amp;&nbsp;sam.",
+            false
+          );
           hideCall();
         }
       };
@@ -416,8 +533,25 @@
         return;
       }
 
-      if (slotTooLate(date, time)) {
-        setFeedback("Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution.", false);
+      // Sans email, l'inscription aux nouveautés n'a aucun sens : on le signale.
+      var optin = document.getElementById("r-optin");
+      var email = (document.getElementById("r-email").value || "").trim();
+      if (optin && optin.checked && !email) {
+        setFeedback("Pour recevoir les nouveautés QENTINA, merci d'indiquer votre email — ou décochez la case.", false);
+        return;
+      }
+
+      var problem = slotProblem(date, time);
+      if (problem) {
+        var closed = closureFor(date);
+        setFeedback(
+          problem === "fermeture"
+            ? "Nous sommes fermés pour " + (closed ? closed.reason : "travaux") + " à cette date. Merci de choisir un autre jour."
+            : problem === "tard"
+              ? "Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution."
+              : "Nous ne servons pas à cette heure-là ce jour-là. Merci de choisir un autre créneau dans la liste, ou appelez-nous au 02 59 16 20 93.",
+          false
+        );
         if (buildSlots && dateInput.value) buildSlots(dateInput.value);
         return;
       }
@@ -435,10 +569,15 @@
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Envoi…"; }
       setFeedback("Envoi de votre demande…", true);
 
+      // Une case décochée n'est pas envoyée par le navigateur : on force la valeur
+      // pour que chaque email indique explicitement Oui ou Non.
+      var data = new FormData(form);
+      data.set("Newsletter", optin && optin.checked ? "Oui" : "Non");
+
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(form)
+        body: data
       })
         .then(function (r) { return r.json(); })
         .then(function (json) {
