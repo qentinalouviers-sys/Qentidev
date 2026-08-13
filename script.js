@@ -36,6 +36,13 @@
     { from: "2026-08-14", to: "2026-08-14", reason: "travaux", only: "Soir" }
   ];
 
+  /* Récapitulatif de service (worker-reservations.js).
+     Coller ici l'adresse du Worker une fois déployé, ex. :
+     "https://qentina-resa.mon-sous-domaine.workers.dev"
+     Tant que c'est vide, rien ne change : les demandes partent par email
+     comme aujourd'hui. Voir DEPLOIEMENT-RESERVATIONS.md */
+  var RESA_ENDPOINT = "";
+
   function padNum(n) { return (n < 10 ? "0" : "") + n; }
   function isoDay(d) { return d.getFullYear() + "-" + padNum(d.getMonth() + 1) + "-" + padNum(d.getDate()); }
   function fmtMin(min) { return padNum(Math.floor(min / 60)) + "h" + padNum(min % 60); }
@@ -613,6 +620,28 @@
       // pour que chaque email indique explicitement Oui ou Non.
       var data = new FormData(form);
       data.set("Newsletter", optin && optin.checked ? "Oui" : "Non");
+
+      // En parallèle : on dépose la réservation dans le récap de service.
+      // Volontairement sans await ni blocage — si le Worker est indisponible,
+      // la demande part quand même par email comme avant.
+      if (RESA_ENDPOINT) {
+        var place = form.querySelector('[name="Emplacement"]:checked');
+        fetch(RESA_ENDPOINT + "/reservation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: date,
+            time: time,
+            name: name,
+            phone: phone,
+            email: email,
+            guests: guests,
+            place: place ? place.value : "",
+            message: (document.getElementById("r-message") || {}).value || "",
+            newsletter: optin && optin.checked ? "Oui" : "Non"
+          })
+        }).catch(function () { /* silencieux : le mail reste la source de vérité */ });
+      }
 
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
