@@ -1,26 +1,29 @@
 /* ============================================================
    QENTINA — Réservations : récap de service & validation
    ------------------------------------------------------------
-   Ce Worker Cloudflare (gratuit) fait trois choses :
+   100 % gratuit : aucun service payant, aucun compte à créer en plus
+   de Cloudflare. Les emails partent par Web3Forms, que le site utilise
+   déjà, et les réponses aux clients par votre propre messagerie.
+
+   Ce Worker fait trois choses :
 
    1. Il enregistre chaque demande de réservation envoyée par le site.
    2. À l'heure du blocage (2 h avant le début du service), il vous envoie
-      UN SEUL email récapitulant toutes les réservations de ce service.
-   3. Chaque réservation du récap a deux boutons — Valider / Refuser — qui
-      ouvrent une page où le message au client est déjà écrit. Vous le
-      modifiez si besoin, puis vous envoyez.
+      un email : « X réservations » + un lien vers la feuille de service.
+   3. La feuille de service liste toutes les réservations avec, sur
+      chacune, un bouton vert Valider et un bouton rouge Refuser. Le clic
+      ouvre le message au client, déjà rédigé et modifiable ; vous
+      l'envoyez ensuite par email, WhatsApp ou SMS en un geste.
 
    Variables à définir dans Cloudflare (Settings → Variables) :
-     BREVO_API_KEY   (secret) → clé API Brevo (envoi des emails)
+     WEB3FORMS_KEY   (secret) → la clé Web3Forms déjà utilisée par le site
      SIGNING_SECRET  (secret) → phrase secrète au hasard, ≥ 32 caractères
-                                (elle signe les liens Valider/Refuser)
-     RESTAURANT_EMAIL         → où recevoir le récap (qentina.louviers@gmail.com)
-     SENDER_EMAIL             → adresse d'expédition validée dans Brevo
+                                (elle signe les liens de la feuille)
+     RESTAURANT_EMAIL         → où recevoir le récap
      ALLOWED_ORIGIN           → https://qentina.fr
-     PUBLIC_URL               → adresse publique de CE worker
-                                (ex. https://qentina-resa.xxx.workers.dev)
+     PUBLIC_URL               → adresse publique de CE worker, sans / final
 
-   Base de données : un binding D1 nommé DB (voir le guide de déploiement).
+   Base de données : un binding D1 nommé DB (voir le guide).
 
    ⚠️ SERVICES et CLOSURES ci-dessous doivent rester identiques à ceux de
       script.js. Si vous changez vos horaires ou ajoutez une fermeture,
@@ -42,7 +45,6 @@ const CLOSURES = [
 ];
 
 const TEL = "02 59 16 20 93";
-const TEL_E164 = "+33259162093";
 
 /* ---------- Utilitaires horaires ---------- */
 const pad = (n) => (n < 10 ? "0" : "") + n;
@@ -89,13 +91,14 @@ function parseSlot(timeStr) {
   return m ? parseInt(m[1], 10) * 60 + parseInt(m[2], 10) : null;
 }
 
-// À quel service appartient ce créneau ?
 function serviceOf(dateStr, slotMin) {
   const win = openServices(dateStr).find((w) => slotMin >= w[0] && slotMin <= w[1]);
   return win ? serviceLabel(win) : null;
 }
 
-/* ---------- Signature des liens Valider / Refuser ---------- */
+/* ---------- Liens signés ----------
+   Sans signature, n'importe qui devinant l'adresse du Worker pourrait
+   ouvrir la feuille de service ou valider une réservation. */
 const b64url = (buf) =>
   btoa(String.fromCharCode(...new Uint8Array(buf)))
     .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -105,26 +108,23 @@ async function sign(payload, secret) {
     "raw", new TextEncoder().encode(secret),
     { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
   );
-  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
-  return b64url(sig);
+  return b64url(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload)));
 }
 
-async function makeToken(id, action, secret) {
-  const payload = `${id}.${action}`;
+async function makeToken(payload, secret) {
   return `${payload}.${await sign(payload, secret)}`;
 }
 
 async function readToken(token, secret) {
-  const parts = String(token || "").split(".");
-  if (parts.length !== 3) return null;
-  const [id, action, sig] = parts;
-  if (action !== "ok" && action !== "no") return null;
-  const expected = await sign(`${id}.${action}`, secret);
-  // Comparaison à temps constant
+  const t = String(token || "");
+  const i = t.lastIndexOf(".");
+  if (i < 1) return null;
+  const payload = t.slice(0, i), sig = t.slice(i + 1);
+  const expected = await sign(payload, secret);
   if (sig.length !== expected.length) return null;
   let diff = 0;
-  for (let i = 0; i < sig.length; i++) diff |= sig.charCodeAt(i) ^ expected.charCodeAt(i);
-  return diff === 0 ? { id, action } : null;
+  for (let k = 0; k < sig.length; k++) diff |= sig.charCodeAt(k) ^ expected.charCodeAt(k);
+  return diff === 0 ? payload : null;
 }
 
 /* ---------- Messages pré-écrits ---------- */
@@ -152,148 +152,136 @@ Avec toutes nos excuses,
 QENTINA`;
 }
 
-/* ---------- Envoi d'emails (Brevo) ---------- */
-async function sendMail(env, { to, toName, subject, html, replyTo }) {
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+const replySubject = (action) =>
+  action === "ok" ? "Votre table est confirmée — QENTINA" : "Votre demande de réservation — QENTINA";
+
+/* ---------- Envoi du récap (via Web3Forms, gratuit) ---------- */
+async function sendRecapMail(env, { subject, fields }) {
+  const res = await fetch("https://api.web3forms.com/submit", {
     method: "POST",
-    headers: {
-      "api-key": env.BREVO_API_KEY,
-      "content-type": "application/json",
-      accept: "application/json",
-    },
+    headers: { "content-type": "application/json", accept: "application/json" },
     body: JSON.stringify({
-      sender: { name: "QENTINA", email: env.SENDER_EMAIL },
-      to: [{ email: to, name: toName || undefined }],
-      replyTo: replyTo ? { email: replyTo } : undefined,
+      access_key: env.WEB3FORMS_KEY,
       subject,
-      htmlContent: html,
+      from_name: "QENTINA — feuille de service",
+      ...fields,
     }),
   });
-  if (!res.ok) throw new Error(`Brevo ${res.status} ${await res.text()}`);
+  const out = await res.json().catch(() => ({}));
+  if (!res.ok || !out.success) throw new Error(`Web3Forms ${res.status} ${JSON.stringify(out)}`);
   return true;
 }
 
-/* ---------- Gabarits HTML ---------- */
+/* ---------- Gabarits ---------- */
 const esc = (s) =>
   String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
 const PAPER = "#f4ecd9", CARD = "#fbf5e7", INK = "#173033", TERRA = "#0f5460";
+const GREEN = "#0f7a4a", RED = "#b3402c";
 
-function recapEmail(env, rows, dateStr, service, tokens) {
+const page = (title, inner) => `<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} — QENTINA</title>
+<style>
+  body{margin:0;background:${PAPER};color:${INK};font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;padding:22px 14px}
+  .wrap{max-width:640px;margin:0 auto}
+  .card{background:${CARD};border:1px solid rgba(23,48,51,.14);border-radius:18px;padding:18px;margin-bottom:14px}
+  h1{font-size:22px;margin:0 0 6px}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:${TERRA};margin:0 0 4px}
+  .muted{color:#5e6b65;font-size:14px}
+  .name{font-size:19px;font-weight:600;margin:0}
+  .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .btn{display:inline-block;border:0;cursor:pointer;padding:12px 22px;border-radius:100px;font:inherit;
+    font-weight:600;font-size:15px;text-decoration:none;text-align:center}
+  .ok{background:${GREEN};color:#fff}.no{background:${RED};color:#fff}
+  .ghost{background:#fff;color:${INK};border:1px solid rgba(23,48,51,.25)}
+  .tag{display:inline-block;font-size:13px;font-weight:600;padding:4px 12px;border-radius:100px}
+  .tag-ok{background:#e8f5ee;color:${GREEN}}.tag-no{background:#fbeae6;color:${RED}}
+  textarea{width:100%;box-sizing:border-box;min-height:230px;padding:12px;border:1px solid rgba(23,48,51,.2);
+    border-radius:12px;font:inherit;font-size:15px;line-height:1.5;background:#fff;resize:vertical}
+  label{display:block;font-size:14px;font-weight:600;margin:16px 0 6px}
+  .note{font-size:13px;color:#5e6b65;margin-top:12px}
+  a.plain{color:${TERRA}}
+</style></head><body><div class="wrap">${inner}</div></body></html>`;
+
+function serviceSheet(env, rows, dateStr, service, tokens) {
+  const covers = rows.reduce((n, r) => n + (parseInt(r.guests, 10) || 0), 0);
   const cards = rows.map((r) => {
-    const t = tokens[r.id];
-    const contact = [
-      `<a href="tel:${esc(r.phone)}" style="color:${TERRA}">${esc(r.phone)}</a>`,
-      r.email ? `<a href="mailto:${esc(r.email)}" style="color:${TERRA}">${esc(r.email)}</a>` : "pas d'email",
-    ].join(" · ");
     const done = r.status !== "pending";
-    return `
-      <tr><td style="padding:0 0 14px">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:${CARD};border:1px solid rgba(23,48,51,.14);border-radius:14px">
-          <tr><td style="padding:16px 18px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:${INK}">
-            <div style="font-size:19px;font-weight:600">${esc(r.time)} — ${esc(r.name)} · ${esc(r.guests || "?")}</div>
-            <div style="font-size:14px;color:#5e6b65;margin-top:4px">${contact}</div>
-            ${r.place ? `<div style="font-size:14px;color:#5e6b65;margin-top:2px">${esc(r.place)}</div>` : ""}
-            ${r.message ? `<div style="font-size:14px;margin-top:8px;padding:8px 10px;background:#fff;border-radius:8px">💬 ${esc(r.message)}</div>` : ""}
-            ${done
-              ? `<div style="margin-top:12px;font-size:14px;font-weight:600;color:${r.status === "confirmed" ? "#0f7a4a" : "#b3402c"}">
-                   ${r.status === "confirmed" ? "✅ Déjà validée" : "❌ Déjà refusée"}
-                 </div>`
-              : `<div style="margin-top:14px">
-                   <a href="${env.PUBLIC_URL}/action?t=${t.ok}"
-                      style="display:inline-block;background:#0f7a4a;color:#fff;text-decoration:none;padding:11px 22px;border-radius:100px;font-weight:600;font-size:15px;margin-right:8px">✅ Valider</a>
-                   <a href="${env.PUBLIC_URL}/action?t=${t.no}"
-                      style="display:inline-block;background:#b3402c;color:#fff;text-decoration:none;padding:11px 22px;border-radius:100px;font-weight:600;font-size:15px">❌ Refuser</a>
-                 </div>`}
-          </td></tr>
-        </table>
-      </td></tr>`;
+    return `<div class="card">
+      <p class="name">${esc(r.time)} — ${esc(r.name)} · ${esc(r.guests || "?")}</p>
+      <p class="muted"><a class="plain" href="tel:${esc(r.phone)}">${esc(r.phone)}</a>
+        ${r.email ? ` · <a class="plain" href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}</p>
+      ${r.place ? `<p class="muted">${esc(r.place)}</p>` : ""}
+      ${r.message ? `<p class="muted">💬 ${esc(r.message)}</p>` : ""}
+      ${done
+        ? `<p><span class="tag ${r.status === "confirmed" ? "tag-ok" : "tag-no"}">
+             ${r.status === "confirmed" ? "✅ Validée" : "❌ Refusée"}</span></p>`
+        : `<div class="row">
+             <a class="btn ok" href="${env.PUBLIC_URL}/action?t=${tokens[r.id].ok}">✅ Valider</a>
+             <a class="btn no" href="${env.PUBLIC_URL}/action?t=${tokens[r.id].no}">❌ Refuser</a>
+           </div>`}
+    </div>`;
   }).join("");
 
-  const covers = rows.reduce((n, r) => n + (parseInt(r.guests, 10) || 0), 0);
-  return `
-  <div style="background:${PAPER};padding:24px 12px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif">
-    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto">
-      <tr><td style="padding-bottom:18px;color:${INK}">
-        <div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:${TERRA}">Service du ${esc(service.toLowerCase())}</div>
-        <div style="font-size:26px;font-weight:600;margin-top:6px">${esc(frDate(dateStr))}</div>
-        <div style="font-size:15px;color:#5e6b65;margin-top:6px">
-          ${rows.length} réservation${rows.length > 1 ? "s" : ""} · ${covers} couvert${covers > 1 ? "s" : ""}
-          — les réservations en ligne sont closes pour ce service.
-        </div>
-      </td></tr>
-      ${cards}
-      <tr><td style="padding-top:8px;font-size:12px;color:#5e6b65">
-        Récapitulatif envoyé automatiquement 2 h avant le service par le site QENTINA.
-      </td></tr>
-    </table>
-  </div>`;
+  return page(`Service du ${service.toLowerCase()}`, `
+    <div class="card">
+      <p class="eyebrow">Service du ${esc(service.toLowerCase())}</p>
+      <h1>${esc(frDate(dateStr))}</h1>
+      <p class="muted">${rows.length} réservation${rows.length > 1 ? "s" : ""} · ${covers} couvert${covers > 1 ? "s" : ""}</p>
+    </div>
+    ${cards || '<div class="card"><p class="muted">Aucune réservation pour ce service.</p></div>'}`);
 }
 
-function actionPage(env, r, action, token, sent) {
+function actionPage(env, r, action, token, done) {
   const ok = action === "ok";
-  const color = ok ? "#0f7a4a" : "#b3402c";
-  const title = ok ? "Valider la réservation" : "Refuser la réservation";
   const body = defaultReply(r, action);
-  const waText = encodeURIComponent(body);
-  const phoneDigits = String(r.phone || "").replace(/[^0-9+]/g, "");
-  const waNum = phoneDigits.replace(/^\+/, "").replace(/^0/, "33");
+  const subject = replySubject(action);
+  const enc = encodeURIComponent(body);
+  const digits = String(r.phone || "").replace(/[^0-9+]/g, "");
+  const waNum = digits.replace(/^\+/, "").replace(/^0/, "33");
 
-  const sentBox = sent
-    ? `<p style="background:#e8f5ee;border:1px solid #0f7a4a;color:#0f5a37;padding:12px 14px;border-radius:12px">
-         ${sent === "email" ? "Message envoyé par email au client." : "Réservation enregistrée. Envoyez le message au client ci-dessous."}
-       </p>` : "";
+  if (!done) {
+    return page(ok ? "Valider" : "Refuser", `<div class="card">
+      <h1 style="color:${ok ? GREEN : RED}">${ok ? "Valider" : "Refuser"} la réservation</h1>
+      <p class="muted"><strong>${esc(r.name)}</strong> · ${esc(r.guests || "?")}<br>
+        ${esc(frDate(r.date))} à ${esc(r.time)}<br>
+        <a class="plain" href="tel:${esc(r.phone)}">${esc(r.phone)}</a>
+        ${r.email ? ` · ${esc(r.email)}` : ""}</p>
+      <form method="POST" action="${env.PUBLIC_URL}/action">
+        <input type="hidden" name="t" value="${esc(token)}">
+        <label for="msg">Message au client (modifiable)</label>
+        <textarea id="msg" name="message">${esc(body)}</textarea>
+        <div class="row">
+          <button class="btn ${ok ? "ok" : "no"}" type="submit">Enregistrer et écrire au client</button>
+        </div>
+      </form>
+    </div>`);
+  }
 
-  return `<!doctype html><html lang="fr"><head><meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>${title} — QENTINA</title>
-  <style>
-    body{margin:0;background:${PAPER};color:${INK};font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;padding:24px 14px}
-    .wrap{max-width:600px;margin:0 auto}
-    .card{background:${CARD};border:1px solid rgba(23,48,51,.14);border-radius:18px;padding:20px}
-    h1{font-size:22px;margin:0 0 4px;color:${color}}
-    .meta{color:#5e6b65;font-size:15px;margin-bottom:16px}
-    label{display:block;font-size:14px;font-weight:600;margin:16px 0 6px}
-    textarea{width:100%;box-sizing:border-box;min-height:220px;padding:12px;border:1px solid rgba(23,48,51,.2);
-      border-radius:12px;font:inherit;font-size:15px;line-height:1.5;background:#fff;resize:vertical}
-    .btn{display:inline-block;border:0;cursor:pointer;padding:13px 26px;border-radius:100px;font:inherit;
-      font-weight:600;font-size:16px;text-decoration:none;text-align:center}
-    .primary{background:${color};color:#fff}
-    .ghost{background:#fff;color:${INK};border:1px solid rgba(23,48,51,.25)}
-    .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .note{font-size:13px;color:#5e6b65;margin-top:14px}
-  </style></head><body><div class="wrap"><div class="card">
-    <h1>${title}</h1>
-    <div class="meta"><strong>${esc(r.name)}</strong> · ${esc(r.guests || "?")}<br>
-      ${esc(frDate(r.date))} à ${esc(r.time)}<br>
-      <a href="tel:${esc(r.phone)}" style="color:${TERRA}">${esc(r.phone)}</a>
-      ${r.email ? ` · ${esc(r.email)}` : " · pas d'email"}</div>
-    ${sentBox}
-    ${sent ? "" : `
-    <form method="POST" action="${env.PUBLIC_URL}/action">
-      <input type="hidden" name="t" value="${esc(token)}">
-      <label for="msg">Message au client (modifiable)</label>
-      <textarea id="msg" name="message">${esc(body)}</textarea>
-      <div class="row">
-        <button class="btn primary" type="submit">
-          ${r.email ? "Envoyer et " + (ok ? "valider" : "refuser") : (ok ? "Valider" : "Refuser")}
-        </button>
-      </div>
-      ${r.email ? "" : `<p class="note">Ce client n'a pas laissé d'email. Après enregistrement,
-        vous pourrez lui envoyer le message par WhatsApp ou SMS en un clic.</p>`}
-    </form>`}
-    ${sent === "manual" ? `
+  // Étape 2 : la réservation est enregistrée, on propose l'envoi.
+  const msg = done.message;
+  const e2 = encodeURIComponent(msg);
+  return page("Message au client", `<div class="card">
+    <p><span class="tag ${ok ? "tag-ok" : "tag-no"}">${ok ? "✅ Validée" : "❌ Refusée"}</span></p>
+    <h1>Envoyer le message à ${esc(firstName(r.name))}</h1>
+    <p class="muted">Choisissez le canal : le message est déjà rempli, il ne reste qu'à envoyer.</p>
     <div class="row">
-      <a class="btn primary" href="https://wa.me/${waNum}?text=${waText}" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn ghost" href="sms:${esc(phoneDigits)}?&body=${waText}">SMS</a>
-      <a class="btn ghost" href="tel:${esc(phoneDigits)}">Appeler</a>
-    </div>` : ""}
-  </div></div></body></html>`;
+      ${r.email ? `<a class="btn ok" href="mailto:${esc(r.email)}?subject=${encodeURIComponent(subject)}&body=${e2}">✉️ Par email</a>` : ""}
+      <a class="btn ghost" href="https://wa.me/${waNum}?text=${e2}" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn ghost" href="sms:${esc(digits)}?&body=${e2}">SMS</a>
+      <a class="btn ghost" href="tel:${esc(digits)}">Appeler</a>
+    </div>
+    <p class="note">Le bouton « Par email » ouvre votre messagerie habituelle avec le message
+      prêt : l'email partira donc de votre vraie adresse, et le client pourra vous répondre
+      directement.</p>
+    <label for="copy">Le message, si vous préférez le copier</label>
+    <textarea id="copy" readonly>${esc(msg)}</textarea>
+  </div>`);
 }
 
-const html = (body, status = 200) =>
+const htmlRes = (body, status = 200) =>
   new Response(body, { status, headers: { "content-type": "text/html; charset=utf-8" } });
 
 /* ============================================================
@@ -317,14 +305,12 @@ export default {
         const time = String(b.time || "");
         const slot = parseSlot(time);
         const email = String(b.email || "").trim();
-        // L'email est obligatoire : c'est par lui que part la confirmation.
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || slot === null || !b.name || !b.phone || !email) {
           return Response.json({ error: "champs_manquants" }, { status: 400, headers: cors });
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
           return Response.json({ error: "email_invalide" }, { status: 400, headers: cors });
         }
-        // On revérifie côté serveur : un créneau fermé n'entre pas en base.
         const service = serviceOf(date, slot);
         if (!service) return Response.json({ error: "creneau_ferme" }, { status: 400, headers: cors });
 
@@ -334,8 +320,7 @@ export default {
            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, 'pending')`
         ).bind(
           crypto.randomUUID(), new Date().toISOString(), date, time, slot, service,
-          String(b.name).slice(0, 120), String(b.phone).slice(0, 40),
-          email.slice(0, 160),
+          String(b.name).slice(0, 120), String(b.phone).slice(0, 40), email.slice(0, 160),
           b.guests ? String(b.guests).slice(0, 40) : null,
           b.place ? String(b.place).slice(0, 60) : null,
           b.message ? String(b.message).slice(0, 800) : null,
@@ -348,62 +333,65 @@ export default {
       }
     }
 
-    /* --- 2. Clic sur Valider / Refuser --- */
+    /* --- 2. La feuille de service (lien reçu par email) --- */
+    if (url.pathname === "/service" && request.method === "GET") {
+      const payload = await readToken(url.searchParams.get("t"), env.SIGNING_SECRET);
+      if (!payload || !payload.startsWith("s:")) return htmlRes("<p>Lien invalide.</p>", 400);
+      const [, date, service] = payload.split(":");
+
+      const { results } = await env.DB.prepare(
+        "SELECT * FROM reservations WHERE date = ? AND service = ? ORDER BY slot_min, created_at"
+      ).bind(date, service).all();
+
+      const tokens = {};
+      for (const r of results || []) {
+        tokens[r.id] = {
+          ok: await makeToken(`a:${r.id}:ok`, env.SIGNING_SECRET),
+          no: await makeToken(`a:${r.id}:no`, env.SIGNING_SECRET),
+        };
+      }
+      return htmlRes(serviceSheet(env, results || [], date, service, tokens));
+    }
+
+    /* --- 3. Valider / Refuser --- */
     if (url.pathname === "/action") {
       const token = request.method === "POST"
-        ? (await request.formData()).get("t")
+        ? (await request.clone().formData()).get("t")
         : url.searchParams.get("t");
-      const parsed = await readToken(token, env.SIGNING_SECRET);
-      if (!parsed) return html("<p>Lien invalide ou expiré.</p>", 400);
+      const payload = await readToken(token, env.SIGNING_SECRET);
+      if (!payload || !payload.startsWith("a:")) return htmlRes("<p>Lien invalide.</p>", 400);
+      const [, id, action] = payload.split(":");
+      if (action !== "ok" && action !== "no") return htmlRes("<p>Lien invalide.</p>", 400);
 
-      const r = await env.DB.prepare("SELECT * FROM reservations WHERE id = ?")
-        .bind(parsed.id).first();
-      if (!r) return html("<p>Réservation introuvable.</p>", 404);
+      const r = await env.DB.prepare("SELECT * FROM reservations WHERE id = ?").bind(id).first();
+      if (!r) return htmlRes("<p>Réservation introuvable.</p>", 404);
 
-      // Affichage du formulaire (clic depuis l'email)
       if (request.method === "GET") {
         if (r.status !== "pending") {
-          return html(`<div style="font-family:sans-serif;padding:32px;max-width:520px;margin:auto">
-            <h1 style="color:${TERRA}">Déjà traitée</h1>
-            <p>Cette réservation a déjà été ${r.status === "confirmed" ? "validée" : "refusée"}.</p></div>`);
+          return htmlRes(page("Déjà traitée", `<div class="card">
+            <h1>Déjà traitée</h1>
+            <p class="muted">Cette réservation a déjà été
+              ${r.status === "confirmed" ? "validée" : "refusée"}.</p>
+            <label for="copy">Le message envoyé</label>
+            <textarea id="copy" readonly>${esc(r.reply || "")}</textarea></div>`));
         }
-        return html(actionPage(env, r, parsed.action, token, null));
+        return htmlRes(actionPage(env, r, action, token, null));
       }
 
-      // Envoi effectif
-      const form = await request.clone().formData();
-      const message = String(form.get("message") || defaultReply(r, parsed.action));
-      const status = parsed.action === "ok" ? "confirmed" : "refused";
-
+      const form = await request.formData();
+      const message = String(form.get("message") || defaultReply(r, action));
+      const status = action === "ok" ? "confirmed" : "refused";
       await env.DB.prepare(
         "UPDATE reservations SET status = ?, handled_at = ?, reply = ? WHERE id = ? AND status = 'pending'"
       ).bind(status, new Date().toISOString(), message, r.id).run();
 
-      let sent = "manual";
-      if (r.email) {
-        try {
-          await sendMail(env, {
-            to: r.email,
-            toName: r.name,
-            replyTo: env.RESTAURANT_EMAIL,
-            subject: parsed.action === "ok"
-              ? `Votre table est confirmée — QENTINA`
-              : `Votre demande de réservation — QENTINA`,
-            html: `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;
-                     line-height:1.55;color:${INK};white-space:pre-wrap">${esc(message)}</div>`,
-          });
-          sent = "email";
-        } catch (e) {
-          sent = "manual"; // l'envoi a échoué : on bascule sur WhatsApp/SMS
-        }
-      }
-      return html(actionPage(env, { ...r, status }, parsed.action, token, sent));
+      return htmlRes(actionPage(env, { ...r, status }, action, token, { message }));
     }
 
     return new Response("QENTINA — service de réservation", { headers: cors });
   },
 
-  /* --- 3. Récap automatique, 2 h avant chaque service --- */
+  /* --- 4. Récap automatique, 2 h avant chaque service --- */
   async scheduled(event, env, ctx) {
     ctx.waitUntil(sendDueRecaps(env));
   },
@@ -416,47 +404,43 @@ export async function sendDueRecaps(env, now = new Date()) {
   for (const win of openServices(date)) {
     const service = serviceLabel(win);
     const cutoff = win[0] - CUTOFF;
-    // Fenêtre : du blocage jusqu'au début du service (le cron passe toutes les 15 min).
     if (min < cutoff || min >= win[0]) continue;
 
     const key = `${date}|${service}`;
-    const already = await env.DB.prepare("SELECT key FROM recaps WHERE key = ?").bind(key).first();
-    if (already) continue;
+    if (await env.DB.prepare("SELECT key FROM recaps WHERE key = ?").bind(key).first()) continue;
 
     const { results } = await env.DB.prepare(
       "SELECT * FROM reservations WHERE date = ? AND service = ? ORDER BY slot_min, created_at"
     ).bind(date, service).all();
 
     // Aucune réservation : pas d'email, on ne vous encombre pas pour rien.
-    if (!results || !results.length) {
-      await env.DB.prepare("INSERT INTO recaps (key, sent_at) VALUES (?,?)")
-        .bind(key, new Date().toISOString()).run();
-      continue;
-    }
+    if (results && results.length) {
+      const covers = results.reduce((n, r) => n + (parseInt(r.guests, 10) || 0), 0);
+      const sheet = `${env.PUBLIC_URL}/service?t=${await makeToken(`s:${date}:${service}`, env.SIGNING_SECRET)}`;
+      const detail = results.map((r) =>
+        `${r.time} — ${r.name} · ${r.guests || "?"} · ${r.phone}${r.message ? ` · « ${r.message} »` : ""}`
+      ).join("\n");
 
-    const tokens = {};
-    for (const r of results) {
-      tokens[r.id] = {
-        ok: await makeToken(r.id, "ok", env.SIGNING_SECRET),
-        no: await makeToken(r.id, "no", env.SIGNING_SECRET),
-      };
+      await sendRecapMail(env, {
+        subject: `${results.length} réservation${results.length > 1 ? "s" : ""} — service du ${service.toLowerCase()}, ${frDate(date)}`,
+        fields: {
+          Service: `${service} — ${frDate(date)}`,
+          Résumé: `${results.length} réservation${results.length > 1 ? "s" : ""} · ${covers} couvert${covers > 1 ? "s" : ""}`,
+          Détail: detail,
+          "Feuille de service (valider ou refuser)": sheet,
+        },
+      });
+      sent.push(key);
     }
-
-    await sendMail(env, {
-      to: env.RESTAURANT_EMAIL,
-      subject: `${results.length} réservation${results.length > 1 ? "s" : ""} — service du ${service.toLowerCase()}, ${frDate(date)}`,
-      html: recapEmail(env, results, date, service, tokens),
-    });
 
     await env.DB.prepare("INSERT INTO recaps (key, sent_at) VALUES (?,?)")
       .bind(key, new Date().toISOString()).run();
-    sent.push(key);
   }
   return sent;
 }
 
 /* Exporté pour les tests hors ligne */
 export const __test = {
-  parisNow, openServices, serviceOf, serviceLabel, closureFor,
-  defaultReply, makeToken, readToken, fmtMin, frDate, parseSlot, CUTOFF,
+  parisNow, openServices, serviceOf, serviceLabel, closureFor, defaultReply,
+  makeToken, readToken, fmtMin, frDate, parseSlot, serviceSheet, actionPage, CUTOFF,
 };
