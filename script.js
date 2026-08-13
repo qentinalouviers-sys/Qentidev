@@ -36,6 +36,13 @@
     { from: "2026-08-14", to: "2026-08-14", reason: "travaux", only: "Soir" }
   ];
 
+  /* Récapitulatif de service (worker-reservations.js).
+     Coller ici l'adresse du Worker une fois déployé, ex. :
+     "https://qentina-resa.mon-sous-domaine.workers.dev"
+     Tant que c'est vide, rien ne change : les demandes partent par email
+     comme aujourd'hui. Voir DEPLOIEMENT-RESERVATIONS.md */
+  var RESA_ENDPOINT = "";
+
   function padNum(n) { return (n < 10 ? "0" : "") + n; }
   function isoDay(d) { return d.getFullYear() + "-" + padNum(d.getMonth() + 1) + "-" + padNum(d.getDate()); }
   function fmtMin(min) { return padNum(Math.floor(min / 60)) + "h" + padNum(min % 60); }
@@ -566,16 +573,15 @@
       var date = document.getElementById("r-date").value;
       var time = document.getElementById("r-time").value;
       var guests = document.getElementById("r-guests").value;
-      if (!name || !phone || !date || !time || !guests) {
-        setFeedback("Merci d'indiquer votre nom, téléphone, la date, l'heure et le nombre de couverts.", false);
+      var optin = document.getElementById("r-optin");
+      // L'email est obligatoire : c'est par lui que part la confirmation.
+      var email = (document.getElementById("r-email").value || "").trim();
+      if (!name || !phone || !email || !date || !time || !guests) {
+        setFeedback("Merci d'indiquer votre nom, téléphone, email, la date, l'heure et le nombre de couverts.", false);
         return;
       }
-
-      // Sans email, l'inscription aux nouveautés n'a aucun sens : on le signale.
-      var optin = document.getElementById("r-optin");
-      var email = (document.getElementById("r-email").value || "").trim();
-      if (optin && optin.checked && !email) {
-        setFeedback("Pour recevoir les nouveautés QENTINA, merci d'indiquer votre email — ou décochez la case.", false);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        setFeedback("Cette adresse email semble incorrecte. Merci de la vérifier : c'est là que nous enverrons votre confirmation.", false);
         return;
       }
 
@@ -613,6 +619,28 @@
       // pour que chaque email indique explicitement Oui ou Non.
       var data = new FormData(form);
       data.set("Newsletter", optin && optin.checked ? "Oui" : "Non");
+
+      // En parallèle : on dépose la réservation dans le récap de service.
+      // Volontairement sans await ni blocage — si le Worker est indisponible,
+      // la demande part quand même par email comme avant.
+      if (RESA_ENDPOINT) {
+        var place = form.querySelector('[name="Emplacement"]:checked');
+        fetch(RESA_ENDPOINT + "/reservation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: date,
+            time: time,
+            name: name,
+            phone: phone,
+            email: email,
+            guests: guests,
+            place: place ? place.value : "",
+            message: (document.getElementById("r-message") || {}).value || "",
+            newsletter: optin && optin.checked ? "Oui" : "Non"
+          })
+        }).catch(function () { /* silencieux : le mail reste la source de vérité */ });
+      }
 
       fetch("https://api.web3forms.com/submit", {
         method: "POST",
