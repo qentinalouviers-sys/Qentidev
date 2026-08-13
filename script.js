@@ -5,18 +5,44 @@
   "use strict";
 
   /* ============================================================
-     FERMETURES EXCEPTIONNELLES — seul endroit à modifier.
-     Le bandeau d'alerte et le blocage des réservations en découlent,
-     et disparaissent tout seuls une fois la date "to" passée.
-     Dates au format AAAA-MM-JJ, "to" inclus.
-     Pour une seule journée : mettre la même date dans "from" et "to".
+     HORAIRES & FERMETURES — seul endroit à modifier.
+     Le bandeau d'alerte, les créneaux du formulaire et le contrôle à
+     l'envoi en découlent tous.
+
+     SERVICES : jour (0=dim … 6=sam) → plages en minutes depuis minuit.
+       Midi 12h00–14h30 (mardi → vendredi), soir 19h00–22h30
+       (23h00 ven. & sam.). Pas de service le samedi midi.
+
+     CLOSURES : fermetures exceptionnelles, "to" inclus. Elles
+       disparaissent d'elles-mêmes une fois la date passée.
+       - journée entière : { from, to, reason }
+       - une seule journée : même date dans from et to
+       - journée partielle : ajouter only: "Soir" (ou "Midi") pour ne
+         garder que ce service-là ouvert
      ============================================================ */
+  var SERVICES = {
+    2: [[720, 870], [1140, 1350]],
+    3: [[720, 870], [1140, 1350]],
+    4: [[720, 870], [1140, 1350]],
+    5: [[720, 870], [1140, 1380]],
+    6: [[1140, 1380]]
+  };
+  var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
+  var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
+
   var CLOSURES = [
-    { from: "2026-08-11", to: "2026-08-12", reason: "travaux" }
+    { from: "2026-08-11", to: "2026-08-13", reason: "travaux" },
+    // Reprise en douceur : le vendredi, seul le service du soir tourne.
+    { from: "2026-08-14", to: "2026-08-14", reason: "travaux", only: "Soir" }
   ];
 
   function padNum(n) { return (n < 10 ? "0" : "") + n; }
   function isoDay(d) { return d.getFullYear() + "-" + padNum(d.getMonth() + 1) + "-" + padNum(d.getDate()); }
+  function fmtMin(min) { return padNum(Math.floor(min / 60)) + "h" + padNum(min % 60); }
+
+  // Le libellé vient de l'heure du service, pas de sa position : le samedi
+  // n'a qu'un seul service et c'est celui du soir.
+  function serviceLabel(win) { return win[0] < 900 ? "Midi" : "Soir"; }
 
   // La fermeture qui couvre cette date, sinon null.
   function closureFor(dateStr) {
@@ -26,23 +52,32 @@
     return null;
   }
 
+  // Les services réellement assurés ce jour-là, fermetures comprises.
+  function openServices(dateStr) {
+    var svc = SERVICES[new Date(dateStr + "T00:00:00").getDay()] || [];
+    var c = closureFor(dateStr);
+    if (!c) return svc;
+    if (!c.only) return [];
+    return svc.filter(function (win) { return serviceLabel(win) === c.only; });
+  }
+
   function frDate(dateStr, withMonth) {
     var d = new Date(dateStr + "T00:00:00");
     try {
-      var opts = withMonth
+      return d.toLocaleDateString("fr-FR", withMonth
         ? { weekday: "long", day: "numeric", month: "long" }
-        : { weekday: "long", day: "numeric" };
-      return d.toLocaleDateString("fr-FR", opts);
+        : { weekday: "long", day: "numeric" });
     } catch (e) { return dateStr; }
   }
 
-  // Premier jour de service après la fermeture.
-  // Fermé le dimanche (0) et le lundi (1) — cf. SERVICES plus bas.
-  function reopenDay(closure) {
-    var d = new Date(closure.to + "T00:00:00");
+  // Prochain moment où l'on sert quelque chose, à partir de dateStr inclus.
+  function nextOpening(dateStr) {
+    var d = new Date(dateStr + "T00:00:00");
     for (var guard = 0; guard < 60; guard++) {
+      var key = isoDay(d);
+      var open = openServices(key);
+      if (open.length) return { date: key, min: open[0][0] };
       d.setDate(d.getDate() + 1);
-      if (d.getDay() !== 0 && d.getDay() !== 1 && !closureFor(isoDay(d))) return isoDay(d);
     }
     return null;
   }
@@ -56,19 +91,28 @@
     }
     if (!next) return;
 
-    var when = next.from === next.to
-      ? "le " + frDate(next.from, true)
-      : "du " + frDate(next.from, false) + " au " + frDate(next.to, true);
-    var reopen = reopenDay(next);
+    var msg;
+    if (next.only) {
+      // Journée partielle : on annonce l'horaire de reprise.
+      var svc = openServices(next.from);
+      msg = "<strong>Reprise après " + next.reason + "</strong> " +
+        (next.from === today ? "aujourd'hui" : frDate(next.from, true)) +
+        " : ouverture uniquement le " + next.only.toLowerCase() +
+        (svc.length ? ", à partir de " + fmtMin(svc[0][0]) : "") + ".";
+    } else {
+      var when = next.from === next.to
+        ? "le " + frDate(next.from, true)
+        : "du " + frDate(next.from, false) + " au " + frDate(next.to, true);
+      var re = nextOpening(next.to);
+      msg = "<strong>Fermeture exceptionnelle pour " + next.reason + "</strong> " + when +
+        (re ? ". Réouverture " + frDate(re.date, true) + " à " + fmtMin(re.min) : "") +
+        ". Merci de votre compréhension&nbsp;!";
+    }
 
     var bar = document.createElement("div");
     bar.className = "notice";
     bar.setAttribute("role", "status");
-    bar.innerHTML =
-      '<span class="notice__icon" aria-hidden="true">🔧</span>' +
-      '<span><strong>Fermeture exceptionnelle pour ' + next.reason + "</strong> " + when +
-      (reopen ? ". Réouverture " + frDate(reopen, true) : "") +
-      ". Merci de votre compréhension&nbsp;!</span>";
+    bar.innerHTML = '<span class="notice__icon" aria-hidden="true">🔧</span><span>' + msg + "</span>";
     document.body.insertBefore(bar, document.body.firstChild);
     document.body.classList.add("has-notice");
 
@@ -325,27 +369,9 @@
       feedback.textContent = msg;
     }
 
-    /* Créneaux de réservation selon les horaires d'ouverture (fiche Google) */
-    // Jour (0=dim … 6=sam). Fermé dimanche (0) et lundi (1).
-    // Services en minutes : midi 12h00–14h30 (mardi → vendredi seulement),
-    // soir 19h00–22h30 (23h00 ven & sam). Pas de service le samedi midi.
-    var SERVICES = {
-      2: [[720, 870], [1140, 1350]],
-      3: [[720, 870], [1140, 1350]],
-      4: [[720, 870], [1140, 1350]],
-      5: [[720, 870], [1140, 1380]],
-      6: [[1140, 1380]]
-    };
-    var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
-    var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
-
-    function pad(n) { return (n < 10 ? "0" : "") + n; }
-    function fmt(min) { return pad(Math.floor(min / 60)) + "h" + pad(min % 60); }
-    function dayKey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
-
-    // Le libellé vient de l'heure du service, pas de sa position : le samedi
-    // n'a qu'un seul service et c'est celui du soir.
-    function serviceLabel(win) { return win[0] < 900 ? "Midi" : "Soir"; }
+    /* Créneaux de réservation — voir SERVICES et CLOSURES en tête de fichier */
+    var fmt = fmtMin;
+    function dayKey(d) { return isoDay(d); }
 
     // Un service n'est réservable en ligne que tant qu'il reste CUTOFF minutes
     // avant son ouverture. Passé ce délai, c'est par téléphone.
@@ -355,26 +381,29 @@
 
     // Vérification côté envoi (garde-fou si la page est restée ouverte
     // longtemps). Renvoie "" si le créneau est valide, sinon la raison :
+    //   "fermeture"  → fermeture exceptionnelle sur ce service
     //   "inexistant" → aucun service à cette heure-là ce jour-là
     //   "tard"       → service existant mais clôturé en ligne
     function slotProblem(dateStr, timeStr) {
-      if (closureFor(dateStr)) return "fermeture";
-      var svc = SERVICES[new Date(dateStr + "T00:00:00").getDay()];
-      if (!svc) return "inexistant";
+      var open = openServices(dateStr);
+      var shut = closureFor(dateStr) ? "fermeture" : "inexistant";
+      if (!open.length) return shut;
+
       var parts = /^(\d{1,2})h(\d{2})$/.exec(timeStr);
       if (!parts) return "";
       var m = parseInt(parts[1], 10) * 60 + parseInt(parts[2], 10);
 
-      // L'heure doit tomber dans un service qui existe ce jour-là — quelle que
-      // soit la date (le samedi midi n'existe pas, même dans trois semaines).
+      // L'heure doit tomber dans un service réellement assuré ce jour-là —
+      // quelle que soit la date (le samedi midi n'existe pas, même dans trois
+      // semaines), fermetures exceptionnelles comprises.
       var win = null;
-      for (var i = 0; i < svc.length; i++) {
-        if (m >= svc[i][0] && m <= svc[i][1]) { win = svc[i]; break; }
+      for (var i = 0; i < open.length; i++) {
+        if (m >= open[i][0] && m <= open[i][1]) { win = open[i]; break; }
       }
-      if (!win) return "inexistant";
+      if (!win) return shut;
 
       var now = new Date();
-      var todayStr = dayKey(now);
+      var todayStr = isoDay(now);
       if (dateStr < todayStr) return "tard";
       if (dateStr > todayStr) return "";
       return serviceOpen(win, true, now.getHours() * 60 + now.getMinutes()) ? "" : "tard";
@@ -426,17 +455,19 @@
       buildSlots = function (dateStr) {
         timeSelect.innerHTML = "";
 
-        // Fermeture exceptionnelle : aucun créneau, et inutile d'appeler.
         var closure = closureFor(dateStr);
-        if (closure) {
+        var svc = openServices(dateStr);
+
+        // Fermeture exceptionnelle totale : aucun créneau, et inutile d'appeler.
+        if (closure && !svc.length) {
           var shut = new Option("Fermé (" + closure.reason + ")", "");
           shut.disabled = true; shut.selected = true;
           timeSelect.add(shut);
           timeSelect.disabled = true;
-          var reopen = reopenDay(closure);
+          var re = nextOpening(dateStr);
           setNote(
             "Nous sommes fermés pour " + closure.reason + " ce jour-là." +
-            (reopen ? " Réouverture " + frDate(reopen, true) + " — les réservations sont ouvertes à partir de cette date." : ""),
+            (re ? " Réouverture " + frDate(re.date, true) + " à " + fmtMin(re.min) + "." : ""),
             true
           );
           hideCall();
@@ -444,8 +475,7 @@
         }
 
         var day = new Date(dateStr + "T00:00:00").getDay();
-        var svc = SERVICES[day];
-        if (!svc) {
+        if (!svc.length) {
           var closed = new Option("Fermé ce jour-là", "");
           closed.disabled = true; closed.selected = true;
           timeSelect.add(closed);
@@ -506,6 +536,14 @@
             "Vous vouliez une table pour le " + tooLate.join(" ou le ") + " ? Contactez-nous, il reste parfois de la place.",
             tooLate[0] === "midi" ? "pour ce midi" : "pour ce soir"
           );
+        } else if (closure) {
+          // Journée partielle : un seul service tourne ce jour-là.
+          setNote(
+            "Reprise après " + closure.reason + "&nbsp;: ce jour-là, nous servons uniquement le " +
+            closure.only.toLowerCase() + ", à partir de " + fmtMin(svc[0][0]) + ".",
+            true
+          );
+          hideCall();
         } else {
           setNote(
             day === 6
@@ -546,7 +584,9 @@
         var closed = closureFor(date);
         setFeedback(
           problem === "fermeture"
-            ? "Nous sommes fermés pour " + (closed ? closed.reason : "travaux") + " à cette date. Merci de choisir un autre jour."
+            ? (closed && closed.only
+                ? "Ce jour-là, nous ne servons que le " + closed.only.toLowerCase() + " (" + closed.reason + "). Merci de choisir un créneau du " + closed.only.toLowerCase() + "."
+                : "Nous sommes fermés pour " + (closed ? closed.reason : "travaux") + " à cette date. Merci de choisir un autre jour.")
             : problem === "tard"
               ? "Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution."
               : "Nous ne servons pas à cette heure-là ce jour-là. Merci de choisir un autre créneau dans la liste, ou appelez-nous au 02 59 16 20 93.",
