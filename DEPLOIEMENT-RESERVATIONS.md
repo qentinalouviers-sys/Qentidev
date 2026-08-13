@@ -178,10 +178,11 @@ Vous recevez :
 
 Vous le modifiez si vous voulez, vous envoyez — le client reçoit l'email.
 
-**Et si le client n'a pas laissé d'email ?** (c'est le cas d'environ une
-demande sur deux, le champ est facultatif). La page vous propose alors trois
-boutons : **WhatsApp**, **SMS** et **Appeler**, tous pré-remplis avec le même
-message. Un appui et c'est parti.
+**Et si l'email ne part pas ?** L'adresse est désormais obligatoire dans le
+formulaire, donc chaque réservation en a une. Mais si l'envoi échoue malgré
+tout (adresse inexistante, boîte pleine), la page bascule automatiquement sur
+trois boutons — **WhatsApp**, **SMS** et **Appeler** — tous pré-remplis avec le
+même message. Vous n'êtes jamais bloqué : le téléphone, lui, est toujours là.
 
 ---
 

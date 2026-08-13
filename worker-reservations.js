@@ -316,8 +316,13 @@ export default {
         const date = String(b.date || "");
         const time = String(b.time || "");
         const slot = parseSlot(time);
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || slot === null || !b.name || !b.phone) {
+        const email = String(b.email || "").trim();
+        // L'email est obligatoire : c'est par lui que part la confirmation.
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || slot === null || !b.name || !b.phone || !email) {
           return Response.json({ error: "champs_manquants" }, { status: 400, headers: cors });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+          return Response.json({ error: "email_invalide" }, { status: 400, headers: cors });
         }
         // On revérifie côté serveur : un créneau fermé n'entre pas en base.
         const service = serviceOf(date, slot);
@@ -330,7 +335,7 @@ export default {
         ).bind(
           crypto.randomUUID(), new Date().toISOString(), date, time, slot, service,
           String(b.name).slice(0, 120), String(b.phone).slice(0, 40),
-          b.email ? String(b.email).slice(0, 160) : null,
+          email.slice(0, 160),
           b.guests ? String(b.guests).slice(0, 40) : null,
           b.place ? String(b.place).slice(0, 60) : null,
           b.message ? String(b.message).slice(0, 800) : null,

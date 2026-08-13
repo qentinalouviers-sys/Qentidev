@@ -573,16 +573,15 @@
       var date = document.getElementById("r-date").value;
       var time = document.getElementById("r-time").value;
       var guests = document.getElementById("r-guests").value;
-      if (!name || !phone || !date || !time || !guests) {
-        setFeedback("Merci d'indiquer votre nom, téléphone, la date, l'heure et le nombre de couverts.", false);
+      var optin = document.getElementById("r-optin");
+      // L'email est obligatoire : c'est par lui que part la confirmation.
+      var email = (document.getElementById("r-email").value || "").trim();
+      if (!name || !phone || !email || !date || !time || !guests) {
+        setFeedback("Merci d'indiquer votre nom, téléphone, email, la date, l'heure et le nombre de couverts.", false);
         return;
       }
-
-      // Sans email, l'inscription aux nouveautés n'a aucun sens : on le signale.
-      var optin = document.getElementById("r-optin");
-      var email = (document.getElementById("r-email").value || "").trim();
-      if (optin && optin.checked && !email) {
-        setFeedback("Pour recevoir les nouveautés QENTINA, merci d'indiquer votre email — ou décochez la case.", false);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        setFeedback("Cette adresse email semble incorrecte. Merci de la vérifier : c'est là que nous enverrons votre confirmation.", false);
         return;
       }
 
