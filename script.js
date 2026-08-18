@@ -15,8 +15,10 @@
 
      CLOSURES : fermetures exceptionnelles, "to" inclus. Elles
        disparaissent d'elles-mêmes une fois la date passée.
-       - journée entière : { from, to, reason }
+       - journée entière : { from: "2026-08-18", to: "2026-08-19" }
        - une seule journée : même date dans from et to
+       - motif facultatif : ajouter reason: "travaux" pour l'annoncer
+         (sans motif, on dit simplement « Fermeture exceptionnelle »)
        - journée partielle : ajouter only: "Soir" (ou "Midi") pour ne
          garder que ce service-là ouvert
      ============================================================ */
@@ -31,9 +33,7 @@
   var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
 
   var CLOSURES = [
-    { from: "2026-08-11", to: "2026-08-13", reason: "travaux" },
-    // Reprise en douceur : le vendredi, seul le service du soir tourne.
-    { from: "2026-08-14", to: "2026-08-14", reason: "travaux", only: "Soir" }
+    { from: "2026-08-18", to: "2026-08-19" }
   ];
 
   /* Récapitulatif de service (worker-reservations.js).
@@ -50,6 +50,10 @@
   // Le libellé vient de l'heure du service, pas de sa position : le samedi
   // n'a qu'un seul service et c'est celui du soir.
   function serviceLabel(win) { return win[0] < 900 ? "Midi" : "Soir"; }
+
+  // Le motif est facultatif : sans lui, on reste sur « fermeture exceptionnelle ».
+  function forReason(c) { return c && c.reason ? " pour " + c.reason : ""; }
+  function afterReason(c) { return c && c.reason ? " après " + c.reason : ""; }
 
   // La fermeture qui couvre cette date, sinon null.
   function closureFor(dateStr) {
@@ -102,7 +106,7 @@
     if (next.only) {
       // Journée partielle : on annonce l'horaire de reprise.
       var svc = openServices(next.from);
-      msg = "<strong>Reprise après " + next.reason + "</strong> " +
+      msg = "<strong>Reprise" + afterReason(next) + "</strong> " +
         (next.from === today ? "aujourd'hui" : frDate(next.from, true)) +
         " : ouverture uniquement le " + next.only.toLowerCase() +
         (svc.length ? ", à partir de " + fmtMin(svc[0][0]) : "") + ".";
@@ -111,7 +115,7 @@
         ? "le " + frDate(next.from, true)
         : "du " + frDate(next.from, false) + " au " + frDate(next.to, true);
       var re = nextOpening(next.to);
-      msg = "<strong>Fermeture exceptionnelle pour " + next.reason + "</strong> " + when +
+      msg = "<strong>Fermeture exceptionnelle" + forReason(next) + "</strong> " + when +
         (re ? ". Réouverture " + frDate(re.date, true) + " à " + fmtMin(re.min) : "") +
         ". Merci de votre compréhension&nbsp;!";
     }
@@ -119,7 +123,9 @@
     var bar = document.createElement("div");
     bar.className = "notice";
     bar.setAttribute("role", "status");
-    bar.innerHTML = '<span class="notice__icon" aria-hidden="true">🔧</span><span>' + msg + "</span>";
+    // Clé à molette pour des travaux, calendrier pour une fermeture ordinaire.
+    var icon = /travaux/i.test(next.reason || "") ? "🔧" : "📅";
+    bar.innerHTML = '<span class="notice__icon" aria-hidden="true">' + icon + '</span><span>' + msg + "</span>";
     document.body.insertBefore(bar, document.body.firstChild);
     document.body.classList.add("has-notice");
 
@@ -467,13 +473,13 @@
 
         // Fermeture exceptionnelle totale : aucun créneau, et inutile d'appeler.
         if (closure && !svc.length) {
-          var shut = new Option("Fermé (" + closure.reason + ")", "");
+          var shut = new Option(closure.reason ? "Fermé (" + closure.reason + ")" : "Fermé ce jour-là", "");
           shut.disabled = true; shut.selected = true;
           timeSelect.add(shut);
           timeSelect.disabled = true;
           var re = nextOpening(dateStr);
           setNote(
-            "Nous sommes fermés pour " + closure.reason + " ce jour-là." +
+            "Nous sommes fermés" + forReason(closure) + " ce jour-là." +
             (re ? " Réouverture " + frDate(re.date, true) + " à " + fmtMin(re.min) + "." : ""),
             true
           );
@@ -546,7 +552,7 @@
         } else if (closure) {
           // Journée partielle : un seul service tourne ce jour-là.
           setNote(
-            "Reprise après " + closure.reason + "&nbsp;: ce jour-là, nous servons uniquement le " +
+            "Reprise" + afterReason(closure) + "&nbsp;: ce jour-là, nous servons uniquement le " +
             closure.only.toLowerCase() + ", à partir de " + fmtMin(svc[0][0]) + ".",
             true
           );
@@ -591,8 +597,8 @@
         setFeedback(
           problem === "fermeture"
             ? (closed && closed.only
-                ? "Ce jour-là, nous ne servons que le " + closed.only.toLowerCase() + " (" + closed.reason + "). Merci de choisir un créneau du " + closed.only.toLowerCase() + "."
-                : "Nous sommes fermés pour " + (closed ? closed.reason : "travaux") + " à cette date. Merci de choisir un autre jour.")
+                ? "Ce jour-là, nous ne servons que le " + closed.only.toLowerCase() + ". Merci de choisir un créneau du " + closed.only.toLowerCase() + "."
+                : "Nous sommes fermés" + forReason(closed) + " à cette date. Merci de choisir un autre jour.")
             : problem === "tard"
               ? "Ce créneau vient de se clôturer : les réservations en ligne ferment 2 h avant le service. Appelez-nous au 02 59 16 20 93, on trouvera une solution."
               : "Nous ne servons pas à cette heure-là ce jour-là. Merci de choisir un autre créneau dans la liste, ou appelez-nous au 02 59 16 20 93.",

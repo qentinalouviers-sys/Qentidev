@@ -40,8 +40,7 @@ const SERVICES = {
 };
 const CUTOFF = 120;        // le récap part 2 h avant le début du service
 const CLOSURES = [
-  { from: "2026-08-11", to: "2026-08-13", reason: "travaux" },
-  { from: "2026-08-14", to: "2026-08-14", reason: "travaux", only: "Soir" },
+  { from: "2026-08-18", to: "2026-08-19" },
 ];
 
 const TEL = "02 59 16 20 93";
