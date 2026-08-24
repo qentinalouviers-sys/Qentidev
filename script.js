@@ -33,7 +33,10 @@
   var CUTOFF = 120;      // réservation en ligne close 2 h avant le DÉBUT du service
 
   var CLOSURES = [
-    { from: "2026-08-18", to: "2026-08-19" }
+    // Vacances d'été : fermé du mardi 25 août au jeudi 3 septembre,
+    // reprise le vendredi 4 septembre au soir uniquement.
+    { from: "2026-08-25", to: "2026-09-03", reason: "vacances" },
+    { from: "2026-09-04", to: "2026-09-04", reason: "vacances", only: "Soir" }
   ];
 
   /* Récapitulatif de service (worker-reservations.js).
@@ -54,6 +57,9 @@
   // Le motif est facultatif : sans lui, on reste sur « fermeture exceptionnelle ».
   function forReason(c) { return c && c.reason ? " pour " + c.reason : ""; }
   function afterReason(c) { return c && c.reason ? " après " + c.reason : ""; }
+
+  // Des vacances ne s'annoncent pas comme des travaux : le bandeau change de ton.
+  function isHoliday(c) { return !!c && /vacance|cong[ée]/i.test(c.reason || ""); }
 
   // La fermeture qui couvre cette date, sinon null.
   function closureFor(dateStr) {
@@ -81,6 +87,14 @@
     } catch (e) { return dateStr; }
   }
 
+  // « le jeudi 3 septembre », « du mardi 25 au jeudi 27 août », et le mois des
+  // deux côtés dès que la période change de mois.
+  function rangeLabel(c) {
+    if (c.from === c.to) return "le " + frDate(c.from, true);
+    var sameMonth = c.from.slice(0, 7) === c.to.slice(0, 7);
+    return "du " + frDate(c.from, !sameMonth) + " au " + frDate(c.to, true);
+  }
+
   // Prochain moment où l'on sert quelque chose, à partir de dateStr inclus.
   function nextOpening(dateStr) {
     var d = new Date(dateStr + "T00:00:00");
@@ -103,28 +117,31 @@
     if (!next) return;
 
     var msg;
+    var holiday = isHoliday(next);
     if (next.only) {
       // Journée partielle : on annonce l'horaire de reprise.
       var svc = openServices(next.from);
-      msg = "<strong>Reprise" + afterReason(next) + "</strong> " +
+      msg = "<strong>" + (holiday ? "Retour de vacances" : "Reprise" + afterReason(next)) + "</strong> " +
         (next.from === today ? "aujourd'hui" : frDate(next.from, true)) +
         " : ouverture uniquement le " + next.only.toLowerCase() +
         (svc.length ? ", à partir de " + fmtMin(svc[0][0]) : "") + ".";
     } else {
-      var when = next.from === next.to
-        ? "le " + frDate(next.from, true)
-        : "du " + frDate(next.from, false) + " au " + frDate(next.to, true);
+      var when = rangeLabel(next);
       var re = nextOpening(next.to);
-      msg = "<strong>Fermeture exceptionnelle" + forReason(next) + "</strong> " + when +
+      // Avant le départ on prévient, une fois parti on l'annonce au présent.
+      var title = holiday
+        ? (next.from <= today ? "Nous sommes en vacances" : "Nous partons en vacances")
+        : "Fermeture exceptionnelle" + forReason(next);
+      msg = "<strong>" + title + "</strong> " + when +
         (re ? ". Réouverture " + frDate(re.date, true) + " à " + fmtMin(re.min) : "") +
-        ". Merci de votre compréhension&nbsp;!";
+        (holiday ? ". À très vite&nbsp;!" : ". Merci de votre compréhension&nbsp;!");
     }
 
     var bar = document.createElement("div");
     bar.className = "notice";
     bar.setAttribute("role", "status");
-    // Clé à molette pour des travaux, calendrier pour une fermeture ordinaire.
-    var icon = /travaux/i.test(next.reason || "") ? "🔧" : "📅";
+    // Palmier pour des vacances, clé à molette pour des travaux, calendrier sinon.
+    var icon = holiday ? "🌴" : /travaux/i.test(next.reason || "") ? "🔧" : "📅";
     bar.innerHTML = '<span class="notice__icon" aria-hidden="true">' + icon + '</span><span>' + msg + "</span>";
     document.body.insertBefore(bar, document.body.firstChild);
     document.body.classList.add("has-notice");
