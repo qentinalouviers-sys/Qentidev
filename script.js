@@ -126,15 +126,20 @@
         " : ouverture uniquement le " + next.only.toLowerCase() +
         (svc.length ? ", à partir de " + fmtMin(svc[0][0]) : "") + ".";
     } else {
-      var when = rangeLabel(next);
       var re = nextOpening(next.to);
-      // Avant le départ on prévient, une fois parti on l'annonce au présent.
-      var title = holiday
-        ? (next.from <= today ? "Nous sommes en vacances" : "Nous partons en vacances")
-        : "Fermeture exceptionnelle" + forReason(next);
-      msg = "<strong>" + title + "</strong> " + when +
-        (re ? ". Réouverture " + frDate(re.date, true) + " à " + fmtMin(re.min) : "") +
-        (holiday ? ". À très vite&nbsp;!" : ". Merci de votre compréhension&nbsp;!");
+      var reopen = re ? "Réouverture " + frDate(re.date, true) + " à " + fmtMin(re.min) + "." : "";
+      if (holiday) {
+        // En vacances, une seule info compte : quand on rouvre. La date de fin
+        // de fermeture n'apporte rien et brouille le message.
+        var head = next.from <= today
+          ? "<strong>Nous sommes en vacances.</strong>"
+          : "<strong>Nous partons en vacances</strong> à partir du " + frDate(next.from, true) + ".";
+        msg = head + (reopen ? " " + reopen : "") + " À très vite&nbsp;!";
+      } else {
+        msg = "<strong>Fermeture exceptionnelle" + forReason(next) + "</strong> " + rangeLabel(next) +
+          (reopen ? ". " + reopen : ".") +
+          " Merci de votre compréhension&nbsp;!";
+      }
     }
 
     var bar = document.createElement("div");
