@@ -40,10 +40,9 @@ const SERVICES = {
 };
 const CUTOFF = 120;        // le récap part 2 h avant le début du service
 const CLOSURES = [
-  // Vacances d'été : fermé du mardi 25 août au jeudi 3 septembre,
-  // reprise le vendredi 4 septembre au soir uniquement.
-  { from: "2026-08-25", to: "2026-09-03", reason: "vacances" },
-  { from: "2026-09-04", to: "2026-09-04", reason: "vacances", only: "Soir" },
+  // Vacances d'été : fermé jusqu'au lundi 7 septembre, réouverture le
+  // mardi 8 septembre à midi (journée complète, horaires habituels).
+  { from: "2026-08-25", to: "2026-09-07", reason: "vacances" },
 ];
 
 const TEL = "02 59 16 20 93";
