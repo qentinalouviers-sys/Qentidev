@@ -16,7 +16,7 @@ Qentidev/
 ├── script.js                  # Interactions JS (menu, défilement, formulaire)
 ├── intro.js                   # Animation d'intro
 ├── reviews.js                 # Avis Google (via Cloudflare Worker)
-├── embers.js                  # Effet braises/pizza animée
+├── consent.js                 # Bandeau cookies RGPD : charge Google Analytics (gtag) après accord
 ├── worker.js                  # Cloudflare Worker proxy pour les avis Google
 ├── banner.jpg                 # Image bannière
 ├── hero-pizza.jpg             # Image héro
