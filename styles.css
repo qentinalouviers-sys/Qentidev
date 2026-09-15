@@ -1389,7 +1389,7 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   .fab__book { flex: 1; justify-content: center; }
 }
 
-/* ---------- Petit clin d'œil "cookies" (pas un vrai bandeau RGPD) ---------- */
+/* ---------- Bandeau consentement cookies (RGPD) ---------- */
 .cookie-banner {
   position: fixed;
   left: 0; right: 0; bottom: 0;
@@ -1404,35 +1404,39 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 }
 .cookie-banner.is-shown { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .cookie-banner__inner {
-  max-width: 460px;
+  max-width: 560px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: .7rem;
   background: var(--card);
   border: 1px solid var(--line-soft);
-  border-radius: 100px;
-  padding: .5rem .6rem .5rem 1rem;
+  border-radius: var(--radius);
+  padding: .9rem 1.1rem;
   box-shadow: 0 14px 32px -16px rgba(23, 48, 51, 0.35);
 }
-.cookie-banner__emoji { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
-.cookie-banner__text { flex: 1; font-size: .76rem; line-height: 1.4; color: var(--ink-soft); }
+.cookie-banner__body { display: flex; align-items: flex-start; gap: .6rem; }
+.cookie-banner__emoji { font-size: 1.05rem; line-height: 1.4; flex-shrink: 0; }
+.cookie-banner__text { flex: 1; margin: 0; font-size: .78rem; line-height: 1.45; color: var(--ink-soft); }
 .cookie-banner__text strong { color: var(--ink); font-weight: 600; }
-.cookie-banner__close {
-  flex-shrink: 0;
-  background: var(--terra);
-  color: #fff;
-  border: none;
+.cookie-banner__actions { display: flex; justify-content: flex-end; gap: .5rem; flex-wrap: wrap; }
+.cookie-banner__btn {
+  flex: 1 1 auto;
+  min-width: 120px;
   border-radius: 100px;
-  padding: .4rem .85rem;
-  font-size: .74rem;
+  padding: .5rem 1rem;
+  font-size: .76rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background .3s var(--ease), transform .3s var(--ease);
+  transition: background .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease);
 }
-.cookie-banner__close:hover { background: var(--terra-deep); transform: translateY(-2px); }
+.cookie-banner__btn--accept { background: var(--terra); color: #fff; border: 1px solid var(--terra); }
+.cookie-banner__btn--accept:hover { background: var(--terra-deep); border-color: var(--terra-deep); transform: translateY(-2px); }
+.cookie-banner__btn--refuse { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.cookie-banner__btn--refuse:hover { border-color: var(--ink); transform: translateY(-2px); }
 
 @media (max-width: 620px) {
-  .cookie-banner__inner { max-width: none; border-radius: var(--radius); padding: .8rem 1rem; }
+  .cookie-banner__inner { max-width: none; }
+  .cookie-banner__btn { flex: 1 1 100%; }
 }
 
 /* ---------- Apparition au défilement ---------- */

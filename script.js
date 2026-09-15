@@ -691,27 +691,4 @@
         });
     });
   }
-
-  /* Petit clin d'œil "cookies" (pas un vrai bandeau RGPD — on ne track pas individuellement) */
-  try {
-    var COOKIE_WINK_KEY = "qentinaCookieWinkDismissed";
-    if (!localStorage.getItem(COOKIE_WINK_KEY)) {
-      var cookieBanner = document.createElement("div");
-      cookieBanner.className = "cookie-banner";
-      cookieBanner.setAttribute("role", "status");
-      cookieBanner.innerHTML =
-        '<div class="cookie-banner__inner">' +
-          '<span class="cookie-banner__emoji" aria-hidden="true">🍕</span>' +
-          '<p class="cookie-banner__text">Ici, on n’a pas laissé Google manger des cookies sur notre site. Chez QENTINA, <strong>on mange des pizzas</strong> — et on protège vos données.</p>' +
-          '<button type="button" class="cookie-banner__close">Miam, compris&nbsp;!</button>' +
-        '</div>';
-      document.body.appendChild(cookieBanner);
-      setTimeout(function () { cookieBanner.classList.add("is-shown"); }, 900);
-      cookieBanner.querySelector(".cookie-banner__close").addEventListener("click", function () {
-        cookieBanner.classList.remove("is-shown");
-        setTimeout(function () { cookieBanner.remove(); }, 500);
-        try { localStorage.setItem(COOKIE_WINK_KEY, "1"); } catch (e) {}
-      });
-    }
-  } catch (e) { /* localStorage indisponible (navigation privée stricte) : on ignore */ }
 })();
