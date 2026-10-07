@@ -35,7 +35,10 @@
   var CLOSURES = [
     // Vacances d'été : fermé jusqu'au lundi 7 septembre, réouverture le
     // mardi 8 septembre à midi (journée complète, horaires habituels).
-    { from: "2026-08-25", to: "2026-09-07", reason: "vacances" }
+    { from: "2026-08-25", to: "2026-09-07", reason: "vacances" },
+    // Repos post fête du foot Saint-Michel — réouverture jeu 8 oct soir
+    { from: "2026-10-07", to: "2026-10-07", only: "Soir", reason: "repos" },
+    { from: "2026-10-08", to: "2026-10-08", only: "Midi", reason: "repos" }
   ];
 
   /* Récapitulatif de service (worker-reservations.js).
