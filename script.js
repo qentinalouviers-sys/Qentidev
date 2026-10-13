@@ -38,7 +38,9 @@
     { from: "2026-08-25", to: "2026-09-07", reason: "vacances" },
     // Repos post fête du foot Saint-Michel — réouverture jeu 8 oct soir
     { from: "2026-10-07", to: "2026-10-07", only: "Soir", reason: "repos" },
-    { from: "2026-10-08", to: "2026-10-08", only: "Midi", reason: "repos" }
+    { from: "2026-10-08", to: "2026-10-08", only: "Midi", reason: "repos" },
+    // Fermeture exceptionnelle mercredi 14 octobre 2026
+    { from: "2026-10-14", to: "2026-10-14", reason: "fermeture exceptionnelle" }
   ];
 
   /* Récapitulatif de service (worker-reservations.js).
