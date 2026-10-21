@@ -16,7 +16,7 @@
      GET  /api/admin/export?what=players   → CSV de tous les joueurs
      GET  /api/admin/export?what=finalists → CSV du top 5 avec emails
      GET  /api/admin/export?what=daily     → CSV des champions du jour
-     GET  /api/admin/draw?n=2              → tirage au sort des pleins d'essence
+     GET  /api/admin/draw?n=1              → tirage au sort du plein d'essence
 
    Guide pas à pas : DEPLOIEMENT-CONCOURS.md
    ============================================================ */
@@ -25,7 +25,8 @@
 const START = Date.parse("2026-10-23T22:00:00Z"); // samedi 24/10 00:00 (UTC+2)
 const END = Date.parse("2026-10-30T22:59:59Z");   // vendredi 30/10 23:59:59 (UTC+1)
 const PURGE_AFTER = Date.parse("2027-01-31T00:00:00Z"); // RGPD : 3 mois après la fin
-const TIRAMISU_AT = 10;
+const TIRAMISU_AT = 15;
+const TIRAMISU_MAX = 100; // les 100 premiers seulement
 const DEFAULT_ORIGINS = "https://qentina.fr,https://www.qentina.fr";
 
 const BANNED = ["pute", "salope", "encul", "nique", "connard", "connasse", "batard", "nazi", "hitler",
@@ -101,7 +102,11 @@ async function postScore(request, env, cors) {
 
   const improved = score > player.best;
   let code = player.tiramisu_code;
-  if (!code && pizzas >= TIRAMISU_AT) code = makeCode();
+  let tiramisuOut = false;
+  if (!code && pizzas >= TIRAMISU_AT) {
+    const given = await db.prepare("SELECT COUNT(*) AS n FROM players WHERE tiramisu_code IS NOT NULL").first();
+    if ((given ? given.n : 0) < TIRAMISU_MAX) code = makeCode(); else tiramisuOut = true;
+  }
 
   await db.batch([
     db.prepare("INSERT INTO plays (email, score, pizzas, day, created_at) VALUES (?, ?, ?, ?, ?)").bind(email, score, pizzas, parisDay(now), iso),
@@ -127,6 +132,7 @@ async function postScore(request, env, cors) {
     best: me.best,
     improved,
     tiramisu: me.tiramisu_code || null,
+    tiramisuOut,
     me: { pseudo: me.pseudo, score: me.best, pizzas: me.best_pizzas, me: true },
     top: top.map((r) => (r.pseudo.toLowerCase() === me.pseudo.toLowerCase() ? { ...r, me: true } : r)),
   }, 200, cors);
@@ -192,7 +198,7 @@ async function adminExport(url, env) {
 }
 
 async function adminDraw(url, env, cors) {
-  const n = Math.min(10, Math.max(1, toInt(url.searchParams.get("n")) || 2));
+  const n = Math.min(10, Math.max(1, toInt(url.searchParams.get("n")) || 1));
   const { results } = await env.DB.prepare("SELECT pseudo, email FROM players WHERE hidden = 0").all();
   const pool = results.slice();
   const winners = [];

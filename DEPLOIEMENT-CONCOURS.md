@@ -103,12 +103,13 @@ Ces liens s'ouvrent depuis le téléphone et téléchargent un fichier Excel/CSV
 | Tous les joueurs (emails, newsletter, codes tiramisu) | `ADRESSE/api/admin/export?what=players&key=MOTDEPASSE` |
 | **Champion du jour** (meilleur score de chaque journée) | `ADRESSE/api/admin/export?what=daily&key=MOTDEPASSE` |
 | **Les 5 finalistes** à prévenir le 31 au matin | `ADRESSE/api/admin/export?what=finalists&key=MOTDEPASSE` |
-| **Tirage des 2 pleins d'essence** (à lancer pendant la finale) | `ADRESSE/api/admin/draw?n=2&key=MOTDEPASSE` |
+| **Tirage du plein d'essence** (à lancer pendant la finale) | `ADRESSE/api/admin/draw?n=1&key=MOTDEPASSE` |
 
 ### Vérifier un code tiramisu au comptoir
 
 Le client montre un code `TIRA-XXXXX` sur son téléphone. Il figure dans
-l'export « tous les joueurs », colonne `code_tiramisu`. Un code par email.
+l'export « tous les joueurs », colonne `code_tiramisu`. Un code par email,
+100 codes au maximum : le serveur s'arrête tout seul au 100e.
 
 ### Masquer un pseudo choquant
 
