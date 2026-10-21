@@ -1,5 +1,8 @@
 # Consignes agent — Concours Halloween QENTINA 2026
 
+> 🚨 **URGENT — ouverture ce soir, mercredi 21/10 à 18 h.** Étapes 1 à 4 à terminer **avant 17 h 30**
+> (Yohan publie sur les réseaux ce soir). Prévenir Yohan dès que l'étape 4 est en ligne, ou immédiatement en cas de blocage.
+
 Mission : rendre opérationnels les deux jeux concours déjà en ligne, puis assurer
 le suivi jusqu'à la finale. Lire aussi `AGENTS.md` (workflow du dépôt) et
 `DEPLOIEMENT-CONCOURS.md` (guide détaillé Cloudflare).
@@ -9,18 +12,18 @@ le suivi jusqu'à la finale. Lire aussi `AGENTS.md` (workflow du dépôt) et
 | Élément | Où | État au 21/10/2026 |
 |---|---|---|
 | Jeu « La Nuit du Four Hanté » | https://qentina.fr/halloween/ — `halloween/index.html` | en ligne, mode entraînement |
-| Roue d'Halloween (1 tour / email) | https://qentina.fr/halloween/roue.html — `halloween/roue.html` | en ligne, « ouverture le 24 » |
+| Roue d'Halloween (1 tour / email) | https://qentina.fr/halloween/roue.html — `halloween/roue.html` | en ligne, « ouverture mercredi 21 octobre à 18 h » |
 | Règlement | https://qentina.fr/halloween/reglement.html | en ligne |
 | Serveur scores + roue | `worker-concours.js` (Cloudflare Worker + D1) | **à déployer** |
 | Site | GitHub Pages, push sur `main` = mise en ligne en 1–2 min | |
 
-Calendrier : classement et roue ouverts du **samedi 24/10 0 h** au **vendredi 30/10 23 h 59** (Paris).
+Calendrier : classement et roue ouverts du **mercredi 21/10 18 h** au **vendredi 30/10 23 h 59** (Paris).
 Finale live **samedi 31/10 à 18 h 30** au restaurant. Les dates sont codées en dur côté serveur
 (`START`, `END`) et côté pages (`CONFIG.start`, `CONFIG.end`) : ne pas les modifier.
 
 ---
 
-## Étape 1 — Déployer le serveur (avant vendredi 23/10 23 h)
+## Étape 1 — Déployer le serveur (avant mercredi 21/10 17 h)
 
 1. **Base D1** `qentina-concours` : exécuter tout le bloc SQL de `DEPLOIEMENT-CONCOURS.md` (étape 1).
    Il crée 4 tables : `players`, `plays`, `wheel_spins`, `wheel_lots`.
@@ -43,16 +46,16 @@ Remplacer `API` par l'adresse du Worker (ex. `https://qentina-concours.xxx.worke
 | Commande | Réponse attendue |
 |---|---|
 | `curl API/api/top` | `{"top":[],"players":0}` |
-| `curl API/api/wheel` | JSON avec `"open":false` avant le 24/10 |
-| `curl -X POST API/api/scores -H 'Content-Type: application/json' -d '{}'` | `{"error":"not_started"}` (403) avant le 24/10 |
-| `curl -X POST API/api/wheel -H 'Content-Type: application/json' -d '{}'` | `{"error":"not_started"}` (403) avant le 24/10 |
+| `curl API/api/wheel` | JSON avec `"open":false` avant 18 h, `true` après |
+| `curl -X POST API/api/scores -H 'Content-Type: application/json' -d '{}'` | `{"error":"not_started"}` (403) avant 18 h |
+| `curl -X POST API/api/wheel -H 'Content-Type: application/json' -d '{}'` | `{"error":"not_started"}` (403) avant 18 h |
 | `curl -i -X OPTIONS API/api/scores -H 'Origin: https://qentina.fr'` | `204` + `Access-Control-Allow-Origin: https://qentina.fr` |
 | `curl "API/api/admin/export?key=MAUVAISE"` | `{"error":"forbidden"}` (403) |
 
-## Étape 3 — Tirer les instants gagnants de la roue (avant le 24/10)
+## Étape 3 — Tirer les instants gagnants de la roue (avant 18 h)
 
 Ouvrir **une seule fois** : `API/api/admin/wheel-init?key=ADMIN_KEY`
-Réponse attendue : `{"ok":true,"lots":[...]}` avec la date du tirage (`tire_au_sort_le`) **antérieure au 24/10**.
+Réponse attendue : `{"ok":true,"lots":[...]}` avec la date du tirage (`tire_au_sort_le`) **antérieure au 21/10 18 h**.
 C'est la preuve que les instants ont été fixés avant l'ouverture (exigence du règlement, art. 7 bis).
 Le rappeler est sans effet (idempotent). **Ne pas chercher à lire les instants avant la clôture.**
 
@@ -66,21 +69,22 @@ Branche `feat/branchement-concours`, commit, merge sur `main`, push. Attendre la
 « Déploiement GitHub Pages ».
 
 Vérifier ensuite sur https://qentina.fr/halloween/ (forcer le rechargement) :
-- avant le 24/10 : la note « le classement ouvre samedi 24 octobre » reste affichée, c'est normal ;
+- avant 18 h : la note « le classement ouvre mercredi 21 octobre à 18 h » s'affiche, c'est normal ;
+- à 18 h 05 : la note devient « Classement ouvert jusqu'au vendredi 30 octobre à 23 h 59 » et `curl API/api/wheel` renvoie `"open":true`. Ne faire **aucun** tour de roue ni score de test.
 - aucune erreur dans la console du navigateur.
 
 ## Interdits
 
 - **Ne jamais faire de tour de roue de test en production** : un test peut consommer un instant
-  gagnant (1 an de pizzas ou plein) ou un tiramisu du stock. Les vérifications se font avant le 24/10
-  (réponses `not_started`) ou en local avec `wrangler dev`.
+  gagnant (1 an de pizzas ou plein) ou un tiramisu du stock. Les vérifications se font avant 18 h
+  (réponses `not_started` avant 18 h) ou en local avec `wrangler dev`.
 - Ne pas inscrire de faux scores au classement après l'ouverture.
 - Ne pas modifier les lots, quantités, dates ou textes du règlement sans accord écrit de Yohan.
 - Ne pas exposer `ADMIN_KEY`, ni les exports CSV (ils contiennent des emails).
 
 ---
 
-## Pendant le concours (24 → 30/10)
+## Pendant le concours (21 → 30/10)
 
 **Chaque matin vers 9 h** (champion de la veille) :
 `API/api/admin/export?what=daily&key=ADMIN_KEY` → envoyer à Yohan le pseudo et l'email du champion
@@ -116,16 +120,16 @@ choquant ou score anormal ; masquage uniquement sur son accord :
 
 ## Communication réseaux
 
-Visuels fournis à Yohan : `affiche-four-hante-A4.pdf` (affichage restaurant, QR codes vérifiés :
+Visuels fournis à Yohan (version « du 21 au 30 octobre ») : `affiche-four-hante-A4.pdf` (affichage restaurant, QR codes vérifiés :
 gauche = jeu, droite = roue) et `post-four-hante-1080x1350.png` (Instagram / Facebook).
 
 Planning proposé :
 | Quand | Quoi |
 |---|---|
-| Mer. 21 ou jeu. 22/10 | Post d'annonce (« ouverture samedi, entraîne-toi dès maintenant ») |
-| Ven. 23/10 soir | Affiche imprimée et posée (vitrine, comptoir, ardoise) |
-| Sam. 24/10 0 h–9 h | Post « C'est parti » + story avec lien `https://qentina.fr/halloween/` |
-| 25 → 30/10 | Story quotidienne champion du jour + rappel de la roue |
+| Mer. 21/10 dès 18 h | Post d'annonce + story avec lien `https://qentina.fr/halloween/` (publié par Yohan) |
+| Jeu. 22/10 | Affiche imprimée et posée (vitrine, comptoir, ardoise) |
+| Sam. 24/10 matin | Rappel marché du samedi : story « scannez l'affiche en passant » |
+| 22 → 30/10 | Story quotidienne champion du jour + rappel de la roue |
 | Ven. 30/10 | « Dernières heures pour entrer dans le top 5 » |
 | Sam. 31/10 | Live / stories de la finale, annonce des gagnants (pseudos uniquement) |
 
@@ -133,12 +137,12 @@ Texte du post d'annonce :
 
 > 🎃 Cette nuit, le four se réveille. Et il a faim.
 >
-> Du 24 au 30 octobre, QENTINA vous propose un double jeu concours d'Halloween :
+> Dès ce soir et jusqu'au 30 octobre, QENTINA vous propose un double jeu concours d'Halloween :
 > 🔥 Séance 1 — La Nuit du Four Hanté : sortez les pizzas du four sans toucher l'ananas maudit. Le top 5 joue la finale live le 31 octobre à 18 h 30.
 > 🎡 Séance 2 — La Roue d'Halloween : pas joueur ? Un email = un tour de roue.
 >
 > À gagner : 1 an de pizzas, des pleins d'essence et 250 tiramisus.
-> 100 % gratuit, sans achat. Entraînez-vous dès maintenant 👉 qentina.fr/halloween
+> 100 % gratuit, sans achat. C'est ouvert 👉 qentina.fr/halloween
 >
 > Jeux gratuits réservés aux 18 ans et plus. Règlement sur qentina.fr/halloween
 > #Louviers #Halloween #Pizza #FeuDeBois #JeuConcours #QENTINA

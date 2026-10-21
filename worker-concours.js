@@ -19,7 +19,7 @@
      GET  /api/admin/export?what=finalists → CSV du top 5 avec emails
      GET  /api/admin/export?what=daily     → CSV des champions du jour
      GET  /api/admin/draw?n=1              → tirage au sort du plein d'essence
-     GET  /api/admin/wheel-init            → tire les instants gagnants de la roue (à faire avant le 24/10)
+     GET  /api/admin/wheel-init            → tire les instants gagnants de la roue (à faire avant l'ouverture du 21/10 à 18 h)
      GET  /api/admin/export?what=wheel     → CSV de tous les tirages de la roue
      GET  /api/admin/export?what=instants  → CSV des instants gagnants et de leurs gagnants
 
@@ -27,18 +27,18 @@
    ============================================================ */
 
 // Heures de Paris converties en UTC (changement d'heure le 25 octobre).
-const START = Date.parse("2026-10-23T22:00:00Z"); // samedi 24/10 00:00 (UTC+2)
+const START = Date.parse("2026-10-21T16:00:00Z"); // mercredi 21/10 18:00 (UTC+2)
 const END = Date.parse("2026-10-30T22:59:59Z");   // vendredi 30/10 23:59:59 (UTC+1)
 const PURGE_AFTER = Date.parse("2027-01-31T00:00:00Z"); // RGPD : 3 mois après la fin
 const TIRAMISU_AT = 15;
 const TIRAMISU_MAX = 100; // les 100 premiers seulement
-// Roue : 1 an de pizzas + 1 plein par instants gagnants, 150 tiramisus répartis sur 7 jours.
+// Roue : 1 an de pizzas + 1 plein par instants gagnants, 150 tiramisus répartis sur 10 jours (21 → 30/10).
 const WHEEL_TIRAMISU = 150;
-const WHEEL_DAYS = 7;
+const WHEEL_DAYS = 10;
 const WHEEL_LOTS = ["pizzas", "plein"];
-// Les instants gagnants tombent entre le 24/10 10 h et le 29/10 22 h (heure de Paris),
+// Les instants gagnants tombent entre le 22/10 10 h et le 29/10 22 h (heure de Paris),
 // pour qu'ils soient presque sûrement réclamés avant la clôture.
-const INSTANT_FROM = Date.parse("2026-10-24T08:00:00Z");
+const INSTANT_FROM = Date.parse("2026-10-22T08:00:00Z");
 const INSTANT_TO = Date.parse("2026-10-29T21:00:00Z");
 const DEFAULT_ORIGINS = "https://qentina.fr,https://www.qentina.fr";
 
@@ -173,7 +173,7 @@ const WHEEL_LABELS = { pizzas: "1 an de pizzas", plein: "Plein d'essence", tiram
 
 // Stock cumulé : 150 × (jours écoulés / 7). Ce qui n'est pas gagné un jour reste disponible le lendemain.
 function tiramisuCap(now) {
-  // Jour calendaire de Paris (0 = samedi 24/10), insensible au changement d'heure du 25/10.
+  // Jour calendaire de Paris (0 = mercredi 21/10), insensible au changement d'heure du 25/10.
   const elapsed = (Date.parse(parisDay(now) + "T00:00:00Z") - Date.parse(parisDay(START) + "T00:00:00Z")) / 86400000;
   const day = Math.min(WHEEL_DAYS - 1, Math.max(0, Math.round(elapsed)));
   return Math.round(WHEEL_TIRAMISU * (day + 1) / WHEEL_DAYS);

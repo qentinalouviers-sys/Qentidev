@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La Roue d'Halloween — QENTINA Louviers</title>
-<meta name="description" content="Un email, un tour de roue : 1 an de pizzas, un plein d'essence et 150 tiramisus à gagner chez QENTINA, pizzeria au feu de bois à Louviers. Gratuit, sans achat, du 24 au 30 octobre 2026.">
+<meta name="description" content="Un email, un tour de roue : 1 an de pizzas, un plein d'essence et 150 tiramisus à gagner chez QENTINA, pizzeria au feu de bois à Louviers. Gratuit, sans achat, du 21 au 30 octobre 2026.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#0c0a12">
 <link rel="canonical" href="https://qentina.fr/halloween/roue.html">
@@ -131,11 +131,11 @@ a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
     <ul>
       <li><strong>1 × 1 an de pizzas</strong> : 12 pizzas de la carte, 1 par mois (valeur max. 240 €)</li>
       <li><strong>1 × carte carburant</strong> de 100 €</li>
-      <li><strong>150 tiramisus</strong> (valeur 5 €), répartis sur les 7 jours</li>
+      <li><strong>150 tiramisus</strong> (valeur 5 €), répartis sur les 10 jours</li>
     </ul>
-    <p>Le 1 an de pizzas et le plein sont attribués par <strong>instants gagnants</strong> : deux moments tirés au sort par le serveur avant l’ouverture, entre le 24 octobre 10 h et le 29 octobre 22 h. Le premier tour de roue effectué après chaque instant remporte le lot.</p>
-    <p>Les tiramisus vont aux tours de roue de chaque jour, dans la limite du stock du jour (environ 21 par jour, le stock non gagné est reporté au lendemain). Tous les autres tours sont perdants.</p>
-    <p>Les cases de la roue sont illustratives&nbsp;: leur taille ne reflète pas les chances de gain. Un seul tour par personne et par email, du samedi 24 octobre 0 h au vendredi 30 octobre 23 h 59. Jeu gratuit sans obligation d’achat, réservé aux 18 ans et plus. Organisateur : TEKOTEK SAS (QENTINA).</p>
+    <p>Le 1 an de pizzas et le plein sont attribués par <strong>instants gagnants</strong> : deux moments tirés au sort par le serveur avant l’ouverture, entre le 22 octobre 10 h et le 29 octobre 22 h. Le premier tour de roue effectué après chaque instant remporte le lot.</p>
+    <p>Les tiramisus vont aux tours de roue de chaque jour, dans la limite du stock du jour (15 par jour, le stock non gagné est reporté au lendemain). Tous les autres tours sont perdants.</p>
+    <p>Les cases de la roue sont illustratives&nbsp;: leur taille ne reflète pas les chances de gain. Un seul tour par personne et par email, du mercredi 21 octobre 18 h au vendredi 30 octobre 23 h 59. Jeu gratuit sans obligation d’achat, réservé aux 18 ans et plus. Organisateur : TEKOTEK SAS (QENTINA).</p>
   </section>
 
   <nav class="links" aria-label="Liens">
@@ -152,7 +152,7 @@ a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
   /* Même adresse que dans index.html (voir DEPLOIEMENT-CONCOURS.md). Vide = roue fermée. */
   const CONFIG = {
     apiBase: '',
-    start: '2026-10-24T00:00:00+02:00',
+    start: '2026-10-21T18:00:00+02:00',
     end: '2026-10-30T23:59:59+01:00'
   };
 
@@ -186,7 +186,7 @@ a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
   const ERRORS = {
     email_invalid: 'Cet email ne semble pas valide. Vérifie-le : c’est par là qu’on te prévient si tu gagnes.',
     rules_required: 'Coche la case « 18 ans et règlement » pour tourner la roue.',
-    not_started: 'La roue ouvre samedi 24 octobre à 0 h.',
+    not_started: 'La roue ouvre mercredi 21 octobre à 18 h.',
     closed: 'La roue est fermée : le concours est terminé.',
     network: 'La roue ne répond pas. Vérifie ta connexion et réessaie.'
   };
@@ -451,10 +451,10 @@ a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
 
   function setupPhase() {
     const ph = phase(), note = $('phase-note'), btn = $('r-submit');
-    const msg = { soon: 'La roue ouvre samedi 24 octobre à 0 h. Entraîne-toi au Four Hanté en attendant !', pending: 'La roue ouvre très bientôt.', closed: 'La roue est fermée : le concours est terminé. Merci à tous !' }[ph];
+    const msg = { soon: 'La roue ouvre mercredi 21 octobre à 18 h. Entraîne-toi au Four Hanté en attendant !', pending: 'La roue ouvre très bientôt.', closed: 'La roue est fermée : le concours est terminé. Merci à tous !' }[ph];
     note.hidden = !msg; note.textContent = msg || '';
     btn.disabled = ph !== 'open';
-    if (ph === 'soon') btn.textContent = 'Ouverture samedi 24 octobre';
+    if (ph === 'soon') btn.textContent = 'Ouverture mercredi 21 octobre à 18 h';
     if (ph === 'closed') btn.textContent = 'Roue fermée';
   }
 

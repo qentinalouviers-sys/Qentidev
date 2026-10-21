@@ -8,7 +8,7 @@ Ce guide branche le mini-serveur qui enregistre les scores, tient le classement,
 délivre les codes tiramisu et exporte les gagnants. Durée : **~10 minutes**.
 **Gratuit** (Cloudflare Workers + D1, offre gratuite).
 
-> ⏰ À faire **avant le samedi 24 octobre 2026 à 0 h**, heure d'ouverture du classement.
+> ⏰ À faire **avant le mercredi 21 octobre 2026 à 18 h**, heure d'ouverture du classement et de la roue.
 
 ---
 
@@ -96,7 +96,7 @@ Puis ouvrez **une seule fois** :
 
 Le serveur tire au sort, au hasard, les **instants gagnants** de la roue
 (1 an de pizzas et plein d'essence) et note l'heure du tirage. Le faire
-**avant le 24 octobre** prouve que les instants ont été fixés avant l'ouverture.
+**avant le 21 octobre à 18 h** prouve que les instants ont été fixés avant l'ouverture.
 Vous ne voyez pas les instants : ne cherchez pas à les connaître avant la fin,
 c'est ce qui rend le tirage loyal. (Si vous oubliez, le serveur les tire tout
 seul au premier tour de roue.)
@@ -117,7 +117,7 @@ apiBase: 'https://qentina-concours.mon-sous-domaine.workers.dev',
 ```
 
 Poussez sur `main` : le site se met à jour en 1 à 2 minutes.
-À partir du 24 octobre, le bouton **« Inscrire mon score au concours »** apparaît.
+À partir du 21 octobre à 18 h, le bouton **« Inscrire mon score au concours »** apparaît.
 
 ---
 
