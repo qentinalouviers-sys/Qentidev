@@ -11,12 +11,17 @@
 
    Routes publiques :
      POST /api/scores   → enregistre une partie, renvoie rang + top 5
+     GET  /api/wheel    → état de la roue (ouverte, tiramisus restants aujourd'hui, gros lots restants)
+     POST /api/wheel    → tirage de la roue, un seul par email
      GET  /api/top      → top 10 du classement
    Routes admin (?key=ADMIN_KEY) :
      GET  /api/admin/export?what=players   → CSV de tous les joueurs
      GET  /api/admin/export?what=finalists → CSV du top 5 avec emails
      GET  /api/admin/export?what=daily     → CSV des champions du jour
      GET  /api/admin/draw?n=1              → tirage au sort du plein d'essence
+     GET  /api/admin/wheel-init            → tire les instants gagnants de la roue (à faire avant le 24/10)
+     GET  /api/admin/export?what=wheel     → CSV de tous les tirages de la roue
+     GET  /api/admin/export?what=instants  → CSV des instants gagnants et de leurs gagnants
 
    Guide pas à pas : DEPLOIEMENT-CONCOURS.md
    ============================================================ */
@@ -27,6 +32,14 @@ const END = Date.parse("2026-10-30T22:59:59Z");   // vendredi 30/10 23:59:59 (UT
 const PURGE_AFTER = Date.parse("2027-01-31T00:00:00Z"); // RGPD : 3 mois après la fin
 const TIRAMISU_AT = 15;
 const TIRAMISU_MAX = 100; // les 100 premiers seulement
+// Roue : 1 an de pizzas + 1 plein par instants gagnants, 150 tiramisus répartis sur 7 jours.
+const WHEEL_TIRAMISU = 150;
+const WHEEL_DAYS = 7;
+const WHEEL_LOTS = ["pizzas", "plein"];
+// Les instants gagnants tombent entre le 24/10 10 h et le 29/10 22 h (heure de Paris),
+// pour qu'ils soient presque sûrement réclamés avant la clôture.
+const INSTANT_FROM = Date.parse("2026-10-24T08:00:00Z");
+const INSTANT_TO = Date.parse("2026-10-29T21:00:00Z");
 const DEFAULT_ORIGINS = "https://qentina.fr,https://www.qentina.fr";
 
 const BANNED = ["pute", "salope", "encul", "nique", "connard", "connasse", "batard", "nazi", "hitler",
@@ -42,10 +55,13 @@ export default {
     try {
       if (url.pathname === "/api/scores" && request.method === "POST") return await postScore(request, env, cors);
       if (url.pathname === "/api/top" && request.method === "GET") return await getTop(env, cors);
+      if (url.pathname === "/api/wheel" && request.method === "GET") return await getWheel(env, cors);
+      if (url.pathname === "/api/wheel" && request.method === "POST") return await postWheel(request, env, cors);
       if (url.pathname.startsWith("/api/admin/")) {
         if (!env.ADMIN_KEY || url.searchParams.get("key") !== env.ADMIN_KEY) return json({ error: "forbidden" }, 403, cors);
         if (url.pathname === "/api/admin/export") return await adminExport(url, env);
         if (url.pathname === "/api/admin/draw") return await adminDraw(url, env, cors);
+        if (url.pathname === "/api/admin/wheel-init") return json(await initWheel(env.DB), 200, cors);
       }
       return json({ error: "not_found" }, 404, cors);
     } catch (e) {
@@ -56,7 +72,7 @@ export default {
   // Déclencheur planifié (facultatif) : efface les données après le 31 janvier 2027.
   async scheduled(event, env) {
     if (Date.now() < PURGE_AFTER) return;
-    await env.DB.batch([env.DB.prepare("DELETE FROM plays"), env.DB.prepare("DELETE FROM players")]);
+    await env.DB.batch(["plays", "players", "wheel_spins", "wheel_lots"].map((t) => env.DB.prepare("DELETE FROM " + t)));
   },
 };
 
@@ -105,7 +121,7 @@ async function postScore(request, env, cors) {
   let tiramisuOut = false;
   if (!code && pizzas >= TIRAMISU_AT) {
     const given = await db.prepare("SELECT COUNT(*) AS n FROM players WHERE tiramisu_code IS NOT NULL").first();
-    if ((given ? given.n : 0) < TIRAMISU_MAX) code = makeCode(); else tiramisuOut = true;
+    if ((given ? given.n : 0) < TIRAMISU_MAX) code = makeCode("TIRA"); else tiramisuOut = true;
   }
 
   await db.batch([
@@ -151,6 +167,99 @@ async function topList(db, n) {
   return results || [];
 }
 
+/* ---------- Roue ---------- */
+
+const WHEEL_LABELS = { pizzas: "1 an de pizzas", plein: "Plein d'essence", tiramisu: "Tiramisu", perdu: "Pas de chance", pending: "En cours" };
+
+// Stock cumulé : 150 × (jours écoulés / 7). Ce qui n'est pas gagné un jour reste disponible le lendemain.
+function tiramisuCap(now) {
+  // Jour calendaire de Paris (0 = samedi 24/10), insensible au changement d'heure du 25/10.
+  const elapsed = (Date.parse(parisDay(now) + "T00:00:00Z") - Date.parse(parisDay(START) + "T00:00:00Z")) / 86400000;
+  const day = Math.min(WHEEL_DAYS - 1, Math.max(0, Math.round(elapsed)));
+  return Math.round(WHEEL_TIRAMISU * (day + 1) / WHEEL_DAYS);
+}
+
+// Tire les instants gagnants une seule fois (ids fixes + INSERT OR IGNORE : sans effet si déjà fait).
+async function initWheel(db) {
+  const iso = new Date().toISOString();
+  await db.batch(WHEEL_LOTS.map((kind, i) => {
+    const r = new Uint32Array(1);
+    crypto.getRandomValues(r);
+    const instant = new Date(INSTANT_FROM + (r[0] / 4294967296) * (INSTANT_TO - INSTANT_FROM)).toISOString();
+    return db.prepare("INSERT OR IGNORE INTO wheel_lots (id, kind, instant, drawn_at) VALUES (?, ?, ?, ?)").bind(i + 1, kind, instant, iso);
+  }));
+  const { results } = await db.prepare("SELECT kind, drawn_at FROM wheel_lots ORDER BY id").all();
+  return { ok: true, lots: results.map((r) => ({ lot: WHEEL_LABELS[r.kind], tire_au_sort_le: r.drawn_at })) };
+}
+
+async function wheelState(db, now) {
+  const t = await db.prepare("SELECT COUNT(*) AS n FROM wheel_spins WHERE result = 'tiramisu'").first();
+  const big = await db.prepare("SELECT kind FROM wheel_lots WHERE email IS NULL").all();
+  const given = t ? t.n : 0;
+  return {
+    open: now >= START && now <= END,
+    tiramisuLeftToday: Math.max(0, tiramisuCap(now) - given),
+    tiramisuLeftTotal: Math.max(0, WHEEL_TIRAMISU - given),
+    bigLeft: (big.results || []).map((r) => r.kind),
+  };
+}
+
+async function getWheel(env, cors) {
+  const now = Date.now();
+  const lots = await env.DB.prepare("SELECT COUNT(*) AS n FROM wheel_lots").first();
+  const state = await wheelState(env.DB, now);
+  if (!lots || !lots.n) state.bigLeft = WHEEL_LOTS.slice();
+  return json(state, 200, { ...cors, "Cache-Control": "public, max-age=15" });
+}
+
+async function postWheel(request, env, cors) {
+  const now = Date.now();
+  if (now < START) return json({ error: "not_started" }, 403, cors);
+  if (now > END) return json({ error: "closed" }, 403, cors);
+
+  let b;
+  try { b = await request.json(); } catch (e) { return json({ error: "bad_request" }, 400, cors); }
+  const email = String(b.email || "").trim().toLowerCase();
+  if (email.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ error: "email_invalid" }, 400, cors);
+  if (b.rules !== true) return json({ error: "rules_required" }, 400, cors);
+
+  const db = env.DB;
+  const iso = new Date(now).toISOString();
+
+  // Un seul tirage par email : la clé primaire garantit l'unicité, même en cas de double clic.
+  const ins = await db.prepare("INSERT OR IGNORE INTO wheel_spins (email, result, newsletter, created_at) VALUES (?, 'pending', ?, ?)")
+    .bind(email, b.newsletter ? 1 : 0, iso).run();
+  if (!ins.meta.changes) {
+    const prev = await db.prepare("SELECT result, code FROM wheel_spins WHERE email = ?").bind(email).first();
+    return json({ already: true, result: prev && prev.result !== "pending" ? prev.result : "perdu", code: prev ? prev.code : null }, 200, cors);
+  }
+
+  await initWheel(db); // sans effet si les instants ont déjà été tirés
+
+  let result = "perdu", code = null;
+  // Gros lot : le premier tirage après un instant gagnant non réclamé le remporte (mise à jour atomique).
+  const claim = await db.prepare(
+    `UPDATE wheel_lots SET email = ?, won_at = ?
+      WHERE id = (SELECT id FROM wheel_lots WHERE email IS NULL AND instant <= ? ORDER BY instant LIMIT 1)
+        AND email IS NULL`
+  ).bind(email, iso, iso).run();
+  if (claim.meta.changes) {
+    const lot = await db.prepare("SELECT kind FROM wheel_lots WHERE email = ?").bind(email).first();
+    result = lot.kind;
+    code = makeCode("ROUE");
+  } else {
+    // Tiramisu, dans la limite du stock cumulé du jour (contrôle et écriture en une seule requête).
+    const c = makeCode("ROUE");
+    const t = await db.prepare(
+      "UPDATE wheel_spins SET result = 'tiramisu', code = ? WHERE email = ? AND (SELECT COUNT(*) FROM wheel_spins WHERE result = 'tiramisu') < ?"
+    ).bind(c, email, tiramisuCap(now)).run();
+    if (t.meta.changes) { result = "tiramisu"; code = c; }
+  }
+  if (result !== "tiramisu") await db.prepare("UPDATE wheel_spins SET result = ?, code = ? WHERE email = ?").bind(result, code, email).run();
+
+  return json({ result, code, ...(await wheelState(db, now)) }, 200, cors);
+}
+
 /* ---------- Admin ---------- */
 
 async function adminExport(url, env) {
@@ -163,6 +272,14 @@ async function adminExport(url, env) {
       "SELECT pseudo, email, best, best_pizzas, best_at FROM players WHERE hidden = 0 AND best > 0 ORDER BY best DESC, best_at ASC LIMIT 5"
     ).all();
     rows = results.map((r, i) => [i + 1, r.pseudo, r.email, r.best, r.best_pizzas, r.best_at]);
+  } else if (what === "wheel") {
+    cols = ["email", "resultat", "code", "newsletter", "tire_le"];
+    const { results } = await db.prepare("SELECT email, result, code, newsletter, created_at FROM wheel_spins ORDER BY created_at ASC").all();
+    rows = results.map((r) => [r.email, WHEEL_LABELS[r.result] || r.result, r.code || "", r.newsletter ? "oui" : "non", r.created_at]);
+  } else if (what === "instants") {
+    cols = ["lot", "instant_gagnant", "tire_au_sort_le", "gagnant", "gagne_le"];
+    const { results } = await db.prepare("SELECT kind, instant, drawn_at, email, won_at FROM wheel_lots ORDER BY instant ASC").all();
+    rows = results.map((r) => [WHEEL_LABELS[r.kind], r.instant, r.drawn_at, r.email || "(pas encore gagné)", r.won_at || ""]);
   } else if (what === "daily") {
     cols = ["jour", "pseudo", "email", "score"];
     const { results } = await db.prepare(
@@ -231,11 +348,11 @@ function isBanned(pseudo) {
   return tokens.some((t) => BANNED_TOKENS.includes(t));
 }
 
-function makeCode() {
+function makeCode(prefix) {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const r = new Uint8Array(5);
   crypto.getRandomValues(r);
-  return "TIRA-" + Array.from(r, (v) => alphabet[v % alphabet.length]).join("");
+  return prefix + "-" + Array.from(r, (v) => alphabet[v % alphabet.length]).join("");
 }
 
 function parisDay(ms) {

@@ -44,6 +44,24 @@ CREATE TABLE plays (
   created_at  TEXT NOT NULL
 );
 CREATE INDEX plays_day ON plays (day, score DESC);
+
+CREATE TABLE wheel_spins (
+  email       TEXT PRIMARY KEY,
+  result      TEXT NOT NULL,
+  code        TEXT,
+  newsletter  INTEGER NOT NULL DEFAULT 0,
+  created_at  TEXT NOT NULL
+);
+CREATE INDEX wheel_result ON wheel_spins (result);
+
+CREATE TABLE wheel_lots (
+  id        INTEGER PRIMARY KEY,
+  kind      TEXT NOT NULL,
+  instant   TEXT NOT NULL,
+  drawn_at  TEXT NOT NULL,
+  email     TEXT,
+  won_at    TEXT
+);
 ```
 
 ---
@@ -72,6 +90,16 @@ Dans le Worker → **« Settings »** :
 Ouvrez dans le navigateur : `https://qentina-concours.VOTRE-SOUS-DOMAINE.workers.dev/api/top`
 
 Vous devez voir : `{"top":[],"players":0}`. ✅
+
+Puis ouvrez **une seule fois** :
+`https://qentina-concours.VOTRE-SOUS-DOMAINE.workers.dev/api/admin/wheel-init?key=MOTDEPASSE`
+
+Le serveur tire au sort, au hasard, les **instants gagnants** de la roue
+(1 an de pizzas et plein d'essence) et note l'heure du tirage. Le faire
+**avant le 24 octobre** prouve que les instants ont été fixés avant l'ouverture.
+Vous ne voyez pas les instants : ne cherchez pas à les connaître avant la fin,
+c'est ce qui rend le tirage loyal. (Si vous oubliez, le serveur les tire tout
+seul au premier tour de roue.)
 
 ## Étape 5 — Brancher le site
 
@@ -104,12 +132,20 @@ Ces liens s'ouvrent depuis le téléphone et téléchargent un fichier Excel/CSV
 | **Champion du jour** (meilleur score de chaque journée) | `ADRESSE/api/admin/export?what=daily&key=MOTDEPASSE` |
 | **Les 5 finalistes** à prévenir le 31 au matin | `ADRESSE/api/admin/export?what=finalists&key=MOTDEPASSE` |
 | **Tirage du plein d'essence** (à lancer pendant la finale) | `ADRESSE/api/admin/draw?n=1&key=MOTDEPASSE` |
+| **Roue** : tous les tirages (email, lot, code) | `ADRESSE/api/admin/export?what=wheel&key=MOTDEPASSE` |
+| **Roue** : instants gagnants et leurs gagnants (après le 30/10) | `ADRESSE/api/admin/export?what=instants&key=MOTDEPASSE` |
 
 ### Vérifier un code tiramisu au comptoir
 
 Le client montre un code `TIRA-XXXXX` sur son téléphone. Il figure dans
 l'export « tous les joueurs », colonne `code_tiramisu`. Un code par email,
 100 codes au maximum : le serveur s'arrête tout seul au 100e.
+
+### Codes de la roue
+
+Les gains de la roue ont un code `ROUE-XXXXX`, visible dans l'export « roue ».
+Gros lots (1 an de pizzas, plein d'essence) : le gagnant est aussi dans l'export
+« instants » ; demandez une pièce d'identité à la remise, au nom du titulaire de l'email.
 
 ### Masquer un pseudo choquant
 
@@ -139,7 +175,7 @@ soit le **31 janvier 2027**. Deux options :
   → ajoutez `0 3 * * *`. Le Worker vide la base tout seul à partir du 31/01/2027.
 - **Manuel** : le 31 janvier 2027, dans la Console D1 :
   ```sql
-  DELETE FROM plays; DELETE FROM players;
+  DELETE FROM plays; DELETE FROM players; DELETE FROM wheel_spins; DELETE FROM wheel_lots;
   ```
 
 Avant cette date, exportez la liste des joueurs ayant coché **newsletter = oui** :

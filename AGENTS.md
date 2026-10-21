@@ -21,7 +21,8 @@ Qentidev/
 ├── worker-concours.js         # Cloudflare Worker + D1 du jeu concours Halloween (scores, classement)
 ├── halloween/                 # Jeu concours « La Nuit du Four Hanté » (oct. 2026)
 │   ├── index.html             #   jeu autonome (canvas) ; CONFIG.apiBase = URL du Worker concours
-│   ├── reglement.html         #   règlement complet du concours
+│   ├── roue.html              #   roue d'Halloween : 1 tour par email (instants gagnants + tiramisus)
+│   ├── reglement.html         #   règlement complet du concours (jeu + roue)
 │   └── og.jpg                 #   image de partage réseaux sociaux (1200×630)
 ├── DEPLOIEMENT-CONCOURS.md    # Doc : activer le classement du concours (Worker + D1)
 ├── banner.jpg                 # Image bannière

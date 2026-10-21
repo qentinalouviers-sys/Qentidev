@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Roue d'Halloween — QENTINA Louviers</title>
+<meta name="description" content="Un email, un tour de roue : 1 an de pizzas, un plein d'essence et 150 tiramisus à gagner chez QENTINA, pizzeria au feu de bois à Louviers. Gratuit, sans achat, du 24 au 30 octobre 2026.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0c0a12">
+<link rel="canonical" href="https://qentina.fr/halloween/roue.html">
+<link rel="icon" href="../logo.jpg">
+<meta property="og:site_name" content="QENTINA">
+<meta property="og:title" content="La Roue d'Halloween — 1 tour de roue offert">
+<meta property="og:description" content="Un email, un tour de roue : 1 an de pizzas, un plein d'essence et 150 tiramisus à gagner chez QENTINA à Louviers.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://qentina.fr/halloween/roue.html">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:image" content="https://qentina.fr/halloween/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://qentina.fr/halloween/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&family=Pirata+One&display=swap">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="83787091-b8a4-4b57-bffe-7d2225579e60"></script>
+<style>
+/* Layout: one column, the wheel is the stage; the form and the legal disclosure sit right under it. Same night palette as the game. */
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+:root{
+  --night:#0c0a12;--ink:#140f1f;--bone:#f2e8d6;--bone-dim:#bfb29c;--gold:#e8b44c;--ember:#ff7426;--ember-deep:#9c3b0c;
+  --cursed:#a6e34a;--ghost:#b9fbe6;--plum:#3b2352;--panel:rgba(20,15,31,.92);--line:rgba(242,232,214,.16);
+  --font-display:"Pirata One",Georgia,"Times New Roman",serif;
+  --font-body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:dark;
+}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;color:var(--bone);font:15px/1.5 var(--font-body);
+  background:radial-gradient(circle at 82% 6%,rgba(244,226,180,.16) 0,rgba(244,226,180,0) 22%),
+             radial-gradient(ellipse at 50% 38%,rgba(255,116,38,.16) 0,rgba(255,116,38,0) 55%),
+             linear-gradient(180deg,#07060c 0%,#1b1430 45%,#0c0a12 100%) fixed;
+  background-color:var(--night)}
+.wrap{max-width:460px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.eyebrow{margin:0;font:800 12px/1.2 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.eyebrow a{color:inherit;text-decoration:none}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:rgba(0,0,0,.4);color:var(--bone);display:grid;place-items:center;padding:0;cursor:pointer;flex:none}
+.icon-btn svg{width:20px;height:20px}
+h1{font-family:var(--font-display);font-weight:400;font-size:clamp(50px,15vw,72px);line-height:.88;margin:0;text-wrap:balance;text-shadow:0 3px 0 #000,0 0 34px rgba(255,116,38,.45);animation:titleGlow 3.4s ease-in-out infinite}
+@keyframes titleGlow{50%{text-shadow:0 3px 0 #000,0 0 50px rgba(255,116,38,.8),0 0 90px rgba(166,227,74,.2)}}
+.lede{margin:0;font-size:16px;color:var(--bone-dim);max-width:36ch}
+.lede strong{color:var(--bone)}
+.stage{position:relative;width:100%;max-width:380px;margin:0 auto;aspect-ratio:1/1.08}
+#wheel{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stock{margin:0;text-align:center;font:700 13.5px/1.4 var(--font-body);color:var(--ghost);min-height:1.4em;text-wrap:balance}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-weight:600;font-size:13.5px}
+input[type=email]{font:600 16px var(--font-body);color:var(--bone);background:rgba(255,255,255,.06);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;width:100%}
+input::placeholder{color:rgba(191,178,156,.55)}
+input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.check{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;font-weight:400;font-size:13.5px;line-height:1.45;color:var(--bone-dim);cursor:pointer}
+.check input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--ember)}
+.btn{appearance:none;border:0;border-radius:999px;font:800 17px/1 var(--font-body);padding:16px 22px;min-height:54px;width:100%;cursor:pointer;color:#1c0b02;background:linear-gradient(180deg,#ffb04d,var(--ember));box-shadow:0 6px 0 var(--ember-deep),0 12px 30px rgba(255,116,38,.32);animation:litPulse 1.9s ease-in-out infinite}
+.btn:active{transform:translateY(3px)}
+.btn:disabled{animation:none;opacity:.55;cursor:default;box-shadow:0 6px 0 var(--ember-deep)}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+a.btn{display:flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+.btn.ghost{background:rgba(255,255,255,.04);border:1.5px solid var(--line);color:var(--bone);box-shadow:none;animation:none}
+@keyframes litPulse{50%{box-shadow:0 6px 0 var(--ember-deep),0 10px 50px rgba(255,116,38,.8),0 0 0 7px rgba(255,116,38,.14)}}
+.error{margin:0;color:#ffc1b6;background:rgba(224,68,47,.14);border:1px solid rgba(224,68,47,.45);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.note{margin:0;padding:10px 12px;border-radius:10px;background:rgba(185,251,230,.08);border:1px solid rgba(185,251,230,.3);color:var(--ghost);font-weight:700;font-size:14px;text-wrap:balance}
+.result{text-align:center;align-items:center}
+.result .kicker{margin:0;font:800 12px/1.2 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.result h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:44px;line-height:.95;text-wrap:balance}
+.result.win h2{color:var(--gold);text-shadow:0 0 30px rgba(232,180,76,.45)}
+.result p{margin:0;color:var(--bone-dim);max-width:34ch}
+.code{display:inline-block;font:800 22px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;color:#fff3c4;background:rgba(0,0,0,.4);border:1px dashed rgba(232,180,76,.6);padding:10px 14px;border-radius:10px;-webkit-user-select:all;user-select:all}
+.result.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(.85);opacity:.2}to{transform:none;opacity:1}}
+.legal{font-size:12.5px;line-height:1.5;color:var(--bone-dim);display:flex;flex-direction:column;gap:8px}
+.legal h2{margin:0;font:800 11px/1.2 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim)}
+.legal p{margin:0}
+.legal ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:3px}
+.legal strong{color:var(--bone)}
+a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
+.links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;font-weight:700;font-size:14px}
+@media (prefers-reduced-motion: reduce){h1,.btn,.result.pop{animation:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <p class="eyebrow"><a href="/">QENTINA · Louviers</a></p>
+    <button class="icon-btn" id="mute" type="button" aria-pressed="false" aria-label="Couper le son"></button>
+  </div>
+  <header>
+    <h1>La Roue d’Halloween</h1>
+  </header>
+  <p class="lede"><strong>Un email, un tour de roue.</strong> Pas besoin de jouer, pas besoin d’acheter&nbsp;: tente ta chance pour 1 an de pizzas, un plein d’essence ou un tiramisu.</p>
+
+  <div class="stage">
+    <canvas id="wheel" role="img" aria-label="Roue d’Halloween : 1 an de pizzas, plein d’essence, tiramisu et pas de chance"></canvas>
+  </div>
+  <p class="stock" id="stock" role="status"></p>
+
+  <form class="panel" id="spin-form" novalidate>
+    <p class="note" id="phase-note" hidden></p>
+    <div class="field">
+      <label for="r-email">Ton email, pour retrouver ton lot</label>
+      <input id="r-email" type="email" inputmode="email" autocomplete="email" placeholder="prenom@exemple.fr">
+    </div>
+    <label class="check"><input type="checkbox" id="r-rules"><span>J’ai 18 ans ou plus et j’accepte le <a class="link" href="reglement.html#roue">règlement</a>.</span></label>
+    <label class="check"><input type="checkbox" id="r-news"><span>Je veux recevoir les offres de QENTINA (facultatif).</span></label>
+    <p class="error" id="r-error" role="alert" hidden></p>
+    <button class="btn" id="r-submit" type="submit">Faire tourner la roue</button>
+  </form>
+
+  <section class="panel result" id="result" hidden aria-live="polite">
+    <p class="kicker" id="res-kicker"></p>
+    <h2 id="res-title"></h2>
+    <p id="res-text"></p>
+    <span class="code" id="res-code" hidden></span>
+    <p id="res-how"></p>
+    <a class="btn" href="./" id="res-play">Jouer au Four Hanté</a>
+  </section>
+
+  <section class="panel legal" aria-labelledby="lg-h">
+    <h2 id="lg-h">Lots de la roue et chances de gain</h2>
+    <ul>
+      <li><strong>1 × 1 an de pizzas</strong> : 12 pizzas de la carte, 1 par mois (valeur max. 240 €)</li>
+      <li><strong>1 × carte carburant</strong> de 100 €</li>
+      <li><strong>150 tiramisus</strong> (valeur 5 €), répartis sur les 7 jours</li>
+    </ul>
+    <p>Le 1 an de pizzas et le plein sont attribués par <strong>instants gagnants</strong> : deux moments tirés au sort par le serveur avant l’ouverture, entre le 24 octobre 10 h et le 29 octobre 22 h. Le premier tour de roue effectué après chaque instant remporte le lot.</p>
+    <p>Les tiramisus vont aux tours de roue de chaque jour, dans la limite du stock du jour (environ 21 par jour, le stock non gagné est reporté au lendemain). Tous les autres tours sont perdants.</p>
+    <p>Les cases de la roue sont illustratives&nbsp;: leur taille ne reflète pas les chances de gain. Un seul tour par personne et par email, du samedi 24 octobre 0 h au vendredi 30 octobre 23 h 59. Jeu gratuit sans obligation d’achat, réservé aux 18 ans et plus. Organisateur : TEKOTEK SAS (QENTINA).</p>
+  </section>
+
+  <nav class="links" aria-label="Liens">
+    <a class="link" href="./">Jouer au Four Hanté</a>
+    <a class="link" href="reglement.html#roue">Règlement complet</a>
+    <a class="link" href="/">qentina.fr</a>
+  </nav>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  /* Même adresse que dans index.html (voir DEPLOIEMENT-CONCOURS.md). Vide = roue fermée. */
+  const CONFIG = {
+    apiBase: '',
+    start: '2026-10-24T00:00:00+02:00',
+    end: '2026-10-30T23:59:59+01:00'
+  };
+
+  const TAU = Math.PI * 2;
+  const $ = id => document.getElementById(id);
+  const reduced = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const FONT_BODY = 'Figtree, system-ui, -apple-system, "Segoe UI", sans-serif';
+  const FONT_DISPLAY = '"Pirata One", Georgia, serif';
+
+  // Segments drawn on the wheel (illustrative; the server decides the result)
+  const SEGS = [
+    { kind: 'pizzas', lines: ['1 AN DE', 'PIZZAS'], bg: '#e8b44c', fg: '#2a1206' },
+    { kind: 'tiramisu', lines: ['TIRAMISU'], bg: '#efe3c8', fg: '#4a2a16' },
+    { kind: 'perdu', lines: ['PAS DE', 'CHANCE'], bg: '#3b2352', fg: '#f2e8d6', icon: 'pineapple' },
+    { kind: 'tiramisu', lines: ['TIRAMISU'], bg: '#dcc7a0', fg: '#4a2a16' },
+    { kind: 'plein', lines: ['PLEIN', "D'ESSENCE"], bg: '#ff7426', fg: '#1c0b02' },
+    { kind: 'tiramisu', lines: ['TIRAMISU'], bg: '#efe3c8', fg: '#4a2a16' },
+    { kind: 'perdu', lines: ['PAS DE', 'CHANCE'], bg: '#2a1a3c', fg: '#f2e8d6', icon: 'pineapple' },
+    { kind: 'tiramisu', lines: ['TIRAMISU'], bg: '#dcc7a0', fg: '#4a2a16' }
+  ];
+  const SEG = TAU / SEGS.length;
+
+  const RESULTS = {
+    pizzas: { win: true, kicker: 'Instant gagnant !', title: '1 an de pizzas', text: 'Tu gagnes 12 pizzas de la carte, une par mois pendant un an.', how: 'Garde ce code. On te contacte par email ; présente-le avec une pièce d’identité au comptoir pour activer ton lot.' },
+    plein: { win: true, kicker: 'Instant gagnant !', title: 'Un plein d’essence', text: 'Tu gagnes une carte carburant de 100 €.', how: 'Garde ce code. On te contacte par email ; présente-le avec une pièce d’identité au comptoir pour retirer ta carte.' },
+    tiramisu: { win: true, kicker: 'Gagné !', title: 'Un tiramisu offert', text: 'Café, pistache ou noisette : c’est toi qui choisis.', how: 'Montre ce code au comptoir avant le 30 novembre 2026.' },
+    perdu: { win: false, kicker: 'L’ananas maudit est passé par là', title: 'Pas de chance cette fois', text: 'Mais tu peux encore gagner : joue au Four Hanté, le top 5 dispute 1 an de pizzas en finale le 31 octobre.', how: '' }
+  };
+
+  const ERRORS = {
+    email_invalid: 'Cet email ne semble pas valide. Vérifie-le : c’est par là qu’on te prévient si tu gagnes.',
+    rules_required: 'Coche la case « 18 ans et règlement » pour tourner la roue.',
+    not_started: 'La roue ouvre samedi 24 octobre à 0 h.',
+    closed: 'La roue est fermée : le concours est terminé.',
+    network: 'La roue ne répond pas. Vérifie ta connexion et réessaie.'
+  };
+
+  const STORE_GAME = 'qentinaHalloween', STORE_WHEEL = 'qentinaRoue';
+  const load = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
+  const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } };
+  const track = (n, d) => { try { if (window.umami && window.umami.track) window.umami.track(n, d); } catch (e) { /* optional */ } };
+
+  function phase() {
+    const now = Date.now();
+    if (now < Date.parse(CONFIG.start)) return 'soon';
+    if (now > Date.parse(CONFIG.end)) return 'closed';
+    return CONFIG.apiBase ? 'open' : 'pending';
+  }
+
+  /* ---------- Audio ---------- */
+  let actx = null, muted = false;
+  function audioInit() {
+    try {
+      if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); }
+      if (actx && actx.state === 'suspended') actx.resume();
+    } catch (e) { actx = null; }
+  }
+  function tone(f, d, type, v, slide, delay) {
+    if (muted || !actx) return;
+    try {
+      const t = actx.currentTime + (delay || 0);
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t);
+      if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f * slide), t + d);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v || 0.1, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + d + 0.03);
+    } catch (e) { /* optional */ }
+  }
+  const sfx = {
+    tick: () => tone(1400, 0.03, 'square', 0.04),
+    win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', 0.14, 0, i * 0.1)),
+    lose: () => { tone(220, 0.5, 'sawtooth', 0.08, 0.5); tone(98, 0.6, 'sawtooth', 0.05, 0.8, 0.1); }
+  };
+  const buzz = p => { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) { /* optional */ } };
+  function setMute(m) {
+    muted = m;
+    $('mute').innerHTML = m
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+    $('mute').setAttribute('aria-pressed', String(m));
+    $('mute').setAttribute('aria-label', m ? 'Remettre le son' : 'Couper le son');
+  }
+
+  /* ---------- Wheel drawing ---------- */
+  const cv = $('wheel'), ctx = cv.getContext('2d');
+  let W = 0, H = 0, DPR = 1, R = 0, CX = 0, CY = 0;
+  const wheelImg = document.createElement('canvas');
+  let rot = 0, spinning = false, kick = 0, t = 0;
+  const parts = [];
+
+  function layout() {
+    const r = cv.getBoundingClientRect();
+    W = r.width; H = r.height; DPR = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+    R = Math.min(W, H / 1.08) * 0.44; CX = W / 2; CY = H * 0.54;
+    paintWheel();
+  }
+
+  function pineapple(c, x, y, s) {
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#3f9b3a';
+    for (let i = -1; i <= 1; i++) { c.beginPath(); c.moveTo(i * s * 0.18, -s * 0.6); c.lineTo(i * s * 0.45, -s * 1.3); c.lineTo(i * s * 0.05 + s * 0.08, -s * 0.6); c.fill(); }
+    c.fillStyle = '#e2b437'; c.beginPath(); c.ellipse(0, 0, s * 0.55, s * 0.72, 0, 0, TAU); c.fill();
+    c.fillStyle = '#ff2e1f';
+    c.beginPath(); c.moveTo(-s * 0.36, -s * 0.18); c.lineTo(-s * 0.06, -s * 0.02); c.lineTo(-s * 0.3, s * 0.06); c.fill();
+    c.beginPath(); c.moveTo(s * 0.36, -s * 0.18); c.lineTo(s * 0.06, -s * 0.02); c.lineTo(s * 0.3, s * 0.06); c.fill();
+    c.restore();
+  }
+
+  function pumpkin(c, x, y, s) {
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#4f7a26'; c.fillRect(-s * 0.09, -s * 1.02, s * 0.18, s * 0.36);
+    c.fillStyle = '#e8741c';
+    for (const dx of [-0.45, 0.45]) { c.beginPath(); c.ellipse(dx * s, 0, s * 0.6, s * 0.78, 0, 0, TAU); c.fill(); }
+    c.fillStyle = '#f39233'; c.beginPath(); c.ellipse(0, 0, s * 0.42, s * 0.8, 0, 0, TAU); c.fill();
+    c.fillStyle = '#ffd36b'; c.shadowColor = '#ffb23a'; c.shadowBlur = s * 0.5;
+    c.beginPath(); c.moveTo(-s * 0.48, -s * 0.12); c.lineTo(-s * 0.2, -s * 0.12); c.lineTo(-s * 0.34, -s * 0.38); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(s * 0.48, -s * 0.12); c.lineTo(s * 0.2, -s * 0.12); c.lineTo(s * 0.34, -s * 0.38); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(-s * 0.5, s * 0.18); c.quadraticCurveTo(0, s * 0.62, s * 0.5, s * 0.18); c.quadraticCurveTo(0, s * 0.38, -s * 0.5, s * 0.18); c.fill();
+    c.restore();
+  }
+
+  // The rotating disc is painted once to an offscreen canvas, then drawn rotated each frame
+  function paintWheel() {
+    const size = Math.ceil(R * 2 * DPR);
+    wheelImg.width = wheelImg.height = size;
+    const c = wheelImg.getContext('2d');
+    c.setTransform(DPR, 0, 0, DPR, 0, 0);
+    c.translate(R, R);
+    SEGS.forEach((s, i) => {
+      const a0 = -Math.PI / 2 + i * SEG, a1 = a0 + SEG;
+      c.beginPath(); c.moveTo(0, 0); c.arc(0, 0, R * 0.995, a0, a1); c.closePath();
+      c.fillStyle = s.bg; c.fill();
+      const g = c.createRadialGradient(0, 0, R * 0.2, 0, 0, R);
+      g.addColorStop(0, 'rgba(0,0,0,.18)'); g.addColorStop(0.7, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.22)');
+      c.fillStyle = g; c.fill();
+      c.strokeStyle = 'rgba(12,10,18,.75)'; c.lineWidth = 2; c.stroke();
+      c.save();
+      c.rotate(a0 + SEG / 2);
+      c.fillStyle = s.fg; c.textAlign = 'right'; c.textBaseline = 'middle';
+      const fs = Math.max(10, R * 0.085);
+      c.font = `800 ${fs}px ${FONT_BODY}`;
+      const x = R * 0.86;
+      if (s.lines.length === 1) c.fillText(s.lines[0], x, 0, R * 0.55);
+      else { c.fillText(s.lines[0], x, -fs * 0.58, R * 0.55); c.fillText(s.lines[1], x, fs * 0.58, R * 0.55); }
+      if (s.icon === 'pineapple') { c.rotate(Math.PI / 2); pineapple(c, 0, -R * 0.3, R * 0.07); }
+      c.restore();
+    });
+    // rim
+    c.lineWidth = R * 0.07; c.strokeStyle = '#1b1024'; c.beginPath(); c.arc(0, 0, R * 0.965, 0, TAU); c.stroke();
+    c.lineWidth = 2; c.strokeStyle = 'rgba(232,180,76,.7)'; c.beginPath(); c.arc(0, 0, R * 0.93, 0, TAU); c.stroke();
+  }
+
+  function drawPointer(x, y, s, k) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(k * 0.35);
+    ctx.fillStyle = '#120a19'; ctx.strokeStyle = '#e8b44c'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(-s * 0.55, -s * 0.2); ctx.lineTo(s * 0.55, -s * 0.2); ctx.lineTo(0, s * 0.9); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    pumpkin(ctx, x, y - s * 0.45, s * 0.55);
+  }
+
+  function render() {
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    // glow
+    const g = ctx.createRadialGradient(CX, CY, R * 0.6, CX, CY, R * 1.25);
+    g.addColorStop(0, 'rgba(255,116,38,.25)'); g.addColorStop(1, 'rgba(255,116,38,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // stand
+    ctx.fillStyle = '#120a19';
+    ctx.beginPath(); ctx.moveTo(CX - R * 0.12, CY); ctx.lineTo(CX + R * 0.12, CY); ctx.lineTo(CX + R * 0.32, H); ctx.lineTo(CX - R * 0.32, H); ctx.closePath(); ctx.fill();
+    // disc
+    ctx.save(); ctx.translate(CX, CY); ctx.rotate(rot);
+    ctx.drawImage(wheelImg, -R, -R, R * 2, R * 2);
+    ctx.restore();
+    // blinking bulbs on the rim
+    const n = 16;
+    for (let i = 0; i < n; i++) {
+      const a = i / n * TAU + rot;
+      const on = spinning ? ((i + Math.floor(t * 12)) % 2 === 0) : (0.5 + 0.5 * Math.sin(t * 3 + i)) > 0.5;
+      const col = ['#ff7426', '#b060ff', '#96ff50'][i % 3];
+      const x = CX + Math.cos(a) * R * 0.965, y = CY + Math.sin(a) * R * 0.965;
+      if (on) { ctx.fillStyle = col; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.arc(x, y, R * 0.06, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = on ? col : '#3a2e44';
+      ctx.beginPath(); ctx.arc(x, y, R * 0.025, 0, TAU); ctx.fill();
+    }
+    // hub
+    ctx.fillStyle = '#120a19'; ctx.beginPath(); ctx.arc(CX, CY, R * 0.19, 0, TAU); ctx.fill();
+    ctx.strokeStyle = '#e8b44c'; ctx.lineWidth = 2; ctx.stroke();
+    pumpkin(ctx, CX, CY + R * 0.03, R * 0.12);
+    drawPointer(CX, CY - R * 1.0, R * 0.13, kick);
+    // particles
+    for (const p of parts) {
+      ctx.globalAlpha = Math.max(0, p.life / p.max);
+      if (p.bat) {
+        ctx.fillStyle = '#050409';
+        ctx.beginPath(); ctx.ellipse(p.x, p.y, 3, 4.5, 0, 0, TAU); ctx.fill();
+        const f = Math.sin(t * 30 + p.ph);
+        for (const sd of [-1, 1]) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.quadraticCurveTo(p.x + sd * 8, p.y - 6 - f * 6, p.x + sd * 16, p.y - f * 4); ctx.quadraticCurveTo(p.x + sd * 9, p.y + 2, p.x, p.y + 2); ctx.fill(); }
+      } else {
+        ctx.fillStyle = p.col; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function celebrate(big) {
+    const cols = ['#ff7426', '#e8b44c', '#b060ff', '#96ff50', '#f2e8d6'];
+    const n = reduced ? 20 : big ? 140 : 70;
+    for (let i = 0; i < n; i++) {
+      const a = rand(-Math.PI, 0), sp = rand(160, big ? 520 : 380);
+      parts.push({ x: CX, y: CY - R * 0.2, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: 520, r: rand(0, TAU), vr: rand(-8, 8), s: rand(6, 11), col: cols[i % cols.length], life: rand(1.4, 2.4), max: 2.4 });
+    }
+  }
+  function batsOut() {
+    for (let i = 0; i < (reduced ? 4 : 12); i++) {
+      const a = rand(-Math.PI * 0.95, -Math.PI * 0.05), sp = rand(150, 320);
+      parts.push({ bat: true, x: CX, y: CY, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: -30, ph: rand(0, TAU), life: rand(1.2, 1.8), max: 1.8 });
+    }
+  }
+
+  /* ---------- Spin ---------- */
+  let anim = null;
+  const segAt = r => ((Math.floor(((-r % TAU) + TAU) % TAU / SEG)) % SEGS.length);
+
+  function targetFor(kind) {
+    const idx = SEGS.map((s, i) => (s.kind === kind ? i : -1)).filter(i => i >= 0);
+    const i = idx[Math.floor(Math.random() * idx.length)];
+    return (i + 0.5) * SEG + rand(-0.32, 0.32) * SEG;
+  }
+
+  function spinTo(kind, done) {
+    const goal = targetFor(kind);
+    const base = ((-goal - rot) % TAU + TAU) % TAU;
+    const total = base + TAU * (reduced ? 1 : 6);
+    anim = { from: rot, to: rot + total, t0: performance.now(), dur: reduced ? 1200 : 6200, done, last: segAt(rot) };
+    spinning = true;
+  }
+
+  function settle(kind) { rot = -targetFor(kind); }
+
+  /* ---------- Loop ---------- */
+  let prev = 0, idleSpeed = 0.18;
+  function loop(now) {
+    const dt = prev ? Math.min(0.05, (now - prev) / 1000) : 0.016; prev = now; t += dt;
+    if (anim) {
+      const k = Math.min(1, (now - anim.t0) / anim.dur);
+      rot = anim.from + (anim.to - anim.from) * (1 - Math.pow(1 - k, 4));
+      const s = segAt(rot);
+      if (s !== anim.last) { anim.last = s; kick = 1; sfx.tick(); if (k < 0.9) buzz(4); }
+      if (k >= 1) { const d = anim.done; anim = null; spinning = false; d && d(); }
+    } else if (idleSpeed && !reduced) rot += idleSpeed * dt;
+    kick = Math.max(0, kick - dt * 8);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i]; p.life -= dt;
+      if (p.life <= 0) { parts.splice(i, 1); continue; }
+      p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; if (p.vr) p.r += p.vr * dt;
+    }
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  /* ---------- UI ---------- */
+  function showResult(kind, code, already) {
+    const r = RESULTS[kind] || RESULTS.perdu;
+    const box = $('result');
+    box.classList.toggle('win', r.win);
+    $('res-kicker').textContent = already ? 'Tu as déjà tourné la roue' : r.kicker;
+    $('res-title').textContent = r.title;
+    $('res-text').textContent = r.text;
+    $('res-code').hidden = !code;
+    $('res-code').textContent = code || '';
+    $('res-how').textContent = r.how;
+    $('res-how').hidden = !r.how;
+    $('spin-form').hidden = true;
+    box.hidden = false;
+    if (!reduced) { box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop'); }
+    if (!already) box.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+  }
+
+  function stockText(s) {
+    if (!s) return '';
+    const big = (s.bigLeft || []).map(k => (k === 'pizzas' ? '1 an de pizzas' : 'plein d’essence'));
+    const parts = [];
+    if (s.tiramisuLeftTotal > 0) parts.push(s.tiramisuLeftToday > 0 ? `${s.tiramisuLeftToday} tiramisu${s.tiramisuLeftToday > 1 ? 's' : ''} encore à gagner aujourd’hui` : 'Tiramisus du jour tous gagnés : le stock se recharge demain');
+    else parts.push('Les 150 tiramisus ont tous été gagnés');
+    if (big.length) parts.push(`${big.join(' et ')} encore en jeu`);
+    return parts.join(' · ');
+  }
+
+  async function refreshStock() {
+    if (phase() !== 'open') return;
+    try { const r = await fetch(`${CONFIG.apiBase}/api/wheel`); $('stock').textContent = stockText(await r.json()); } catch (e) { /* silent */ }
+  }
+
+  function setupPhase() {
+    const ph = phase(), note = $('phase-note'), btn = $('r-submit');
+    const msg = { soon: 'La roue ouvre samedi 24 octobre à 0 h. Entraîne-toi au Four Hanté en attendant !', pending: 'La roue ouvre très bientôt.', closed: 'La roue est fermée : le concours est terminé. Merci à tous !' }[ph];
+    note.hidden = !msg; note.textContent = msg || '';
+    btn.disabled = ph !== 'open';
+    if (ph === 'soon') btn.textContent = 'Ouverture samedi 24 octobre';
+    if (ph === 'closed') btn.textContent = 'Roue fermée';
+  }
+
+  $('spin-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    audioInit();
+    const email = $('r-email').value.trim().toLowerCase(), err = $('r-error');
+    let msg = '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) msg = ERRORS.email_invalid;
+    else if (!$('r-rules').checked) msg = ERRORS.rules_required;
+    if (msg) { err.textContent = msg; err.hidden = false; return; }
+    err.hidden = true;
+    const btn = $('r-submit');
+    btn.disabled = true; btn.textContent = 'La roue tourne…';
+    document.querySelector('.stage').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    idleSpeed = 0;
+    let data;
+    try {
+      const res = await fetch(`${CONFIG.apiBase}/api/wheel`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, rules: true, newsletter: $('r-news').checked }) });
+      data = await res.json().catch(() => null);
+      if (!res.ok || !data) throw new Error((data && data.error) || 'network');
+    } catch (x) {
+      err.textContent = ERRORS[x.message] || ERRORS.network; err.hidden = false;
+      btn.disabled = false; btn.textContent = 'Faire tourner la roue'; idleSpeed = 0.18;
+      return;
+    }
+    save(STORE_WHEEL, { email, result: data.result, code: data.code || null });
+    const game = load(STORE_GAME);
+    if (!game.player) { /* keep email for the game form */ save(STORE_GAME, Object.assign(game, { email })); }
+    track('roue-tirage', { result: data.result, already: !!data.already });
+    if (data.already) { settle(data.result); showResult(data.result, data.code, true); return; }
+    spinTo(data.result, () => {
+      const r = RESULTS[data.result] || RESULTS.perdu;
+      if (r.win) { sfx.win(); buzz([30, 40, 30, 40, 80]); celebrate(data.result !== 'tiramisu'); batsOut(); }
+      else { sfx.lose(); buzz(120); }
+      showResult(data.result, data.code, false);
+      $('stock').textContent = stockText(data);
+    });
+  });
+
+  $('mute').addEventListener('click', () => setMute(!muted));
+  let rz = 0;
+  window.addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(layout); });
+
+  /* ---------- Boot ---------- */
+  setMute(false);
+  layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout).catch(() => {});
+  const game = load(STORE_GAME), wheel = load(STORE_WHEEL);
+  $('r-email').value = (game.player && game.player.email) || game.email || '';
+  if (game.player) $('r-rules').checked = true;
+  setupPhase();
+  if (wheel.result) { idleSpeed = 0; settle(wheel.result); showResult(wheel.result, wheel.code, true); }
+  refreshStock();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

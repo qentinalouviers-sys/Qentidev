@@ -61,6 +61,7 @@ body{margin:0;background:var(--night);color:var(--bone);font-family:var(--font-b
 .board li.empty{display:block;color:var(--bone-dim);padding:14px 6px;font-size:14px;line-height:1.4}
 .code{font:800 1.05em/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;color:#fff3c4;background:rgba(0,0,0,.35);padding:3px 7px;border-radius:6px;white-space:nowrap;-webkit-user-select:all;user-select:all}
 a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
+a.btn{display:flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
 button{font-family:inherit}
 #app{position:relative;height:100%;max-width:560px;margin:0 auto;overflow:hidden;background:var(--night)}
 #scene{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
@@ -232,7 +233,7 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
         </div>
         <p class="phase" id="phase-note" role="status"></p>
         <button class="btn primary lit" id="btn-start" type="button">Allumer le four</button>
-        <p class="fine">Tape quand la braise passe sur l’arc doré. Jeu gratuit sans obligation d’achat, réservé aux 18 ans et plus. <button class="link" type="button" id="btn-board" hidden>Classement</button> <button class="link" type="button" data-rules>Règlement</button></p>
+        <p class="fine">Tape quand la braise passe sur l’arc doré. Jeu gratuit sans obligation d’achat, réservé aux 18 ans et plus. <button class="link" type="button" id="btn-board" hidden>Classement</button> <button class="link" type="button" data-rules>Règlement</button> <a class="link" href="roue.html">Pas joueur ? Tente la roue</a></p>
       </div>
     </div>
   </section>
@@ -259,7 +260,7 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
           <button class="btn ghost" type="button" data-share>Défier mes potes</button>
         </div>
       </div>
-      <p class="fine"><button class="link" type="button" id="btn-edit" hidden>Modifier mon inscription</button> <a class="link" href="/#contact">Réserver une table chez QENTINA</a></p>
+      <p class="fine"><button class="link" type="button" id="btn-edit" hidden>Modifier mon inscription</button> <a class="link" href="roue.html">Tente aussi la roue</a> <a class="link" href="/#contact">Réserver une table</a></p>
     </div>
   </section>
 
@@ -303,6 +304,7 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
       </div>
       <div class="actions">
         <button class="btn primary" id="btn-replay2" type="button">Rejouer pour grimper</button>
+        <a class="btn ghost" href="roue.html">Tourner la roue : 1 tour offert</a>
         <button class="btn ghost" type="button" data-share>Défier mes potes</button>
       </div>
     </div>
@@ -334,6 +336,7 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
         <li><b>Participation</b>Gratuite et sans obligation d’achat. Réservée aux 18 ans et plus, une inscription par personne (un email). L’équipe de QENTINA et sa famille ne peuvent pas gagner.</li>
         <li><b>Classement et finale</b>Seul ton meilleur score compte. Le top 5 est prévenu par email le 31 au matin et joue une partie chacun sur la tablette du restaurant. Le meilleur score sur place gagne le grand prix. Un finaliste absent est remplacé par le suivant du classement.</li>
         <li><b>Lots</b>Grand prix : 12 pizzas de la carte, une par mois pendant un an (valeur maximale 240 €). Une carte carburant de 100 €, tirée au sort parmi tous les inscrits pendant la finale. Champion du jour, du 24 au 30 octobre : une pizza offerte. Dès 15 pizzas sorties sur une partie : un tiramisu offert aux 100 premiers joueurs, un par personne, avec un code affiché à l’écran à présenter au comptoir avant le 30 novembre 2026.</li>
+        <li><b>La roue</b>Un tour de roue offert par email, même sans jouer : 1 an de pizzas et 1 plein d’essence par instants gagnants, 150 tiramisus répartis sur la semaine. Détails sur la page de la roue.</li>
         <li><b>Données</b>Pseudo et email servent uniquement à gérer le concours et sont supprimés 3 mois après sa fin. Les offres QENTINA ne sont envoyées que si tu as coché la case. Accès et suppression : <span id="rules-contact"></span>.</li>
       </ul>
       <p class="fine"><a class="link" href="reglement.html">Lire le règlement complet</a></p>
