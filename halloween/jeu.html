@@ -296,7 +296,8 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
         <p class="eyebrow">Score enregistré</p>
         <h2 class="title sm" id="d-h">C’est dans le four, <span id="done-name"></span></h2>
         <p class="lede" id="done-rank"></p>
-      </div>
+        <p class="lede" id="done-hook" hidden style="margin-top:6px;color:#ff7426;font-weight:700"></p>
+
       <p class="reward" id="done-reward" hidden></p>
       <div class="panel">
         <h3 class="board-h">Classement</h3>
@@ -399,14 +400,9 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
     closed: 'Le concours est terminé : plus aucun score n’est enregistré.',
     too_fast: 'Doucement ! Attends quelques secondes avant de renvoyer un score.',
     invalid_score: 'Ce score n’a pas pu être validé.',
-    network: ''
+    network: 'Le score n’est pas parti. Vérifie ta connexion et réessaie.'
   };
-  // Some home Wi-Fi filters and in-app browsers block *.workers.dev: tell the player exactly what to do.
-  const IN_APP = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|LinkedInApp|Snapchat|TikTok/i.test(navigator.userAgent);
-  const NET_HELP = IN_APP
-    ? 'Le score n’est pas parti : le navigateur de l’appli bloque le serveur du jeu. Touche « ··· » en haut puis « Ouvrir dans le navigateur » (Safari ou Chrome) et rejoue. Ou coupe le Wi-Fi et réessaie en 4G/5G.'
-    : 'Le score n’est pas parti : ce réseau bloque le serveur du jeu. Coupe le Wi-Fi et réessaie en 4G/5G. Ton score est gardé sur ce téléphone et sera renvoyé automatiquement.';
-  const errText = e => (e && e.message === 'network') ? NET_HELP : (ERRORS[e && e.message] || 'Le score n’est pas parti. Réessaie dans un instant.');
+  const errText = e => ERRORS[e && e.message] || 'Le score n’est pas parti. Réessaie dans un instant.';
 
   /* ---------- Balance (angles in radians, speeds in rad/s) ---------- */
   const BAL = {
@@ -2107,59 +2103,21 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
     showScreen('s-over');
   }
 
-  const PENDING_KEY = 'qentinaHalloweenPending';
-  const wait = ms => new Promise(r => setTimeout(r, ms));
-  async function postOnce(body) {
-    const ctl = typeof AbortController === 'function' ? new AbortController() : null;
-    const t = ctl ? setTimeout(() => ctl.abort(), 15000) : 0;
-    try {
-      return await fetch(`${CONFIG.apiBase}/api/scores`, { method: 'POST', headers: { 'content-type': 'application/json' }, body, signal: ctl ? ctl.signal : undefined });
-    } finally { clearTimeout(t); }
-  }
-  function keepPending(player, run) {
-    try {
-      const cur = JSON.parse(localStorage.getItem(PENDING_KEY) || 'null');
-      if (cur && cur.player && cur.player.email === player.email && cur.run.score >= run.score) return;
-      localStorage.setItem(PENDING_KEY, JSON.stringify({ player, run: { score: run.score, pizzas: run.pizzas, hits: run.hits, duration: run.duration } }));
-    } catch (e) { /* storage blocked */ }
-  }
-
-  async function submitScore(run, player) {
-    const p = player || S.player;
-    const body = JSON.stringify({ pseudo: p.pseudo, email: p.email, newsletter: p.newsletter, rules: true, score: run.score, pizzas: run.pizzas, hits: run.hits, duration: run.duration });
+  async function submitScore(run) {
+    const p = S.player;
     let res, data = null;
-    try { res = await postOnce(body); }
-    catch (e) {
-      // One silent retry: the server keeps only the best score, so a duplicate is harmless.
-      await wait(1500);
-      try { res = await postOnce(body); }
-      catch (e2) { keepPending(p, run); throw new Error('network'); }
-    }
+    try {
+      res = await fetch(`${CONFIG.apiBase}/api/scores`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ pseudo: p.pseudo, email: p.email, newsletter: p.newsletter, rules: true, score: run.score, pizzas: run.pizzas, hits: run.hits, duration: run.duration })
+      });
+    } catch (e) { throw new Error('network'); }
     try { data = await res.json(); } catch (e) { /* empty body */ }
     if (!res.ok || !data) throw new Error((data && data.error) || 'server');
-    try { localStorage.removeItem(PENDING_KEY); } catch (e) { /* storage blocked */ }
     if (data.tiramisu) S.tiramisu = data.tiramisu;
     saveStore();
     return data; // { rank, best, improved, tiramisu, top: [{ pseudo, score, pizzas, me? }], me }
-  }
-
-  let flushing = false;
-  async function flushPending() {
-    if (flushing || !canEnter()) return;
-    let pend = null;
-    try { pend = JSON.parse(localStorage.getItem(PENDING_KEY) || 'null'); } catch (e) { return; }
-    if (!pend || !pend.player || !pend.run) return;
-    flushing = true;
-    try {
-      const res = await submitScore(pend.run, pend.player);
-      if (!S.player) S.player = pend.player;
-      if (res && res.best > S.best) S.best = res.best;
-      saveStore();
-      track('halloween-score-renvoye');
-      if (res && typeof refreshTitle === 'function') refreshTitle();
-    } catch (e) {
-      if (e && e.message !== 'network') { try { localStorage.removeItem(PENDING_KEY); } catch (x) { /* storage blocked */ } }
-    } finally { flushing = false; }
   }
 
   function renderList(ol, rows, emptyText) {
@@ -2193,6 +2151,49 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
     $('done-rank').textContent = res.rank <= 5
       ? `Tu es ${ordinal(res.rank)} : te voilà dans le top 5, en route pour la finale du 31 octobre.`
       : `Tu es ${ordinal(res.rank)}. Le top 5 joue la finale : rejoue pour grimper.`;
+
+    // — Message de relance compétitif —
+    const hook = $('done-hook');
+    hook.hidden = true; hook.textContent = '';
+    const myScore = res.best;
+    const top = res.top || [];
+
+    // Trouver le joueur juste au-dessus dans le classement
+    const above = top.find(p => !p.me && p.score > myScore);
+
+    if (res.rank <= 3 && top.length >= 4) {
+      // Dans le top 3 : signaler le poursuivant juste derrière
+      const behind = [...top].reverse().find(p => !p.me && p.score < myScore);
+      if (behind) {
+        const gap = myScore - behind.score;
+        hook.textContent = `👀 ${behind.pseudo} est à ${gap.toLocaleString('fr-FR')} pts derrière toi — rejoue avant qu'il te rattrape !`;
+        hook.hidden = false;
+      }
+    } else if (res.rank === 6 && above) {
+      // À un rang de la finale
+      const gap = above.score - myScore;
+      hook.textContent = `🚨 À ${gap.toLocaleString('fr-FR')} pts de la finale ! Encore une partie et tu y es.`;
+      hook.hidden = false;
+    } else if (above) {
+      const gap = above.score - myScore;
+      const pct = Math.round(gap / above.score * 100);
+      if (pct <= 10) {
+        // Moins de 10 % d'écart
+        hook.textContent = `🔥 Encore ${gap.toLocaleString('fr-FR')} pts et tu dépasses ${above.pseudo} !`;
+        hook.hidden = false;
+      } else if (res.improved && S.lastRun && myScore >= S.lastRun.prevBest * 2 && S.lastRun.prevBest > 0) {
+        // Score doublé
+        hook.textContent = `⚡ Tu viens de doubler ton record ! Continue sur ta lancée.`;
+        hook.hidden = false;
+      } else if (res.improved) {
+        hook.textContent = `🎃 Nouveau record ! Rejoue tant que c'est chaud.`;
+        hook.hidden = false;
+      }
+    } else if (res.improved) {
+      hook.textContent = `🎃 Nouveau record ! Tu es ${ordinal(res.rank)}, rejoue tant que c'est chaud.`;
+      hook.hidden = false;
+    }
+
     const dr = $('done-reward');
     dr.hidden = !res.tiramisu && !res.tiramisuOut;
     if (res.tiramisu) dr.innerHTML = tiramisuHTML(res.tiramisu);
@@ -2390,6 +2391,7 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
       S.player = { pseudo, email: email.toLowerCase(), newsletter: $('f-news').checked };
       try {
         const res = await submitScore(S.lastRun);
+        if (S.lastRun) S.lastRun.prevBest = S.best || 0;
         track('halloween-inscription');
         showDone(res);
       } catch (x) {
@@ -2430,9 +2432,6 @@ input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
     spawnAttract();
     wire();
     requestAnimationFrame(loop);
-    flushPending();
-    window.addEventListener('online', flushPending);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) flushPending(); });
   }
 
   init();
