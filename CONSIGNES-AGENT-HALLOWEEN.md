@@ -11,7 +11,8 @@ le suivi jusqu'à la finale. Lire aussi `AGENTS.md` (workflow du dépôt) et
 
 | Élément | Où | État au 21/10/2026 |
 |---|---|---|
-| Jeu « La Nuit du Four Hanté » | https://qentina.fr/halloween/ — `halloween/index.html` | en ligne, mode entraînement |
+| Page d'accueil Halloween (2 jeux + cadeaux) | https://qentina.fr/halloween/ — `halloween/index.html` | en ligne |
+| Jeu « La Nuit du Four Hanté » | https://qentina.fr/halloween/jeu.html — `halloween/jeu.html` | en ligne, mode entraînement |
 | Roue d'Halloween (1 tour / email) | https://qentina.fr/halloween/roue.html — `halloween/roue.html` | en ligne, « ouverture mercredi 21 octobre à 18 h » |
 | Règlement | https://qentina.fr/halloween/reglement.html | en ligne |
 | Serveur scores + roue | `worker-concours.js` (Cloudflare Worker + D1) | **à déployer** |
@@ -62,13 +63,13 @@ Le rappeler est sans effet (idempotent). **Ne pas chercher à lire les instants 
 ## Étape 4 — Brancher le site
 
 Dans **les deux fichiers**, remplacer `apiBase: '',` par l'adresse du Worker, sans `/` final :
-- `halloween/index.html` (bloc `CONFIG`)
+- `halloween/jeu.html` (bloc `CONFIG`)
 - `halloween/roue.html` (bloc `CONFIG`)
 
 Branche `feat/branchement-concours`, commit, merge sur `main`, push. Attendre la fin du workflow
 « Déploiement GitHub Pages ».
 
-Vérifier ensuite sur https://qentina.fr/halloween/ (forcer le rechargement) :
+Vérifier ensuite sur https://qentina.fr/halloween/jeu.html (forcer le rechargement) :
 - avant 18 h : la note « le classement ouvre mercredi 21 octobre à 18 h » s'affiche, c'est normal ;
 - à 18 h 05 : la note devient « Classement ouvert jusqu'au vendredi 30 octobre à 23 h 59 » et `curl API/api/wheel` renvoie `"open":true`. Ne faire **aucun** tour de roue ni score de test.
 - aucune erreur dans la console du navigateur.
