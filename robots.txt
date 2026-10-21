@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /halloween/comptoir.html
 
 Sitemap: https://qentina.fr/sitemap.xml

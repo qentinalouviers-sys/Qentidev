@@ -22,6 +22,8 @@
      GET  /api/admin/wheel-init            → tire les instants gagnants de la roue (à faire avant l'ouverture du 21/10 à 18 h)
      GET  /api/admin/export?what=wheel     → CSV de tous les tirages de la roue
      GET  /api/admin/export?what=instants  → CSV des instants gagnants et de leurs gagnants
+     GET  /api/admin/code?code=TIRA-XXXXX  → vérifie un code gagnant (page comptoir)
+     POST /api/admin/code?code=TIRA-XXXXX  → enregistre la remise du lot (une seule fois)
 
    Guide pas à pas : DEPLOIEMENT-CONCOURS.md
    ============================================================ */
@@ -62,6 +64,7 @@ export default {
         if (url.pathname === "/api/admin/export") return await adminExport(url, env);
         if (url.pathname === "/api/admin/draw") return await adminDraw(url, env, cors);
         if (url.pathname === "/api/admin/wheel-init") return json(await initWheel(env.DB), 200, cors);
+        if (url.pathname === "/api/admin/code") return await adminCode(url, request, env, cors);
       }
       return json({ error: "not_found" }, 404, cors);
     } catch (e) {
@@ -72,7 +75,7 @@ export default {
   // Déclencheur planifié (facultatif) : efface les données après le 31 janvier 2027.
   async scheduled(event, env) {
     if (Date.now() < PURGE_AFTER) return;
-    await env.DB.batch(["plays", "players", "wheel_spins", "wheel_lots"].map((t) => env.DB.prepare("DELETE FROM " + t)));
+    await env.DB.batch(["plays", "players", "wheel_spins", "wheel_lots", "redemptions"].map((t) => env.DB.prepare("DELETE FROM " + t)));
   },
 };
 
@@ -258,6 +261,38 @@ async function postWheel(request, env, cors) {
   if (result !== "tiramisu") await db.prepare("UPDATE wheel_spins SET result = ?, code = ? WHERE email = ?").bind(result, code, email).run();
 
   return json({ result, code, ...(await wheelState(db, now)) }, 200, cors);
+}
+
+/* ---------- Comptoir : vérification et remise des codes ---------- */
+
+const LOT_DEADLINE = Date.parse("2026-11-30T22:59:59Z"); // 30/11/2026 23:59 Paris : tiramisus à retirer avant
+
+async function adminCode(url, request, env, cors) {
+  const db = env.DB;
+  // Table créée à la volée : aucune migration manuelle nécessaire.
+  await db.prepare("CREATE TABLE IF NOT EXISTS redemptions (code TEXT PRIMARY KEY, redeemed_at TEXT NOT NULL)").run();
+  const code = String(url.searchParams.get("code") || "").toUpperCase().replace(/[^A-Z0-9-]/g, "");
+  if (!/^(TIRA|ROUE)-[A-Z0-9]{5}$/.test(code)) return json({ found: false, error: "format" }, 200, cors);
+
+  let info = null;
+  if (code.startsWith("TIRA-")) {
+    const r = await db.prepare("SELECT pseudo, email, hidden FROM players WHERE tiramisu_code = ?").bind(code).first();
+    if (r) info = { source: "Jeu du Four Hanté", lot: "tiramisu", label: "Tiramisu offert", pseudo: r.pseudo, email: r.email, excluded: !!r.hidden, idRequired: false };
+  } else {
+    const r = await db.prepare("SELECT email, result FROM wheel_spins WHERE code = ?").bind(code).first();
+    if (r) info = { source: "Roue d'Halloween", lot: r.result, label: WHEEL_LABELS[r.result] || r.result, pseudo: null, email: r.email, excluded: false, idRequired: r.result !== "tiramisu" };
+  }
+  if (!info) return json({ found: false, code }, 200, cors);
+
+  const now = Date.now();
+  info.expired = info.lot === "tiramisu" && now > LOT_DEADLINE;
+  let justRedeemed = false;
+  if (request.method === "POST" && !info.excluded && !info.expired) {
+    const r = await db.prepare("INSERT OR IGNORE INTO redemptions (code, redeemed_at) VALUES (?, ?)").bind(code, new Date(now).toISOString()).run();
+    justRedeemed = r.meta.changes === 1;
+  }
+  const red = await db.prepare("SELECT redeemed_at FROM redemptions WHERE code = ?").bind(code).first();
+  return json({ found: true, code, ...info, redeemedAt: red ? red.redeemed_at : null, justRedeemed }, 200, cors);
 }
 
 /* ---------- Admin ---------- */

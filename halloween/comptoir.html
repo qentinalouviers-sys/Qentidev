@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comptoir — codes gagnants Halloween</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0c0a12">
+<link rel="icon" href="../logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&family=Pirata+One&display=swap">
+<style>
+/* Layout: one column, counter tool for the restaurant tablet — big input, big verdict, one action. */
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+:root{--night:#0c0a12;--panel:#160f22;--line:rgba(242,232,214,.16);--bone:#f2e8d6;--dim:#bfb29c;--gold:#e8b44c;--ember:#ff7426;--ok:#59d98e;--ok-bg:rgba(89,217,142,.12);--bad:#ff6b57;--bad-bg:rgba(255,107,87,.12);--warn:#ffc04d;--warn-bg:rgba(255,192,77,.12);
+  --display:"Pirata One",Georgia,serif;--body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--night);color:var(--bone);font:16px/1.5 var(--body)}
+.wrap{max-width:560px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+h1{margin:0;font:400 40px/1 var(--display)}
+.eyebrow{margin:0 0 4px;font:800 11px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.link{background:none;border:0;padding:0;color:var(--gold);font:600 14px var(--body);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+label{font-weight:600;font-size:14px}
+input{width:100%;font:800 28px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--bone);background:rgba(255,255,255,.06);border:2px solid var(--line);border-radius:12px;padding:16px 14px}
+input#key{font:600 16px var(--body);letter-spacing:0;text-transform:none}
+input:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+.hint{margin:0;color:var(--dim);font-size:13.5px}
+.btn{appearance:none;border:0;border-radius:999px;font:800 18px/1 var(--body);padding:17px 22px;min-height:56px;width:100%;cursor:pointer;color:#1c0b02;background:linear-gradient(180deg,#ffb04d,var(--ember))}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ok{background:linear-gradient(180deg,#86f0b3,#2fbf6e);color:#05210f}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--bone)}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.verdict{border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;border:2px solid}
+.verdict.ok{background:var(--ok-bg);border-color:var(--ok)}
+.verdict.bad{background:var(--bad-bg);border-color:var(--bad)}
+.verdict.warn{background:var(--warn-bg);border-color:var(--warn)}
+.state{margin:0;font:800 13px/1 var(--body);letter-spacing:.14em;text-transform:uppercase}
+.ok .state{color:var(--ok)}.bad .state{color:var(--bad)}.warn .state{color:var(--warn)}
+.lot{margin:0;font:400 38px/1 var(--display)}
+dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:15px}
+dt{color:var(--dim)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.id{margin:0;padding:10px 12px;border-radius:10px;background:rgba(255,192,77,.16);color:var(--warn);font-weight:800}
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--dim)}
+.log li{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:6px}
+.log b{color:var(--bone);font-family:ui-monospace,Menlo,monospace}
+.err{margin:0;color:var(--bad);font-weight:600}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div><p class="eyebrow">QENTINA · Halloween</p><h1>Comptoir</h1></div>
+    <button class="link" id="change-key" type="button" hidden>Changer la clé</button>
+  </header>
+
+  <form class="panel" id="key-form" hidden>
+    <label for="key">Clé admin du concours</label>
+    <input id="key" type="password" autocomplete="off" placeholder="Colle la clé ADMIN_KEY">
+    <p class="hint">Elle reste enregistrée sur cette tablette uniquement. Ne l’utilise pas sur un appareil partagé avec des clients.</p>
+    <p class="err" id="key-err" hidden></p>
+    <button class="btn" type="submit">Enregistrer</button>
+  </form>
+
+  <form class="panel" id="code-form" hidden>
+    <label for="code">Code montré par le client</label>
+    <input id="code" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TIRA-XXXXX">
+    <p class="hint">Codes du jeu : TIRA-… · codes de la roue : ROUE-… Tu peux taper juste les 5 derniers caractères et choisir le type.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn ghost" type="button" data-prefix="TIRA-">TIRA-</button>
+      <button class="btn ghost" type="button" data-prefix="ROUE-">ROUE-</button>
+    </div>
+    <button class="btn" type="submit" id="check">Vérifier</button>
+  </form>
+
+  <section id="verdict" class="verdict" hidden aria-live="polite">
+    <p class="state" id="v-state"></p>
+    <p class="lot" id="v-lot"></p>
+    <dl id="v-info"></dl>
+    <p class="id" id="v-id" hidden>Gros lot : demande une pièce d’identité et vérifie que le client accède bien à cet email sur son téléphone.</p>
+    <button class="btn ok" type="button" id="redeem" hidden>Remettre le lot</button>
+    <button class="btn ok" type="button" id="confirm" hidden>Confirmer : le lot est remis</button>
+  </section>
+
+  <section class="panel" id="history" hidden>
+    <p class="eyebrow">Remis sur cette tablette aujourd’hui</p>
+    <ul class="log" id="log"></ul>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const API = 'https://qentina-concours.qentina-louviers.workers.dev';
+  const KEY_STORE = 'qentinaComptoirKey', LOG_STORE = 'qentinaComptoirLog';
+  const $ = id => document.getElementById(id);
+  const get = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const set = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } };
+  let key = get(KEY_STORE) || '';
+  let current = null;
+
+  const fmt = iso => new Date(iso).toLocaleString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const normalize = v => v.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+
+  function show() {
+    $('key-form').hidden = !!key;
+    $('code-form').hidden = !key;
+    $('change-key').hidden = !key;
+    renderLog();
+    if (key) $('code').focus(); else $('key').focus();
+  }
+
+  async function call(code, method) {
+    const res = await fetch(`${API}/api/admin/code?code=${encodeURIComponent(code)}&key=${encodeURIComponent(key)}`, { method });
+    if (res.status === 403) throw new Error('forbidden');
+    if (!res.ok) throw new Error('server');
+    return res.json();
+  }
+
+  function row(dt, dd) { const a = document.createElement('dt'); a.textContent = dt; const b = document.createElement('dd'); b.textContent = dd; $('v-info').append(a, b); }
+
+  function render(d) {
+    const v = $('verdict');
+    v.hidden = false;
+    $('v-info').textContent = '';
+    $('redeem').hidden = true; $('confirm').hidden = true; $('v-id').hidden = true;
+    v.className = 'verdict';
+    if (!d.found) {
+      v.classList.add('bad');
+      $('v-state').textContent = d.error === 'format' ? 'Format invalide' : 'Code inconnu';
+      $('v-lot').textContent = 'Ne pas remettre';
+      row('Code', d.code || $('code').value);
+      return;
+    }
+    $('v-lot').textContent = d.label;
+    row('Code', d.code);
+    row('Origine', d.source);
+    if (d.pseudo) row('Pseudo', d.pseudo);
+    row('Email', d.email);
+    if (d.excluded) { v.classList.add('bad'); $('v-state').textContent = 'Joueur exclu du concours'; return; }
+    if (d.lot === 'perdu') { v.classList.add('bad'); $('v-state').textContent = 'Tour perdant'; $('v-lot').textContent = 'Aucun lot'; return; }
+    if (d.redeemedAt) {
+      v.classList.add('bad');
+      $('v-state').textContent = d.justRedeemed ? 'Remise enregistrée' : 'Déjà remis';
+      if (d.justRedeemed) { v.className = 'verdict ok'; }
+      row('Remis le', fmt(d.redeemedAt));
+      return;
+    }
+    if (d.expired) { v.classList.add('bad'); $('v-state').textContent = 'Expiré (après le 30 novembre)'; return; }
+    v.classList.add(d.idRequired ? 'warn' : 'ok');
+    $('v-state').textContent = 'Valide · pas encore remis';
+    $('v-id').hidden = !d.idRequired;
+    $('redeem').hidden = false;
+  }
+
+  function renderLog() {
+    let log = [];
+    try { log = JSON.parse(get(LOG_STORE) || '[]'); } catch (e) { log = []; }
+    const today = new Date().toDateString();
+    log = log.filter(e => new Date(e.at).toDateString() === today);
+    $('history').hidden = !log.length || !key;
+    $('log').textContent = '';
+    log.slice().reverse().forEach(e => {
+      const li = document.createElement('li');
+      const b = document.createElement('b'); b.textContent = e.code;
+      const s = document.createElement('span'); s.textContent = `${e.label} · ${new Date(e.at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+      li.append(b, s); $('log').appendChild(li);
+    });
+  }
+
+  $('key-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const k = $('key').value.trim();
+    if (!k) return;
+    key = k;
+    try { await call('TIRA-00000', 'GET'); set(KEY_STORE, k); $('key-err').hidden = true; $('key').value = ''; show(); }
+    catch (x) { key = ''; $('key-err').textContent = x.message === 'forbidden' ? 'Clé refusée. Vérifie-la et recommence.' : 'Le serveur ne répond pas. Vérifie la connexion.'; $('key-err').hidden = false; }
+  });
+  $('change-key').addEventListener('click', () => { key = ''; set(KEY_STORE, null); $('verdict').hidden = true; show(); });
+
+  document.querySelectorAll('[data-prefix]').forEach(b => b.addEventListener('click', () => {
+    const tail = normalize($('code').value).replace(/^(TIRA|ROUE)-?/, '');
+    $('code').value = b.dataset.prefix + tail; $('code').focus();
+  }));
+
+  $('code-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    let code = normalize($('code').value);
+    if (/^(TIRA|ROUE)[A-Z0-9]{5}$/.test(code)) code = code.slice(0, 4) + '-' + code.slice(4);
+    $('code').value = code;
+    $('check').disabled = true; $('check').textContent = 'Vérification…';
+    try { current = await call(code, 'GET'); render(current); }
+    catch (x) {
+      if (x.message === 'forbidden') { key = ''; set(KEY_STORE, null); show(); $('key-err').textContent = 'La clé n’est plus valide : saisis la nouvelle.'; $('key-err').hidden = false; }
+      else render({ found: false, code, error: 'network' }), $('v-state').textContent = 'Serveur injoignable', $('v-lot').textContent = 'Réessaie';
+    } finally { $('check').disabled = false; $('check').textContent = 'Vérifier'; }
+  });
+
+  // Two-step redemption: no accidental tap
+  $('redeem').addEventListener('click', () => { $('redeem').hidden = true; $('confirm').hidden = false; });
+  $('confirm').addEventListener('click', async () => {
+    $('confirm').disabled = true;
+    try {
+      const d = await call(current.code, 'POST');
+      render(d);
+      if (d.justRedeemed) {
+        let log = []; try { log = JSON.parse(get(LOG_STORE) || '[]'); } catch (e) { log = []; }
+        log.push({ code: d.code, label: d.label, at: d.redeemedAt }); set(LOG_STORE, JSON.stringify(log.slice(-200)));
+        renderLog();
+      }
+    } catch (x) { $('v-state').textContent = 'Échec : la remise n’est pas enregistrée. Réessaie.'; $('confirm').hidden = false; }
+    finally { $('confirm').disabled = false; }
+  });
+
+  const pre = new URLSearchParams(location.search).get('code');
+  if (pre) $('code').value = normalize(pre);
+  show();
+})();
+</script>
+</body>
+</html>

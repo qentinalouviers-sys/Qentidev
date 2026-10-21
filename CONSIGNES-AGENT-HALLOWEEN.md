@@ -73,6 +73,16 @@ Vérifier ensuite sur https://qentina.fr/halloween/ (forcer le rechargement) :
 - à 18 h 05 : la note devient « Classement ouvert jusqu'au vendredi 30 octobre à 23 h 59 » et `curl API/api/wheel` renvoie `"open":true`. Ne faire **aucun** tour de roue ni score de test.
 - aucune erreur dans la console du navigateur.
 
+## Mise à jour du 21/10 — page Comptoir (à faire avant 18 h)
+
+`worker-concours.js` a une nouvelle route `/api/admin/code` (vérification et remise des codes
+gagnants, utilisée par https://qentina.fr/halloween/comptoir.html). **Redéployer le Worker** avec
+le code à jour du dépôt (`git pull` puis `wrangler deploy`). Aucune action sur la base : la table
+`redemptions` est créée automatiquement au premier appel. Les données, les instants gagnants et
+`ADMIN_KEY` ne changent pas.
+
+Vérification : `curl "API/api/admin/code?code=TIRA-00000&key=ADMIN_KEY"` → `{"found":false,"code":"TIRA-00000"}`.
+
 ## Interdits
 
 - **Ne jamais faire de tour de roue de test en production** : un test peut consommer un instant
