@@ -189,7 +189,9 @@ a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
     rules_required: 'Coche la case « 18 ans et règlement » pour tourner la roue.',
     not_started: 'La roue ouvre mercredi 21 octobre à 18 h.',
     closed: 'La roue est fermée : le concours est terminé.',
-    network: 'La roue ne répond pas. Vérifie ta connexion et réessaie.'
+    network: /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|LinkedInApp|Snapchat|TikTok/i.test(navigator.userAgent)
+      ? 'La roue ne répond pas : le navigateur de l’appli bloque le serveur du jeu. Touche « ··· » en haut puis « Ouvrir dans le navigateur » (Safari ou Chrome). Ou coupe le Wi-Fi et réessaie en 4G/5G.'
+      : 'La roue ne répond pas : ce réseau bloque le serveur du jeu. Coupe le Wi-Fi et réessaie en 4G/5G.'
   };
 
   const STORE_GAME = 'qentinaHalloween', STORE_WHEEL = 'qentinaRoue';
@@ -474,7 +476,11 @@ a.link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
     idleSpeed = 0;
     let data;
     try {
-      const res = await fetch(`${CONFIG.apiBase}/api/wheel`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, rules: true, newsletter: $('r-news').checked }) });
+      // One silent retry on network failure: the server answers a repeated email with the same result.
+      const body = JSON.stringify({ email, rules: true, newsletter: $('r-news').checked });
+      const post = () => fetch(`${CONFIG.apiBase}/api/wheel`, { method: 'POST', headers: { 'content-type': 'application/json' }, body });
+      let res;
+      try { res = await post(); } catch (e1) { await new Promise(r => setTimeout(r, 1500)); res = await post(); }
       data = await res.json().catch(() => null);
       if (!res.ok || !data) throw new Error((data && data.error) || 'network');
     } catch (x) {
