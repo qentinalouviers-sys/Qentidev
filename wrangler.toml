@@ -1,0 +1,12 @@
+name = "qentina-concours"
+main = "worker-concours.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "qentina-concours"
+database_id = "2f92ba2c-59f3-464b-996a-9042c6d4aa65"
+
+[triggers]
+crons = ["0 3 * * *"]
