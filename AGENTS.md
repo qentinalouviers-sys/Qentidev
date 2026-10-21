@@ -18,6 +18,12 @@ Qentidev/
 ├── reviews.js                 # Avis Google (via Cloudflare Worker)
 ├── consent.js                 # Bandeau cookies RGPD : charge Google Analytics (gtag) après accord
 ├── worker.js                  # Cloudflare Worker proxy pour les avis Google
+├── worker-concours.js         # Cloudflare Worker + D1 du jeu concours Halloween (scores, classement)
+├── halloween/                 # Jeu concours « La Nuit du Four Hanté » (oct. 2026)
+│   ├── index.html             #   jeu autonome (canvas) ; CONFIG.apiBase = URL du Worker concours
+│   ├── reglement.html         #   règlement complet du concours
+│   └── og.jpg                 #   image de partage réseaux sociaux (1200×630)
+├── DEPLOIEMENT-CONCOURS.md    # Doc : activer le classement du concours (Worker + D1)
 ├── banner.jpg                 # Image bannière
 ├── hero-pizza.jpg             # Image héro
 ├── carte-1.jpg / carte-2.jpg / carte-3.jpg  # Photos cartes
