@@ -32,7 +32,7 @@
 const START = Date.parse("2026-10-21T16:00:00Z"); // mercredi 21/10 18:00 (UTC+2)
 const END = Date.parse("2026-10-30T22:59:59Z");   // vendredi 30/10 23:59:59 (UTC+1)
 const PURGE_AFTER = Date.parse("2027-01-31T00:00:00Z"); // RGPD : 3 mois après la fin
-const TIRAMISU_AT = 15;
+const TIRAMISU_AT = 20;
 const TIRAMISU_MAX = 100; // les 100 premiers seulement
 // Roue : 1 an de pizzas + 1 plein par instants gagnants, 150 tiramisus répartis sur 10 jours (21 → 30/10).
 const WHEEL_TIRAMISU = 150;
