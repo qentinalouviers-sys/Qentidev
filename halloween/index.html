@@ -248,14 +248,14 @@ footer nav a{color:var(--gold)}
           <span class="qty">2 lots</span>
           <h3>1 an de pizzas</h3>
           <p>12 pizzas de la carte, une par mois pendant un an, sur place ou à emporter.</p>
-          <div class="where"><span>Jeu · finale live</span><span>Roue · instant gagnant</span></div>
+          <div class="where"><span>Jeu · 1er du classement</span><span>Roue · instant gagnant</span></div>
         </article>
         <article class="prize" style="--g:#ff7426">
           <svg viewBox="0 0 72 72" aria-hidden="true"><rect x="12" y="12" width="32" height="50" rx="5" fill="#ff7426"/><rect x="17" y="18" width="22" height="14" rx="2" fill="#1b1024"/><rect x="20" y="22" width="16" height="2.5" fill="#a6e34a"/><rect x="20" y="27" width="10" height="2.5" fill="#a6e34a"/><rect x="8" y="60" width="40" height="6" rx="2" fill="#9c3b0c"/><path d="M44 24h8a5 5 0 0 1 5 5v20a3 3 0 0 0 6 0V30l-6-8" fill="none" stroke="#f2e8d6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 38c-4 5-4 8 0 10 4-2 4-5 0-10z" fill="#ffd56b"/></svg>
           <span class="qty">2 lots</span>
           <h3>Plein d’essence</h3>
           <p>Cartes carburant de 100&nbsp;€. De quoi tenir quelques semaines vu le prix du litre.</p>
-          <div class="where"><span>Jeu · tirage en finale</span><span>Roue · instant gagnant</span></div>
+          <div class="where"><span>Jeu · 2e du classement</span><span>Roue · instant gagnant</span></div>
         </article>
         <article class="prize" style="--g:#a6e34a">
           <svg viewBox="0 0 72 72" aria-hidden="true"><path d="M12 26l12 10 12-20 12 20 12-10-5 30H17z" fill="#e8b44c" stroke="#9c6a12" stroke-width="2.5" stroke-linejoin="round"/><rect x="17" y="56" width="38" height="7" rx="2" fill="#c2851d"/><circle cx="36" cy="16" r="4" fill="#ff3b1f"/><circle cx="12" cy="26" r="3.5" fill="#a6e34a"/><circle cx="60" cy="26" r="3.5" fill="#a6e34a"/></svg>
@@ -279,11 +279,11 @@ footer nav a{color:var(--gold)}
     <div class="wrap">
       <div class="finale">
         <div>
-          <h2 id="f-h">La grande finale, en live</h2>
-          <p>Les 5 meilleurs joueurs au classement du vendredi 30 octobre au soir s’affrontent sur la tablette du restaurant. Le meilleur score sur place remporte 1 an de pizzas. Le plein d’essence du jeu est tiré au sort devant tout le monde.</p>
-          <p><strong>QENTINA · 20 rue Maréchal Foch · Louviers</strong> — venez encourager les finalistes.</p>
+          <h2 id="f-h">Les gagnants du classement</h2>
+          <p>Le 1<sup>er</sup> du classement remporte le grand prix (12 pizzas / 1 an). Le 2<sup>e</sup> remporte la carte carburant de 100 €. Les gagnants sont contactés par email le 31 octobre.</p>
+
         </div>
-        <div class="when"><b>31</b><span>octobre · 18 h 30</span></div>
+        <div class="when"><b>30</b><span>octobre · 23 h 59</span></div>
       </div>
     </div>
   </section>
@@ -324,8 +324,8 @@ footer nav a{color:var(--gold)}
     const now = Date.now();
     let target, label;
     if (now < START) { target = START; label = 'avant l’ouverture, ce soir à 18 h'; }
-    else if (now <= END) { target = END; label = 'avant la fin du concours · finale le 31 à 18 h 30'; }
-    else { $('countdown').hidden = true; $('cd-label').textContent = 'Le concours est terminé. Rendez-vous à la finale du 31 octobre à 18 h 30 !'; return; }
+    else if (now <= END) { target = END; label = 'avant la fin du concours · résultats le 31 octobre'; }
+    else { $('countdown').hidden = true; $('cd-label').textContent = 'Le concours est terminé. Les gagnants seront contactés par email.'; return; }
     const s = Math.max(0, Math.floor((target - now) / 1000));
     $('cd-d').textContent = Math.floor(s / 86400); $('cd-h').textContent = pad(Math.floor(s / 3600) % 24);
     $('cd-m').textContent = pad(Math.floor(s / 60) % 60); $('cd-s').textContent = pad(s % 60);
