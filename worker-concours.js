@@ -48,6 +48,56 @@ const BANNED = ["pute", "salope", "encul", "nique", "connard", "connasse", "bata
   "tapette", "negre", "bite", "couille", "merde", "salaud", "enfoir", "abruti", "pede", "chatte", "sexe"];
 const BANNED_TOKENS = ["con", "fdp", "pd", "ntm", "tg", "nik"];
 
+// Emails détectés frauduleux (participations multiples, bots, auto-déclarés) — mis à jour 29/10/2026.
+const FRAUD_EMAILS = new Map([
+  ["nassima_maaijil@hotmail.fr", { group: "MAAIJIL", label: "Participations multiples (famille Maaijil)" }],
+  ["smaaijil@gmail.com", { group: "MAAIJIL", label: "Participations multiples (famille Maaijil)" }],
+  ["yolanda-maaijil@hotmail.com", { group: "MAAIJIL", label: "Participations multiples (famille Maaijil)" }],
+  ["walid.maaijil27@gmail.com", { group: "MAAIJIL", label: "Participations multiples (famille Maaijil)" }],
+  ["nassima541@gmail.com", { group: "MAAIJIL", label: "Participations multiples (famille Maaijil)" }],
+  ["ahmed-36@hotmail.com", { group: "MAAIJIL", label: "Participations multiples (famille Maaijil)" }],
+  ["louis.leballais@gmail.com", { group: "LEBALLAIS", label: "Participations multiples (famille Leballais)" }],
+  ["louis.leballais@groupe-esigelec.fr", { group: "LEBALLAIS", label: "Participations multiples (famille Leballais)" }],
+  ["louis.leballais@gmail.fr", { group: "LEBALLAIS", label: "Participations multiples (famille Leballais)" }],
+  ["louis.leballai@gmail.com", { group: "LEBALLAIS", label: "Participations multiples (famille Leballais)" }],
+  ["leballaispaul@icloud.com", { group: "LEBALLAIS", label: "Participations multiples (famille Leballais)" }],
+  ["paul.leballais@gmail.com", { group: "LEBALLAIS", label: "Participations multiples (famille Leballais)" }],
+  ["max27400@hotmail.fr", { group: "MAX27400", label: "Participations multiples (variantes max27400)" }],
+  ["maxi27400@hotmail.fr", { group: "MAX27400", label: "Participations multiples (variantes max27400)" }],
+  ["maxime27400@hotmail.fr", { group: "MAX27400", label: "Participations multiples (variantes max27400)" }],
+  ["maxim27400@hotmail.fr", { group: "MAX27400", label: "Participations multiples (variantes max27400)" }],
+  ["max27400@gmail.com", { group: "MAX27400", label: "Participations multiples (variantes max27400)" }],
+  ["max@hotmail.fr", { group: "MAX27400", label: "Participations multiples (variantes max27400)" }],
+  ["max27@gmail.com", { group: "MAX27400", label: "Participations multiples (variantes max27400)" }],
+  ["atelier.tricheur@gmail.com", { group: "TRICHEUR", label: "Compte frauduleux auto-déclaré" }],
+  ["tricheur.services@gmail.com", { group: "TRICHEUR", label: "Compte frauduleux auto-déclaré" }],
+  ["tricheur.services@gmail.fr", { group: "TRICHEUR", label: "Compte frauduleux auto-déclaré" }],
+  ["ateler.tricheur@gmail.com", { group: "TRICHEUR", label: "Compte frauduleux auto-déclaré" }],
+  ["qzqjla@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["zqnfqjzf@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["mlagn@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["mqzl.gz@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["zfqizj@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["zfzqjh@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["fqzj.fjazj@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["zfqzjf.hfhh@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["aaaaaa@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["aaaaaaaaaaa@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["bbbb@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["azer@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["lllll@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["dfshsaf@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["ljhdghhd@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["gkiqzgjh@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["srhqwrzr@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["egjehgeri@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["eiafnsiuf@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["siuf@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["tri@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["tr@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+  ["le@gmail.com", { group: "BOTS", label: "Email généré / invalide (bot)" }],
+]);
+
 export default {
   async fetch(request, env) {
     const cors = corsHeaders(request, env);
@@ -283,6 +333,14 @@ async function adminCode(url, request, env, cors) {
     if (r) info = { source: "Roue d'Halloween", lot: r.result, label: WHEEL_LABELS[r.result] || r.result, pseudo: null, email: r.email, excluded: false, idRequired: r.result !== "tiramisu" };
   }
   if (!info) return json({ found: false, code }, 200, cors);
+
+  // Détection fraude : email dans la liste noire
+  const fraudEntry = FRAUD_EMAILS.get(info.email);
+  if (fraudEntry) {
+    info.fraud = true;
+    info.fraudGroup = fraudEntry.group;
+    info.fraudLabel = fraudEntry.label;
+  }
 
   const now = Date.now();
   info.expired = info.lot === "tiramisu" && now > LOT_DEADLINE;

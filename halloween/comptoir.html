@@ -48,6 +48,11 @@ dt{color:var(--dim)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 .log li{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:6px}
 .log b{color:var(--bone);font-family:ui-monospace,Menlo,monospace}
 .err{margin:0;color:var(--bad);font-weight:600}
+.fraud-banner{display:flex;flex-direction:column;gap:6px;border-radius:12px;padding:14px 16px;background:rgba(255,60,60,.15);border:2px solid #ff3c3c}
+.fraud-banner .fraud-title{margin:0;font:800 13px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:#ff6b57}
+.fraud-banner .fraud-title::before{content:"⛔ "}
+.fraud-banner p{margin:0;font-size:14px;color:var(--bone);line-height:1.45}
+.fraud-banner .fraud-group{font:800 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#ff9980;margin-top:2px}
 </style>
 </head>
 <body>
@@ -80,6 +85,11 @@ dt{color:var(--dim)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
     <p class="state" id="v-state"></p>
     <p class="lot" id="v-lot"></p>
     <dl id="v-info"></dl>
+    <div class="fraud-banner" id="v-fraud" hidden>
+      <p class="fraud-title">FRAUDE DÉTECTÉE — Ne pas remettre le lot</p>
+      <p id="v-fraud-label"></p>
+      <p class="fraud-group" id="v-fraud-group"></p>
+    </div>
     <p class="id" id="v-id" hidden>Gros lot : demande une pièce d’identité et vérifie que le client accède bien à cet email sur son téléphone.</p>
     <button class="btn ok" type="button" id="redeem" hidden>Remettre le lot</button>
     <button class="btn ok" type="button" id="confirm" hidden>Confirmer : le lot est remis</button>
@@ -126,7 +136,7 @@ dt{color:var(--dim)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
     const v = $('verdict');
     v.hidden = false;
     $('v-info').textContent = '';
-    $('redeem').hidden = true; $('confirm').hidden = true; $('v-id').hidden = true;
+    $('redeem').hidden = true; $('confirm').hidden = true; $('v-id').hidden = true; $('v-fraud').hidden = true;
     v.className = 'verdict';
     if (!d.found) {
       v.classList.add('bad');
@@ -140,6 +150,15 @@ dt{color:var(--dim)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
     row('Origine', d.source);
     if (d.pseudo) row('Pseudo', d.pseudo);
     row('Email', d.email);
+    // Fraude détectée : afficher le bandeau rouge et bloquer la remise
+    if (d.fraud) {
+      v.classList.add('bad');
+      $('v-state').textContent = 'Participation frauduleuse';
+      $('v-fraud-label').textContent = d.fraudLabel || 'Participation non conforme au règlement (une seule participation par personne).';
+      $('v-fraud-group').textContent = 'Groupe : ' + (d.fraudGroup || '?') + ' — Ne pas remettre le lot.';
+      $('v-fraud').hidden = false;
+      return;
+    }
     if (d.excluded) { v.classList.add('bad'); $('v-state').textContent = 'Joueur exclu du concours'; return; }
     if (d.lot === 'perdu') { v.classList.add('bad'); $('v-state').textContent = 'Tour perdant'; $('v-lot').textContent = 'Aucun lot'; return; }
     if (d.redeemedAt) {
