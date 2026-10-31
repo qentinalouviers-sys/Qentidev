@@ -115,6 +115,7 @@ export default {
         if (url.pathname === "/api/admin/draw") return await adminDraw(url, env, cors);
         if (url.pathname === "/api/admin/wheel-init") return json(await initWheel(env.DB), 200, cors);
         if (url.pathname === "/api/admin/code") return await adminCode(url, request, env, cors);
+        if (url.pathname === "/api/admin/patch-player" && request.method === "POST") return await adminPatchPlayer(request, env, cors);
       }
       return json({ error: "not_found" }, 404, cors);
     } catch (e) {
@@ -405,6 +406,20 @@ async function adminExport(url, env) {
       "Content-Disposition": `attachment; filename="concours-halloween-${what}.csv"`,
     },
   });
+}
+
+async function adminPatchPlayer(request, env, cors) {
+  const b = await request.json().catch(() => null);
+  if (!b || !b.email) return json({ error: "bad_request" }, 400, cors);
+  const fields = [];
+  const vals = [];
+  if (b.best_pizzas != null) { fields.push("best_pizzas = ?"); vals.push(b.best_pizzas); }
+  if (b.best != null)        { fields.push("best = ?");        vals.push(b.best); }
+  if (!fields.length) return json({ error: "nothing_to_patch" }, 400, cors);
+  vals.push(b.email);
+  await env.DB.prepare(`UPDATE players SET ${fields.join(", ")} WHERE email = ?`).bind(...vals).run();
+  const row = await env.DB.prepare("SELECT pseudo, best, best_pizzas FROM players WHERE email = ?").bind(b.email).first();
+  return json({ ok: true, player: row }, 200, cors);
 }
 
 async function adminDraw(url, env, cors) {
