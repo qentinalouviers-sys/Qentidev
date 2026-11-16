@@ -40,7 +40,9 @@
     { from: "2026-10-07", to: "2026-10-07", only: "Soir", reason: "repos" },
     { from: "2026-10-08", to: "2026-10-08", only: "Midi", reason: "repos" },
     // Fermeture exceptionnelle mercredi 14 octobre 2026
-    { from: "2026-10-14", to: "2026-10-14", reason: "fermeture exceptionnelle" }
+    { from: "2026-10-14", to: "2026-10-14", reason: "fermeture exceptionnelle" },
+    // Fermeture exceptionnelle semaine du 17 novembre 2026 — réouverture en fin de semaine
+    { from: "2026-11-17", to: "2026-11-22", reason: "fermeture exceptionnelle" }
   ];
 
   /* Récapitulatif de service (worker-reservations.js).
