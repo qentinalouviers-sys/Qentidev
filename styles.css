@@ -1641,3 +1641,71 @@ body.nav-dark .nav__cta.nav__cta--main:hover { background: var(--terra-deep); bo
   }
   .reveal { opacity: 1; transform: none; }
 }
+
+
+/* ============================================================
+   Ajouts nov. 2026 : sous-titre du hero, carte en texte, FAQ,
+   en-tête des pages sans photo (mentions légales, 404)
+   ============================================================ */
+.hero__sub {
+  display: block;
+  margin-top: 1.1rem;
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 600;
+  font-size: clamp(.78rem, 1.5vw, .95rem);
+  line-height: 1.5;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+/* ---------- La carte en texte ---------- */
+.carte { max-width: 1000px; margin: 3.2rem auto 0; }
+.carte__title { font-family: var(--serif); font-weight: 500; font-size: clamp(1.5rem, 3vw, 1.9rem); text-align: center; }
+.carte__intro { max-width: 60ch; margin: .7rem auto 2rem; text-align: center; color: var(--ink-soft); }
+.carte__group { border-top: 1px solid var(--line); }
+.carte__group:last-of-type { border-bottom: 1px solid var(--line); }
+.carte__group summary,
+.faq__item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1.15rem .2rem; cursor: pointer; list-style: none;
+}
+.carte__group summary::-webkit-details-marker,
+.faq__item summary::-webkit-details-marker { display: none; }
+.carte__group summary::after,
+.faq__item summary::after {
+  content: "+"; flex: none; font-family: var(--serif); font-size: 1.6rem; line-height: 1;
+  color: var(--terra); transition: transform .3s var(--ease);
+}
+.carte__group[open] summary::after,
+.faq__item[open] summary::after { transform: rotate(45deg); }
+.carte__group summary:focus-visible,
+.faq__item summary:focus-visible { outline: 2px solid var(--terra); outline-offset: 3px; border-radius: 6px; }
+.carte__group h4 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; color: var(--terra); }
+.carte__sub { color: var(--ink-soft); font-size: .95rem; margin: -.3rem .2rem 1rem; }
+.carte__list { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem 2.6rem; padding: .2rem .2rem 1.8rem; }
+.carte__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.carte__name { font-weight: 600; color: var(--ink); }
+.carte__name sup { color: var(--gold); font-weight: 600; margin-left: .1em; line-height: 0; }
+.carte__price { flex: none; font-weight: 600; color: var(--terra); white-space: nowrap; }
+.carte__desc { color: var(--ink-soft); font-size: .95rem; line-height: 1.5; margin-top: .15rem; }
+.carte__note { margin-top: 1.4rem; color: var(--ink-soft); font-size: .88rem; line-height: 1.6; text-align: center; }
+@media (max-width: 720px) { .carte__list { grid-template-columns: 1fr; gap: .95rem; } }
+
+/* ---------- Questions fréquentes ---------- */
+.faq { max-width: 860px; margin: 0 auto; padding: 4rem clamp(1.2rem, 5vw, 3rem) 1rem; }
+.faq__item { border-top: 1px solid var(--line); }
+.faq__item:last-child { border-bottom: 1px solid var(--line); }
+.faq__item h3 { font-family: var(--serif); font-weight: 500; font-size: 1.15rem; line-height: 1.35; }
+.faq__item p { color: var(--ink-soft); padding: 0 2.4rem 1.3rem .2rem; }
+
+/* ---------- En-tête des pages sans photo ---------- */
+.page-head { background: var(--terra-deep); color: var(--paper); text-align: center; padding: clamp(7rem, 16vw, 9.5rem) clamp(1.2rem, 5vw, 3rem) clamp(2.6rem, 6vw, 3.6rem); }
+.page-head .eyebrow { color: var(--gold); }
+.page-head h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.08; letter-spacing: -.02em; margin-top: .7rem; }
+.prose__body h2 { font-family: var(--serif); font-weight: 500; font-size: 1.45rem; color: var(--ink); margin: 2.2rem 0 .7rem; }
+.prose__body ul { color: var(--ink-soft); margin: 0 0 1.1rem 1.2rem; font-size: 1.05rem; }
+.prose__body li { margin-bottom: .35rem; }
+.prose__body a.btn { text-decoration: none; }
+.prose__body a.btn--primary { color: var(--paper); }

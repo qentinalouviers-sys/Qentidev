@@ -42,11 +42,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="noel.css" /><!-- NOËL : déco saisonnière, à retirer après les fêtes -->
-  <link rel="icon" href="logo.jpg" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="preload" as="image" href="banner.webp" type="image/webp" />
-  <link rel="preload" as="image" href="banner.jpg" type="image/jpeg" />
+  <link rel="preload" as="image" href="banner.webp" type="image/webp" fetchpriority="high" />
 
   <!-- Données structurées : restaurant (rich results Google) -->
   <script type="application/ld+json">
@@ -64,6 +64,7 @@
     "servesCuisine": ["Pizza napolitaine", "Italienne", "Méditerranéenne"],
     "acceptsReservations": "True",
     "menu": "https://qentina.fr/#menu",
+    "hasMenu": { "@id": "https://qentina.fr/#carte" },
     "slogan": "De Naples à Lisbonne",
     "areaServed": ["Louviers", "Val-de-Reuil", "Le Vaudreuil", "Incarville", "Acquigny", "Pinterville"],
     "address": {
@@ -82,20 +83,14 @@
     "hasMap": "https://www.google.com/maps/search/?api=1&query=QENTINA%20pizzeria%2020%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers",
     "sameAs": [
       "https://www.tiktok.com/@qentina.louviers",
-      "https://www.facebook.com/share/1BHUtqxe6N/?mibextid=wwXIfr"
+      "https://www.instagram.com/qentina.louviers/",
+      "https://www.facebook.com/people/QENTINA-Louviers/61574375634107/"
     ],
     "openingHoursSpecification": [
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "12:00", "closes": "14:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday"], "opens": "19:00", "closes": "22:30" },
       { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday", "Saturday"], "opens": "19:00", "closes": "23:00" }
     ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "187",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
     "potentialAction": [
       {
         "@type": "OrderAction",
@@ -116,7 +111,7 @@
   </script>
 
 
-  <!-- Données structurées : FAQ (rich results Google) -->
+  <!-- Données structurées : questions fréquentes (identiques au texte visible de la rubrique) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -127,7 +122,7 @@
         "name": "Quels sont les horaires de QENTINA à Louviers ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "QENTINA est ouvert du mardi au vendredi midi (12h00–14h30) et du mardi au samedi soir (19h00–22h30, jusqu'à 23h00 le vendredi et samedi). Fermé le dimanche, le lundi et le samedi midi."
+          "text": "QENTINA est ouvert du mardi au vendredi midi, de 12h00 à 14h30, et du mardi au samedi soir, de 19h00 à 22h30 (jusqu'à 23h00 le vendredi et le samedi). Le restaurant est fermé le dimanche, le lundi et le samedi midi."
         }
       },
       {
@@ -135,7 +130,15 @@
         "name": "Comment réserver une table chez QENTINA ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Réservez directement sur qentina.fr via le formulaire en ligne, ou appelez-nous au 02 59 16 20 93 pendant les heures de service."
+          "text": "Réservez en ligne avec le formulaire de cette page, ou par téléphone au 02 59 16 20 93 aux heures de service. Chaque réservation est confirmée par email."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Peut-on commander une pizza à emporter ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Appelez le 02 59 16 20 93 : nous préparons votre commande et vous indiquons dans combien de temps elle sera prête. Vous la récupérez au 20 rue Maréchal Foch, à Louviers."
         }
       },
       {
@@ -143,7 +146,7 @@
         "name": "QENTINA livre-t-il à domicile ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "La livraison à domicile le soir arrive bientôt (zone précisée au lancement). En attendant, commandez à emporter en appelant le 02 59 16 20 93."
+          "text": "La livraison à domicile le soir arrive bientôt (zone précisée au lancement). En attendant, commandez à emporter au 02 59 16 20 93."
         }
       },
       {
@@ -151,8 +154,388 @@
         "name": "Qu'est-ce qu'un panuozzo ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Le panuozzo est un sandwich napolitain préparé avec notre pâte à pizza cuite et garnie au feu de bois. Croustillant et généreux, c'est l'une des spécialités maison de QENTINA."
+          "text": "Le panuozzo est un sandwich napolitain préparé avec notre pâte à pizza, cuite au feu de bois puis garnie. Chez QENTINA, il est servi uniquement le midi."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce qui rend la pâte de QENTINA différente ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Notre pâte est travaillée selon une approche napolitaine contemporaine, avec une pré-fermentation en biga, puis repose au minimum 48 heures. Résultat : une mie alvéolée, légère et digeste, saisie au feu de bois."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Y a-t-il des plats sans viande et une liste des allergènes ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui : la Margherita, la Végétarienne et la 4 fromages sont sans viande, et nous adaptons volontiers un plat selon vos restrictions ou préférences alimentaires. Dites-le-nous à la commande. La liste des allergènes est disponible sur demande."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "QENTINA a-t-il une terrasse ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, QENTINA dispose d'une terrasse au bord de l'Eure, au cœur de Louviers. Vous pouvez la demander au moment de réserver."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Données structurées : la carte (prix à tenir alignés sur Square et sur la rubrique « La carte en détail ») -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    "@id": "https://qentina.fr/#carte",
+    "name": "La carte de QENTINA",
+    "inLanguage": "fr",
+    "url": "https://qentina.fr/#menu",
+    "hasMenuSection": [
+      {
+        "@type": "MenuSection",
+        "name": "Les pizzas napolitaines",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Margherita",
+            "description": "Tomate San Marzano, mozzarella fior di latte, basilic frais",
+            "offers": {
+              "@type": "Offer",
+              "price": "11.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Burratina",
+            "description": "Tomate San Marzano, mozzarella fior di latte, burrata des Pouilles, jambon San Daniele 24 mois, roquette, tomates confites, parmesan",
+            "offers": {
+              "@type": "Offer",
+              "price": "18.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Regina",
+            "description": "Tomate San Marzano, mozzarella fior di latte, jambon blanc, champignons",
+            "offers": {
+              "@type": "Offer",
+              "price": "14.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Diavola",
+            "description": "Tomate San Marzano, mozzarella fior di latte, spianata piccante, poivrons grillés, miel piquant",
+            "offers": {
+              "@type": "Offer",
+              "price": "15.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Piri Piri",
+            "description": "Tomate San Marzano, mozzarella fior di latte, poulet piri piri à la portugaise, oignons confits, olives",
+            "offers": {
+              "@type": "Offer",
+              "price": "17.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Napolitaine",
+            "description": "Tomate San Marzano, câpres, anchois, parmesan",
+            "offers": {
+              "@type": "Offer",
+              "price": "12.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Chèvre miel",
+            "description": "Tomate San Marzano, mozzarella fior di latte, chèvre, miel, marmelade de figues, noix, roquette",
+            "offers": {
+              "@type": "Offer",
+              "price": "15.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "4 fromages",
+            "description": "Base crème et ricotta, mozzarella fior di latte, gorgonzola, parmesan, chèvre, noix",
+            "offers": {
+              "@type": "Offer",
+              "price": "15.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Pistacchio",
+            "description": "Base crème et ricotta, mozzarella fior di latte, mortadelle IGP, burrata des Pouilles, pesto pistache",
+            "offers": {
+              "@type": "Offer",
+              "price": "18.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Truite",
+            "description": "Base crème et ricotta, mozzarella fior di latte, truite, stracciatella, roquette",
+            "offers": {
+              "@type": "Offer",
+              "price": "17.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Tonno",
+            "description": "Tomate San Marzano, mozzarella fior di latte, thon, roquette, parmesan, olives",
+            "offers": {
+              "@type": "Offer",
+              "price": "14.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Végétarienne",
+            "description": "Tomate San Marzano, mozzarella fior di latte, courgettes grillées, poivrons grillés, oignons confits, champignons, parmesan",
+            "offers": {
+              "@type": "Offer",
+              "price": "13.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Pizza du moment",
+            "description": "Une création qui change au fil des saisons, à découvrir sur place."
+          }
+        ],
+        "description": "Pizza napolitaine contemporaine, cuite au feu de bois."
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Salades & assiettes",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Salade Théo",
+            "description": "Mélange de salades, burrata des Pouilles, jambon San Daniele, tomates cerises, copeaux de parmesan",
+            "offers": {
+              "@type": "Offer",
+              "price": "16.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Salade Eva",
+            "description": "Mélange de salades, stracciatella, truite fumée, courgettes grillées, pickles d'oignons et pickles de concombre à l'aneth",
+            "offers": {
+              "@type": "Offer",
+              "price": "16.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Salade Hugo",
+            "description": "Mélange de salades, burrata des Pouilles, mortadelle pistache, poivrons grillés, oignons confits",
+            "offers": {
+              "@type": "Offer",
+              "price": "16.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Assiette de truite fumée",
+            "description": "Truite fumée, stracciatella",
+            "offers": {
+              "@type": "Offer",
+              "price": "15.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "San Daniele & Melone",
+            "description": "Stracciatella crémeuse, jambon San Daniele, melon, pignons de pin torréfiés, huile d'olive, réduction balsamique",
+            "offers": {
+              "@type": "Offer",
+              "price": "17.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Planche de charcuterie",
+            "description": "Jambon San Daniele, mortadelle pistache, spianata piccante",
+            "offers": {
+              "@type": "Offer",
+              "price": "17.00",
+              "priceCurrency": "EUR"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Panuozzo",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Verde Classico",
+            "description": "Pesto vert, roquette, jambon blanc, tomates cerises, copeaux de parmesan",
+            "offers": {
+              "@type": "Offer",
+              "price": "11.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Rosso Spicy",
+            "description": "Pesto rouge, roquette, spianata piccante, poivrons grillés, oignons caramélisés",
+            "offers": {
+              "@type": "Offer",
+              "price": "11.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Mortadella Pistacchio",
+            "description": "Pesto pistache, roquette, mortadelle pistache, copeaux de parmesan",
+            "offers": {
+              "@type": "Offer",
+              "price": "11.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "San Daniele",
+            "description": "Pesto rouge, roquette, jambon San Daniele, oignons caramélisés, tomates cerises",
+            "offers": {
+              "@type": "Offer",
+              "price": "13.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Piri Piri",
+            "description": "Pesto rouge, roquette, poulet piri piri, oignons caramélisés, copeaux de parmesan",
+            "offers": {
+              "@type": "Offer",
+              "price": "11.00",
+              "priceCurrency": "EUR"
+            }
+          }
+        ],
+        "description": "Le sandwich napolitain de la maison, servi uniquement le midi."
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Desserts",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Tiramisu maison original café",
+            "description": "Tiramisu fait maison, recette au café",
+            "offers": {
+              "@type": "Offer",
+              "price": "6.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Tiramisu maison pistache",
+            "description": "Tiramisu fait maison à la pistache",
+            "offers": {
+              "@type": "Offer",
+              "price": "6.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Tiramisu maison noisette",
+            "description": "Tiramisu fait maison à la noisette",
+            "offers": {
+              "@type": "Offer",
+              "price": "6.00",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Glaces artisanales normandes",
+            "description": "Les parfums du moment sont à l'ardoise."
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Formules du midi & menu enfant",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Formule midi panuozzo",
+            "description": "Un panuozzo au choix parmi les plats signalés d'un astérisque, une boisson et un dessert",
+            "offers": {
+              "@type": "Offer",
+              "price": "15.90",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Formule midi pizza",
+            "description": "Une pizza au choix parmi les plats signalés d'un astérisque, une boisson et un dessert",
+            "offers": {
+              "@type": "Offer",
+              "price": "18.90",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Formule midi salade ou assiette",
+            "description": "Une salade ou une assiette au choix parmi les plats signalés d'un astérisque, une boisson et un dessert",
+            "offers": {
+              "@type": "Offer",
+              "price": "19.90",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Menu enfant",
+            "description": "Mini pizza margherita ou mini pizza jambon, une boule de glace artisanale et un sirop à l'eau (jusqu'à 10 ans)",
+            "offers": {
+              "@type": "Offer",
+              "price": "10.00",
+              "priceCurrency": "EUR"
+            }
+          }
+        ]
       }
     ]
   }
@@ -165,7 +548,7 @@
   <!-- Navigation -->
   <header class="nav" id="nav">
     <a href="#accueil" class="nav__logo" aria-label="QENTINA, accueil">
-      <img class="nav__logo-img" src="logo.jpg" alt="" width="40" height="40" />
+      <img class="nav__logo-img" src="logo-96.jpg" alt="" width="40" height="40" />
       <span class="nav__logo-text">QENTINA</span>
     </a>
     <nav class="nav__links" aria-label="Navigation principale">
@@ -224,6 +607,7 @@
         <p class="eyebrow reveal">De Naples à Lisbonne · Louviers</p>
         <h1 class="hero__title reveal" style="--d:.05s">
           L'art du<br /><em>feu de bois</em>
+          <span class="hero__sub">Pizzeria napolitaine à Louviers</span>
         </h1>
         <p class="hero__lead reveal" style="--d:.12s">
           Pizzas napolitaines, panuozzo et salades aux légumes grillés&nbsp;: chez QENTINA,
@@ -321,14 +705,14 @@
       <div class="section-head reveal">
         <p class="eyebrow">Notre carte</p>
         <h2 class="section-title">Découvrez la carte</h2>
-        <p class="section-lead">Découvrez toute notre carte en images. Touchez une page pour l'agrandir.</p>
+        <p class="section-lead">Touchez une page pour l'agrandir, ou lisez la carte en détail juste en dessous.</p>
       </div>
 
       <div class="menu__gallery">
         <button type="button" class="menu-card reveal" data-index="0" data-full="carte-1.jpg" aria-label="Agrandir la carte : les pizzas">
           <picture>
-            <source srcset="carte-1.webp" type="image/webp" />
-            <img src="carte-1.jpg" alt="Carte QENTINA — Les pizzas napolitaines" loading="lazy" />
+            <source srcset="carte-1-720.webp" type="image/webp" />
+            <img src="carte-1-720.jpg" alt="Carte QENTINA — Les pizzas napolitaines" width="720" height="1018" loading="lazy" />
           </picture>
           <span class="menu-card__hint" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
@@ -337,8 +721,8 @@
         </button>
         <button type="button" class="menu-card reveal" style="--d:.08s" data-index="1" data-full="carte-2.jpg" aria-label="Agrandir la carte : salades, assiettes et panuozzo">
           <picture>
-            <source srcset="carte-2.webp" type="image/webp" />
-            <img src="carte-2.jpg" alt="Carte QENTINA — Salades, assiettes & panuozzo" loading="lazy" />
+            <source srcset="carte-2-720.webp" type="image/webp" />
+            <img src="carte-2-720.jpg" alt="Carte QENTINA — Salades, assiettes & panuozzo" width="720" height="1010" loading="lazy" />
           </picture>
           <span class="menu-card__hint" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
@@ -347,8 +731,8 @@
         </button>
         <button type="button" class="menu-card reveal" style="--d:.16s" data-index="2" data-full="carte-3.jpg" aria-label="Agrandir la carte : les boissons">
           <picture>
-            <source srcset="carte-3.webp" type="image/webp" />
-            <img src="carte-3.jpg" alt="Carte QENTINA — Les boissons" loading="lazy" />
+            <source srcset="carte-3-720.webp" type="image/webp" />
+            <img src="carte-3-720.jpg" alt="Carte QENTINA — Les boissons" width="720" height="1017" loading="lazy" />
           </picture>
           <span class="menu-card__hint" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l4 4M11 8v6M8 11h6"/></svg>
@@ -357,6 +741,70 @@
         </button>
       </div>
 
+      <div class="carte reveal" id="carte">
+        <h3 class="carte__title">La carte en détail</h3>
+        <p class="carte__intro">Notre pâte est travaillée selon une approche napolitaine contemporaine, avec une pré-fermentation en biga, puis repose au minimum 48&nbsp;heures&nbsp;: une mie alvéolée, légère et digeste.</p>
+        <details class="carte__group" open>
+          <summary><h4>Les pizzas napolitaines</h4></summary>
+          <p class="carte__sub">Pizza napolitaine contemporaine, cuite au feu de bois.</p>
+          <ul class="carte__list">
+            <li><p class="carte__row"><span class="carte__name">Margherita<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">11&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, basilic frais</p></li>
+            <li><p class="carte__row"><span class="carte__name">Burratina</span><span class="carte__price">18&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, burrata des Pouilles, jambon San Daniele 24 mois, roquette, tomates confites, parmesan</p></li>
+            <li><p class="carte__row"><span class="carte__name">Regina<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">14&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, jambon blanc, champignons</p></li>
+            <li><p class="carte__row"><span class="carte__name">Diavola</span><span class="carte__price">15&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, spianata piccante, poivrons grillés, miel piquant</p></li>
+            <li><p class="carte__row"><span class="carte__name">Piri Piri</span><span class="carte__price">17&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, poulet piri piri à la portugaise, oignons confits, olives</p></li>
+            <li><p class="carte__row"><span class="carte__name">Napolitaine<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">12&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, câpres, anchois, parmesan</p></li>
+            <li><p class="carte__row"><span class="carte__name">Chèvre miel</span><span class="carte__price">15&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, chèvre, miel, marmelade de figues, noix, roquette</p></li>
+            <li><p class="carte__row"><span class="carte__name">4 fromages</span><span class="carte__price">15&nbsp;€</span></p><p class="carte__desc">Base crème et ricotta, mozzarella fior di latte, gorgonzola, parmesan, chèvre, noix</p></li>
+            <li><p class="carte__row"><span class="carte__name">Pistacchio</span><span class="carte__price">18&nbsp;€</span></p><p class="carte__desc">Base crème et ricotta, mozzarella fior di latte, mortadelle IGP, burrata des Pouilles, pesto pistache</p></li>
+            <li><p class="carte__row"><span class="carte__name">Truite</span><span class="carte__price">17&nbsp;€</span></p><p class="carte__desc">Base crème et ricotta, mozzarella fior di latte, truite, stracciatella, roquette</p></li>
+            <li><p class="carte__row"><span class="carte__name">Tonno<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">14&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, thon, roquette, parmesan, olives</p></li>
+            <li><p class="carte__row"><span class="carte__name">Végétarienne<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">13&nbsp;€</span></p><p class="carte__desc">Tomate San Marzano, mozzarella fior di latte, courgettes grillées, poivrons grillés, oignons confits, champignons, parmesan</p></li>
+            <li><p class="carte__row"><span class="carte__name">Pizza du moment</span></p><p class="carte__desc">Une création qui change au fil des saisons, à découvrir sur place.</p></li>
+          </ul>
+        </details>
+        <details class="carte__group">
+          <summary><h4>Salades &amp; assiettes</h4></summary>
+          <ul class="carte__list">
+            <li><p class="carte__row"><span class="carte__name">Salade Théo<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">16&nbsp;€</span></p><p class="carte__desc">Mélange de salades, burrata des Pouilles, jambon San Daniele, tomates cerises, copeaux de parmesan</p></li>
+            <li><p class="carte__row"><span class="carte__name">Salade Eva<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">16&nbsp;€</span></p><p class="carte__desc">Mélange de salades, stracciatella, truite fumée, courgettes grillées, pickles d'oignons et pickles de concombre à l'aneth</p></li>
+            <li><p class="carte__row"><span class="carte__name">Salade Hugo<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">16&nbsp;€</span></p><p class="carte__desc">Mélange de salades, burrata des Pouilles, mortadelle pistache, poivrons grillés, oignons confits</p></li>
+            <li><p class="carte__row"><span class="carte__name">Assiette de truite fumée<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">15&nbsp;€</span></p><p class="carte__desc">Truite fumée, stracciatella</p></li>
+            <li><p class="carte__row"><span class="carte__name">San Daniele &amp; Melone</span><span class="carte__price">17&nbsp;€</span></p><p class="carte__desc">Stracciatella crémeuse, jambon San Daniele, melon, pignons de pin torréfiés, huile d'olive, réduction balsamique</p></li>
+            <li><p class="carte__row"><span class="carte__name">Planche de charcuterie</span><span class="carte__price">17&nbsp;€</span></p><p class="carte__desc">Jambon San Daniele, mortadelle pistache, spianata piccante</p></li>
+          </ul>
+        </details>
+        <details class="carte__group">
+          <summary><h4>Panuozzo</h4></summary>
+          <p class="carte__sub">Le sandwich napolitain de la maison, servi uniquement le midi.</p>
+          <ul class="carte__list">
+            <li><p class="carte__row"><span class="carte__name">Verde Classico<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">11&nbsp;€</span></p><p class="carte__desc">Pesto vert, roquette, jambon blanc, tomates cerises, copeaux de parmesan</p></li>
+            <li><p class="carte__row"><span class="carte__name">Rosso Spicy<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">11&nbsp;€</span></p><p class="carte__desc">Pesto rouge, roquette, spianata piccante, poivrons grillés, oignons caramélisés</p></li>
+            <li><p class="carte__row"><span class="carte__name">Mortadella Pistacchio<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">11&nbsp;€</span></p><p class="carte__desc">Pesto pistache, roquette, mortadelle pistache, copeaux de parmesan</p></li>
+            <li><p class="carte__row"><span class="carte__name">San Daniele</span><span class="carte__price">13&nbsp;€</span></p><p class="carte__desc">Pesto rouge, roquette, jambon San Daniele, oignons caramélisés, tomates cerises</p></li>
+            <li><p class="carte__row"><span class="carte__name">Piri Piri<sup title="Plat disponible en formule du midi">*</sup></span><span class="carte__price">11&nbsp;€</span></p><p class="carte__desc">Pesto rouge, roquette, poulet piri piri, oignons caramélisés, copeaux de parmesan</p></li>
+          </ul>
+        </details>
+        <details class="carte__group">
+          <summary><h4>Desserts</h4></summary>
+          <ul class="carte__list">
+            <li><p class="carte__row"><span class="carte__name">Tiramisu maison original café</span><span class="carte__price">6&nbsp;€</span></p><p class="carte__desc">Tiramisu fait maison, recette au café</p></li>
+            <li><p class="carte__row"><span class="carte__name">Tiramisu maison pistache</span><span class="carte__price">6&nbsp;€</span></p><p class="carte__desc">Tiramisu fait maison à la pistache</p></li>
+            <li><p class="carte__row"><span class="carte__name">Tiramisu maison noisette</span><span class="carte__price">6&nbsp;€</span></p><p class="carte__desc">Tiramisu fait maison à la noisette</p></li>
+            <li><p class="carte__row"><span class="carte__name">Glaces artisanales normandes</span></p><p class="carte__desc">Les parfums du moment sont à l'ardoise.</p></li>
+          </ul>
+        </details>
+        <details class="carte__group">
+          <summary><h4>Formules du midi &amp; menu enfant</h4></summary>
+          <ul class="carte__list">
+            <li><p class="carte__row"><span class="carte__name">Formule midi panuozzo</span><span class="carte__price">15,90&nbsp;€</span></p><p class="carte__desc">Un panuozzo au choix parmi les plats signalés d'un astérisque, une boisson et un dessert</p></li>
+            <li><p class="carte__row"><span class="carte__name">Formule midi pizza</span><span class="carte__price">18,90&nbsp;€</span></p><p class="carte__desc">Une pizza au choix parmi les plats signalés d'un astérisque, une boisson et un dessert</p></li>
+            <li><p class="carte__row"><span class="carte__name">Formule midi salade ou assiette</span><span class="carte__price">19,90&nbsp;€</span></p><p class="carte__desc">Une salade ou une assiette au choix parmi les plats signalés d'un astérisque, une boisson et un dessert</p></li>
+            <li><p class="carte__row"><span class="carte__name">Menu enfant</span><span class="carte__price">10&nbsp;€</span></p><p class="carte__desc">Mini pizza margherita ou mini pizza jambon, une boule de glace artisanale et un sirop à l'eau (jusqu'à 10 ans)</p></li>
+          </ul>
+        </details>
+        <p class="carte__note">* Plats disponibles en formule du midi (plat + boisson + dessert). Prix TTC. Les boissons figurent sur la carte en images ci-dessus. Intolérances, restrictions ou préférences alimentaires&nbsp;: dites-le-nous, nous ferons notre possible pour vous proposer une option adaptée. Liste des allergènes disponible sur demande.</p>
+      </div>
     </section>
 
     <!-- Commander : à emporter & livraison -->
@@ -469,7 +917,7 @@
         <div class="loyalty__visual reveal" style="--d:.1s" aria-hidden="true">
           <div class="lcard">
             <div class="lcard__top">
-              <img src="logo.jpg" alt="" />
+              <img src="logo-96.jpg" alt="" width="34" height="34" loading="lazy" />
               <span>Carte de fidélité</span>
             </div>
             <p class="lcard__name">QENTINA</p>
@@ -481,6 +929,48 @@
             <p class="lcard__foot">10 commandes = 1 pizza offerte</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Questions fréquentes -->
+    <section class="faq" id="faq">
+      <div class="section-head reveal">
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2 class="section-title">Bon à savoir avant de venir</h2>
+      </div>
+      <div class="faq__list reveal">
+        <details class="faq__item">
+          <summary><h3>Quels sont les horaires de QENTINA à Louviers&nbsp;?</h3></summary>
+          <p>QENTINA est ouvert du mardi au vendredi midi, de 12h00 à 14h30, et du mardi au samedi soir, de 19h00 à 22h30 (jusqu'à 23h00 le vendredi et le samedi). Le restaurant est fermé le dimanche, le lundi et le samedi midi.</p>
+        </details>
+        <details class="faq__item">
+          <summary><h3>Comment réserver une table chez QENTINA&nbsp;?</h3></summary>
+          <p>Réservez en ligne avec le formulaire de cette page, ou par téléphone au 02 59 16 20 93 aux heures de service. Chaque réservation est confirmée par email.</p>
+        </details>
+        <details class="faq__item">
+          <summary><h3>Peut-on commander une pizza à emporter&nbsp;?</h3></summary>
+          <p>Oui. Appelez le 02 59 16 20 93&nbsp;: nous préparons votre commande et vous indiquons dans combien de temps elle sera prête. Vous la récupérez au 20 rue Maréchal Foch, à Louviers.</p>
+        </details>
+        <details class="faq__item">
+          <summary><h3>QENTINA livre-t-il à domicile&nbsp;?</h3></summary>
+          <p>La livraison à domicile le soir arrive bientôt (zone précisée au lancement). En attendant, commandez à emporter au 02 59 16 20 93.</p>
+        </details>
+        <details class="faq__item">
+          <summary><h3>Qu'est-ce qu'un panuozzo&nbsp;?</h3></summary>
+          <p>Le panuozzo est un sandwich napolitain préparé avec notre pâte à pizza, cuite au feu de bois puis garnie. Chez QENTINA, il est servi uniquement le midi.</p>
+        </details>
+        <details class="faq__item">
+          <summary><h3>Qu'est-ce qui rend la pâte de QENTINA différente&nbsp;?</h3></summary>
+          <p>Notre pâte est travaillée selon une approche napolitaine contemporaine, avec une pré-fermentation en biga, puis repose au minimum 48 heures. Résultat&nbsp;: une mie alvéolée, légère et digeste, saisie au feu de bois.</p>
+        </details>
+        <details class="faq__item">
+          <summary><h3>Y a-t-il des plats sans viande et une liste des allergènes&nbsp;?</h3></summary>
+          <p>Oui&nbsp;: la Margherita, la Végétarienne et la 4 fromages sont sans viande, et nous adaptons volontiers un plat selon vos restrictions ou préférences alimentaires. Dites-le-nous à la commande. La liste des allergènes est disponible sur demande.</p>
+        </details>
+        <details class="faq__item">
+          <summary><h3>QENTINA a-t-il une terrasse&nbsp;?</h3></summary>
+          <p>Oui, QENTINA dispose d'une terrasse au bord de l'Eure, au cœur de Louviers. Vous pouvez la demander au moment de réserver.</p>
+        </details>
       </div>
     </section>
 
@@ -530,7 +1020,8 @@
           <p>Une envie de terrasse au bord de l'eau, un événement, une grande tablée&nbsp;? Réservez et venez profiter du meilleur de l'Italie à Louviers. Nous vous répondons rapidement.</p>
           <div class="contact__social">
             <a href="https://www.tiktok.com/@qentina.louviers" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a>
-            <a href="https://www.facebook.com/share/1BHUtqxe6N/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+            <a href="https://www.instagram.com/qentina.louviers/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+            <a href="https://www.facebook.com/people/QENTINA-Louviers/61574375634107/" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
             <a href="tel:+33259162093">Appeler</a>
           </div>
         </div>
@@ -635,8 +1126,8 @@
 
   <footer class="footer">
     <picture>
-      <source srcset="logo.webp" type="image/webp" />
-      <img class="footer__logo" src="logo.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
+      <source srcset="logo-260.webp" type="image/webp" />
+      <img class="footer__logo" src="logo-260.jpg" alt="QENTINA — De Naples à Lisbonne" width="130" height="130" loading="lazy" />
     </picture>
     <p class="footer__tag">Pizzeria artisanale au feu de bois · Terrasse au bord de l'Eure, à Louviers.<br />Sur place ou à emporter — bientôt en livraison le soir.</p>
     <nav class="footer__links" aria-label="Pied de page">
@@ -645,19 +1136,24 @@
       <a href="#histoire">La maison</a>
       <a href="#avis">Avis</a>
       <a href="#infos">Infos</a>
+      <a href="#faq">Questions fréquentes</a>
       <a href="#contact">Réserver</a>
       <a href="traiteur.html">Traiteur à domicile</a>
       <a href="terroir-normand-louviers.html">Terroir &amp; Louviers</a>
       <a href="bonnes-adresses-louviers.html">Nos bonnes adresses</a>
       <a href="pizzeria-louviers.html">Pizzeria à Louviers</a>
       <a href="pizza-val-de-reuil.html">Pizza à Val-de-Reuil</a>
+      <a href="mentions-legales.html">Mentions légales</a>
       <a href="#" class="js-cookie-settings">Cookies</a>
     </nav>
     <div class="footer__social">
       <a href="https://www.tiktok.com/@qentina.louviers" target="_blank" rel="noopener" aria-label="QENTINA sur TikTok">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.35 2.02 1.53 3.6 3.5 3.86v2.6c-1.3 0-2.5-.4-3.5-1.02v5.62a5.68 5.68 0 1 1-5.68-5.68c.3 0 .6.02.88.07v2.73a2.98 2.98 0 1 0 2.1 2.85V3h2.7Z"/></svg>
       </a>
-      <a href="https://www.facebook.com/share/1BHUtqxe6N/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="QENTINA sur Facebook">
+      <a href="https://www.instagram.com/qentina.louviers/" target="_blank" rel="noopener" aria-label="QENTINA sur Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="https://www.facebook.com/people/QENTINA-Louviers/61574375634107/" target="_blank" rel="noopener" aria-label="QENTINA sur Facebook">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg>
       </a>
     </div>

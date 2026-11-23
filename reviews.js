@@ -184,12 +184,22 @@ var GOOGLE_REVIEWS = {
     showState("La clé Google n'est pas autorisée pour ce site (vérifiez les restrictions et les API activées).");
   };
 
-  var s = document.createElement("script");
-  s.src =
-    "https://maps.googleapis.com/maps/api/js?key=" +
-    encodeURIComponent(GOOGLE_REVIEWS.apiKey) +
-    "&libraries=places&language=fr&loading=async&callback=__qentinaInitReviews";
-  s.async = true;
-  s.onerror = function () { showState("Impossible de joindre Google Maps."); };
-  document.head.appendChild(s);
+  // Google Maps (≈ 280 Ko de script) n'est chargé qu'une fois la page affichée,
+  // pour ne pas retarder le premier rendu ni la photo d'accueil.
+  function loadMaps() {
+    var s = document.createElement("script");
+    s.src =
+      "https://maps.googleapis.com/maps/api/js?key=" +
+      encodeURIComponent(GOOGLE_REVIEWS.apiKey) +
+      "&libraries=places&language=fr&loading=async&callback=__qentinaInitReviews";
+    s.async = true;
+    s.onerror = function () { showState("Impossible de joindre Google Maps."); };
+    document.head.appendChild(s);
+  }
+  function whenIdle() {
+    if ("requestIdleCallback" in window) window.requestIdleCallback(loadMaps, { timeout: 2500 });
+    else setTimeout(loadMaps, 600);
+  }
+  if (document.readyState === "complete") whenIdle();
+  else window.addEventListener("load", whenIdle);
 })();

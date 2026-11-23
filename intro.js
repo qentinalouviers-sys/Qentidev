@@ -76,7 +76,7 @@
   var logo = new Image();
   var logoReady = false;
   logo.onload = function () { logoReady = true; };
-  logo.src = "logo.jpg";
+  logo.src = "logo-260.jpg";
 
   /* Polices d'affichage (repli serif élégant si pas encore chargées) */
   if (document.fonts && document.fonts.load) {
