@@ -371,24 +371,106 @@
     });
   }
 
-  /* Bouton flottant : visible après le hero, masqué sur la section contact */
-  var fab = document.getElementById("fab");
+  /* ============================================================
+     APPELS À L'ACTION — Réserver · Commander · Je me rends chez QENTINA
+
+     ORDER_URL : adresse du site de commande en ligne. Tant que c'est
+       vide, « Commander » mène à la rubrique Commander de l'accueil
+       (à emporter par téléphone + annonce de la livraison). Le jour de
+       l'ouverture, coller l'adresse ici : tous les boutons « Commander »
+       du site y mèneront, sans rien modifier d'autre.
+     ============================================================ */
+  var ORDER_URL = "";
+
+  var GO_ADDRESS = "20 rue Maréchal Foch · 27400 Louviers";
+  var GO_GMAPS = "https://www.google.com/maps/dir/?api=1&destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers";
+  // Point exact du 20 rue du Maréchal Foch (Base Adresse Nationale)
+  var GO_WAZE = "https://waze.com/ul?ll=49.21125%2C1.17072&navigate=yes&zoom=17";
+  var GO_PLANS = "https://maps.apple.com/?daddr=20%20rue%20du%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers&dirflg=d";
+
+  if (ORDER_URL) {
+    document.querySelectorAll('[data-cta="order"]').forEach(function (a) { a.href = ORDER_URL; });
+  }
+
+  /* Barre flottante : visible après le haut de page, masquée sur le
+     formulaire de réservation. Absente de la page traiteur (devis). */
   var contact = document.getElementById("contact");
-  if (fab) {
+  var onHome = !!document.getElementById("reservationForm");
+  if (!document.getElementById("devisForm")) {
+    var home = onHome ? "" : "index.html";
+    var dock = document.createElement("nav");
+    dock.className = "dock";
+    dock.setAttribute("aria-label", "Actions rapides");
+    dock.innerHTML =
+      '<a class="dock__item dock__item--main cta cta--book" href="' + home + '#contact">Réserver</a>' +
+      '<a class="dock__item cta cta--order" data-cta="order" href="' + (ORDER_URL || home + "#commander") + '">Commander</a>' +
+      '<a class="dock__item cta cta--go" data-cta="go" href="' + GO_GMAPS + '" target="_blank" rel="noopener" aria-label="Je me rends chez QENTINA : itinéraire">Y aller</a>';
+    document.body.appendChild(dock);
+
     var contactVisible = false;
-    if ("IntersectionObserver" in window && contact) {
+    var updateDock = function () {
+      var pastHero = window.scrollY > window.innerHeight * 0.7;
+      dock.classList.toggle("is-shown", pastHero && !contactVisible);
+    };
+    if ("IntersectionObserver" in window && contact && onHome) {
       new IntersectionObserver(function (entries) {
         contactVisible = entries[0].isIntersecting;
-        updateFab();
+        updateDock();
       }, { threshold: 0.18 }).observe(contact);
     }
-    function updateFab() {
-      var pastHero = window.scrollY > window.innerHeight * 0.7;
-      fab.classList.toggle("is-shown", pastHero && !contactVisible);
-    }
-    window.addEventListener("scroll", updateFab, { passive: true });
-    updateFab();
+    window.addEventListener("scroll", updateDock, { passive: true });
+    updateDock();
   }
+
+  /* « Je me rends chez QENTINA » : choix de l'application d'itinéraire.
+     Sans JavaScript, le lien ouvre directement Google Maps. */
+  var goSheet = null;
+  var goOpener = null;
+  function closeGo() {
+    if (!goSheet || goSheet.hidden) return;
+    goSheet.classList.remove("is-open");
+    document.removeEventListener("keydown", goKey);
+    setTimeout(function () { goSheet.hidden = true; }, 300);
+    if (goOpener && goOpener.focus) goOpener.focus();
+  }
+  function goKey(e) { if (e.key === "Escape") closeGo(); }
+  function openGo(opener) {
+    goOpener = opener;
+    if (!goSheet) {
+      var apple = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+      goSheet = document.createElement("div");
+      goSheet.className = "go-sheet";
+      goSheet.hidden = true;
+      goSheet.setAttribute("role", "dialog");
+      goSheet.setAttribute("aria-modal", "true");
+      goSheet.setAttribute("aria-labelledby", "goSheetTitle");
+      goSheet.innerHTML =
+        '<div class="go-sheet__card">' +
+        '<button type="button" class="go-sheet__close" aria-label="Fermer">&times;</button>' +
+        '<p class="eyebrow">Itinéraire</p>' +
+        '<h2 class="go-sheet__title" id="goSheetTitle">Je me rends chez QENTINA</h2>' +
+        '<p class="go-sheet__addr">' + GO_ADDRESS + "</p>" +
+        '<a class="btn btn--primary btn--full" href="' + GO_GMAPS + '" target="_blank" rel="noopener">Ouvrir dans Google Maps</a>' +
+        '<a class="btn btn--ghost btn--full" href="' + GO_WAZE + '" target="_blank" rel="noopener">Ouvrir dans Waze</a>' +
+        (apple ? '<a class="btn btn--ghost btn--full" href="' + GO_PLANS + '" target="_blank" rel="noopener">Ouvrir dans Plans</a>' : "") +
+        "</div>";
+      document.body.appendChild(goSheet);
+      goSheet.addEventListener("click", function (e) {
+        if (e.target === goSheet || e.target.closest(".go-sheet__close") || e.target.closest("a")) closeGo();
+      });
+    }
+    goSheet.hidden = false;
+    requestAnimationFrame(function () { goSheet.classList.add("is-open"); });
+    document.addEventListener("keydown", goKey);
+    var first = goSheet.querySelector("a");
+    if (first) first.focus();
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest && e.target.closest('[data-cta="go"]');
+    if (!t || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    openGo(t);
+  });
 
   /* Formulaire de réservation → envoi par email via Web3Forms */
   var form = document.getElementById("reservationForm");

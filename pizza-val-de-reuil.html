@@ -57,13 +57,16 @@
     </a>
     <nav class="nav__links" aria-label="Navigation principale">
       <a href="index.html#menu">La carte</a>
-      <a href="index.html#commander">Commander</a>
       <a href="traiteur.html">Traiteur</a>
       <a href="terroir-normand-louviers.html">Louviers</a>
       <a href="bonnes-adresses-louviers.html">Bonnes adresses</a>
       <a href="index.html#avis">Avis</a>
       <a href="index.html#infos">Infos</a>
-      <a href="index.html#contact" class="nav__cta">Réserver</a>
+      <span class="nav__actions">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="nav__cta nav__cta--icon cta cta--go" aria-label="Je me rends chez QENTINA : itinéraire" title="Je me rends chez QENTINA"></a>
+        <a href="index.html#commander" class="nav__cta cta cta--order" data-cta="order">Commander</a>
+        <a href="index.html#contact" class="nav__cta nav__cta--main cta cta--book">Réserver</a>
+      </span>
     </nav>
     <button class="nav__burger" aria-label="Ouvrir le menu" aria-expanded="false">
       <span></span><span></span>
@@ -72,14 +75,17 @@
 
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html#menu">La carte</a>
-    <a href="index.html#commander">Commander</a>
     <a href="traiteur.html">Traiteur</a>
     <a href="terroir-normand-louviers.html">Louviers</a>
     <a href="bonnes-adresses-louviers.html">Bonnes adresses</a>
     <a href="index.html#avis">Avis</a>
     <a href="index.html#fidelite">Fidélité</a>
     <a href="index.html#infos">Infos</a>
-    <a href="index.html#contact">Réserver</a>
+    <div class="mobile-menu__cta">
+      <a href="index.html#contact" class="btn btn--primary cta cta--book">Réserver</a>
+      <a href="index.html#commander" class="btn btn--ghost cta cta--order" data-cta="order">Commander</a>
+      <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="btn btn--ghost cta cta--go">Je me rends chez QENTINA</a>
+    </div>
   </div>
 
   <main>
@@ -100,9 +106,11 @@
           cuites au feu de bois. À emporter, et bientôt en livraison le soir, régalez-vous chez vous —
           pizzas, panuozzo et salades aux légumes grillés.
         </p>
-        <div class="hero__actions reveal" style="--d:.18s">
-          <a href="index.html#menu" class="btn btn--light">Voir la carte</a>
-          <a href="tel:+33259162093" class="btn btn--outline-light">Commander : 02 59 16 20 93</a>
+        <div class="hero__actions cta-row reveal" style="--d:.18s">
+          <a href="index.html#commander" class="btn btn--light cta cta--order" data-cta="order">Commander</a>
+          <a href="index.html#contact" class="btn btn--outline-light cta cta--book">Réserver</a>
+          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="btn btn--outline-light cta cta--go">Je me rends chez QENTINA</a>
+          <p class="cta-more"><a href="index.html#menu">Voir la carte&nbsp;<span aria-hidden="true">→</span></a></p>
         </div>
       </div>
     </section>
@@ -194,10 +202,8 @@
         </div>
 
       </div>
-      <p class="center-link reveal">
-        <a href="https://www.google.com/maps/search/?api=1&query=20%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener">
-          Ouvrir l'itinéraire dans Google Maps&nbsp;<span aria-hidden="true">→</span>
-        </a>
+      <p class="cta-center reveal">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="btn btn--primary cta cta--go">Je me rends chez QENTINA</a>
       </p>
     </section>
   </main>

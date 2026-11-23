@@ -115,13 +115,16 @@
     </a>
     <nav class="nav__links" aria-label="Navigation principale">
       <a href="#menu">La carte</a>
-      <a href="#commander">Commander</a>
       <a href="traiteur.html">Traiteur</a>
       <a href="terroir-normand-louviers.html">Louviers</a>
       <a href="bonnes-adresses-louviers.html">Bonnes adresses</a>
       <a href="#avis">Avis</a>
       <a href="#infos">Infos</a>
-      <a href="#contact" class="nav__cta">Réserver</a>
+      <span class="nav__actions">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="nav__cta nav__cta--icon cta cta--go" aria-label="Je me rends chez QENTINA : itinéraire" title="Je me rends chez QENTINA"></a>
+        <a href="#commander" class="nav__cta cta cta--order" data-cta="order">Commander</a>
+        <a href="#contact" class="nav__cta nav__cta--main cta cta--book">Réserver</a>
+      </span>
     </nav>
     <button class="nav__burger" aria-label="Ouvrir le menu" aria-expanded="false">
       <span></span><span></span>
@@ -130,14 +133,17 @@
 
   <div class="mobile-menu" id="mobileMenu">
     <a href="#menu">La carte</a>
-    <a href="#commander">Commander</a>
     <a href="traiteur.html">Traiteur</a>
     <a href="terroir-normand-louviers.html">Louviers</a>
     <a href="bonnes-adresses-louviers.html">Bonnes adresses</a>
     <a href="#avis">Avis</a>
     <a href="#fidelite">Fidélité</a>
     <a href="#infos">Infos</a>
-    <a href="#contact">Réserver</a>
+    <div class="mobile-menu__cta">
+      <a href="#contact" class="btn btn--primary cta cta--book">Réserver</a>
+      <a href="#commander" class="btn btn--ghost cta cta--order" data-cta="order">Commander</a>
+      <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="btn btn--ghost cta cta--go">Je me rends chez QENTINA</a>
+    </div>
   </div>
 
 
@@ -167,10 +173,11 @@
           tout est cuit au feu de bois, notre unique four. À savourer sur notre terrasse
           au bord de l'Eure ou à emporter, au cœur de Louviers — et bientôt en livraison le soir.
         </p>
-        <div class="hero__actions reveal" style="--d:.18s">
-          <a href="#menu" class="btn btn--light">Découvrir la carte</a>
-          <a href="#contact" class="btn btn--outline-light">Réserver une table</a>
-          <a href="#commander" class="btn btn--outline-light">À emporter &amp; livraison</a>
+        <div class="hero__actions cta-row reveal" style="--d:.18s">
+          <a href="#contact" class="btn btn--light cta cta--book">Réserver</a>
+          <a href="#commander" class="btn btn--outline-light cta cta--order" data-cta="order">Commander</a>
+          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="btn btn--outline-light cta cta--go">Je me rends chez QENTINA</a>
+          <p class="cta-more"><a href="#menu">Découvrir la carte&nbsp;<span aria-hidden="true">→</span></a></p>
         </div>
         <dl class="hero__meta reveal" style="--d:.24s">
           <div><dt>Feu de bois</dt><dd>notre unique four</dd></div>
@@ -451,10 +458,8 @@
           width="100%" height="420" style="border:0;" allowfullscreen=""
           loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-      <p class="center-link reveal">
-        <a href="https://www.google.com/maps/search/?api=1&query=20%20rue%20Mar%C3%A9chal%20Foch%2027400%20Louviers" target="_blank" rel="noopener">
-          Ouvrir l'itinéraire dans Google Maps&nbsp;<span aria-hidden="true">→</span>
-        </a>
+      <p class="cta-center reveal">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers" target="_blank" rel="noopener" data-cta="go" class="btn btn--primary cta cta--go">Je me rends chez QENTINA</a>
       </p>
     </section>
 
@@ -610,18 +615,6 @@
     </figure>
     <button class="lightbox__nav lightbox__next" type="button" aria-label="Image suivante">&#8250;</button>
     <span class="lightbox__counter" id="lightboxCounter"></span>
-  </div>
-
-  <!-- Bouton flottant de réservation -->
-  <div class="fab" id="fab">
-    <a href="tel:+33259162093" class="fab__call" aria-label="Appeler la pizzeria">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M6.5 3.5h3l1.2 4-2 1.3a12 12 0 0 0 5.2 5.2l1.3-2 4 1.2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z"/>
-      </svg>
-    </a>
-    <a href="#contact" class="fab__book">
-      <span>Réserver une table</span>
-    </a>
   </div>
 
   <script src="reviews.js"></script>

@@ -1342,59 +1342,170 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   font-size: .85rem;
 }
 
-/* ---------- Bouton flottant de réservation ---------- */
-.fab {
+/* ---------- Appels à l'action : Réserver · Commander · Je me rends chez QENTINA ----------
+   Trois actions, toujours dans le même ordre et avec la même icône, partout
+   sur le site : menu, haut de page, menu mobile, barre flottante.
+   Le lien « Commander » se règle dans script.js (ORDER_URL). */
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; }
+.cta::before {
+  content: "";
+  width: 1.12em; height: 1.12em;
+  flex: none;
+  background: currentColor;
+  -webkit-mask: var(--ic) center / contain no-repeat;
+  mask: var(--ic) center / contain no-repeat;
+}
+.cta--book { --ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E"); }
+.cta--order { --ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8h14l-1 12H6L5 8z'/%3E%3Cpath d='M9 8V6.5a3 3 0 0 1 6 0V8'/%3E%3C/svg%3E"); }
+.cta--go { --ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z'/%3E%3Ccircle cx='12' cy='10' r='2.3'/%3E%3C/svg%3E"); }
+
+/* Menu principal : icône itinéraire + Commander + Réserver (plein) */
+.nav__actions { display: flex; align-items: center; gap: .55rem; }
+.nav__cta.cta { padding: .52rem 1.05rem; gap: .42rem; font-size: .93rem; }
+.nav__cta--icon.cta { padding: 0; width: 2.45rem; height: 2.45rem; }
+.nav__cta--icon.cta::before { width: 1.2em; height: 1.2em; }
+.nav__cta.nav__cta--main { background: var(--paper); border-color: var(--paper); color: var(--ink) !important; }
+.nav__cta.nav__cta--main:hover { background: #fff; border-color: #fff; color: var(--ink) !important; }
+.nav.is-scrolled .nav__cta.nav__cta--main,
+body.nav-dark .nav__cta.nav__cta--main { background: var(--terra); border-color: var(--terra); color: #fff !important; }
+.nav.is-scrolled .nav__cta.nav__cta--main:hover,
+body.nav-dark .nav__cta.nav__cta--main:hover { background: var(--terra-deep); border-color: var(--terra-deep); color: #fff !important; }
+
+/* Rangée de trois boutons + lien discret vers la carte */
+.cta-row { align-items: center; }
+.cta-more { flex-basis: 100%; font-size: .95rem; font-weight: 500; }
+.cta-more a { border-bottom: 1px solid currentColor; padding-bottom: 1px; opacity: .85; transition: opacity .25s var(--ease); }
+.cta-more a:hover { opacity: 1; }
+.cta-center { text-align: center; margin-top: 1.5rem; }
+/* Bloc de fin de page centré : la règle d'origine était annulée par .contact__inner, définie après elle */
+.contact__inner.contact__inner--center { grid-template-columns: 1fr; max-width: 620px; text-align: center; }
+.contact__inner--center .cta-row { justify-content: center; }
+
+/* Sur grand écran, les trois boutons du haut de page tiennent sur une ligne */
+@media (min-width: 901px) {
+  .hero .cta-row { display: grid; grid-template-columns: repeat(3, max-content); width: max-content; }
+  .hero .cta-row > .cta-more { grid-column: 1 / -1; }
+}
+/* Note Google : en haut à droite du bloc de texte. Ancrée en bas, elle
+   recouvrait les repères « Feu de bois · Panuozzo · À emporter ». */
+@media (min-width: 621px) {
+  .hero__rating { top: 0; bottom: auto; right: 0; }
+}
+/* Avec les trois actions, le menu ne tient plus sous ~1180px → menu burger */
+@media (max-width: 1180px) {
+  .nav__links { display: none; }
+  .nav__burger { display: flex; }
+}
+
+/* Menu mobile : les trois actions en boutons, sous les liens */
+.mobile-menu { overflow-y: auto; gap: 1.1rem; padding: 5rem 1.4rem 1.6rem; justify-content: safe center; }
+.mobile-menu > a { font-size: 1.55rem; }
+.mobile-menu__cta { display: grid; gap: .55rem; width: min(100%, 320px); margin-top: .5rem; }
+.mobile-menu .mobile-menu__cta a { font-family: var(--sans); font-size: 1rem; }
+@media (max-height: 700px) {
+  .mobile-menu { gap: .7rem; padding-top: 4.6rem; }
+  .mobile-menu > a { font-size: 1.3rem; }
+  .mobile-menu__cta .btn { padding-top: .68rem; padding-bottom: .68rem; }
+}
+/* Menu ouvert sur fond crème : logo et croix passent en sombre (ils restaient blancs) */
+.nav__burger.is-open span { background: var(--ink); }
+.nav:has(.nav__burger.is-open) .nav__logo-text { color: var(--ink); }
+
+/* Barre flottante : apparaît après le haut de page */
+.dock {
   position: fixed;
   right: clamp(1rem, 4vw, 2rem);
   bottom: clamp(1rem, 4vw, 2rem);
   z-index: 80;
   display: flex;
   align-items: center;
-  gap: .6rem;
+  gap: .2rem;
+  padding: .35rem;
+  border-radius: 100px;
+  background: rgba(251, 245, 231, 0.94);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 18px 40px -14px rgba(23, 48, 51, 0.5);
   opacity: 0;
   transform: translateY(20px);
   pointer-events: none;
   transition: opacity .4s var(--ease), transform .4s var(--ease);
 }
-.fab.is-shown { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
-.fab__call,
-.fab__book {
-  box-shadow: 0 16px 36px -12px rgba(33, 28, 23, 0.45);
-  transition: transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease);
-}
-.fab__call {
-  display: grid;
-  place-items: center;
-  width: 54px; height: 54px;
-  border-radius: 50%;
-  background: var(--card);
-  color: var(--terra);
-  border: 1px solid var(--line-soft);
-}
-.fab__call svg { width: 24px; height: 24px; }
-.fab__call:hover { transform: translateY(-3px); background: var(--ink); color: var(--paper); }
-
-.fab__book {
-  display: inline-flex;
-  align-items: center;
-  height: 54px;
-  padding: 0 1.5rem;
+.dock.is-shown { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.dock__item {
+  height: 46px;
+  padding: 0 1.1rem;
   border-radius: 100px;
-  background: var(--terra);
-  color: #fff;
+  gap: .42rem;
   font-weight: 500;
-  font-size: .98rem;
+  font-size: .93rem;
+  color: var(--ink);
+  white-space: nowrap;
+  transition: background .3s var(--ease), color .3s var(--ease);
 }
-.fab__book:hover { transform: translateY(-3px); background: var(--terra-deep); }
+.dock__item:hover { background: rgba(15, 84, 96, 0.1); }
+.dock__item--main { background: var(--terra); color: #fff; }
+.dock__item--main:hover { background: var(--terra-deep); }
+
+/* Choix de l'application d'itinéraire */
+.go-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+  background: rgba(11, 34, 38, 0.55);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity .3s var(--ease);
+}
+.go-sheet[hidden] { display: none; }
+.go-sheet.is-open { opacity: 1; }
+.go-sheet__card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  display: grid;
+  gap: .7rem;
+  padding: 2.1rem 1.6rem 1.6rem;
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  transform: translateY(18px);
+  transition: transform .35s var(--ease);
+}
+.go-sheet.is-open .go-sheet__card { transform: none; }
+.go-sheet__title { font-family: var(--serif); font-weight: 500; font-size: 1.6rem; line-height: 1.15; }
+.go-sheet__addr { color: var(--ink-soft); margin-bottom: .5rem; }
+.go-sheet__close {
+  position: absolute;
+  top: .55rem; right: .9rem;
+  background: none; border: 0;
+  font-size: 1.7rem; line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.go-sheet__close:hover { color: var(--ink); }
 
 @media (max-width: 620px) {
-  .fab {
-    left: 1rem; right: 1rem;
-    bottom: 1rem;
-    gap: .7rem;
+  .cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .cta-row > .cta--go, .cta-row > .cta-more { grid-column: 1 / -1; }
+  .cta-row .btn { padding-left: 1rem; padding-right: 1rem; }
+  .dock { left: .75rem; right: .75rem; bottom: calc(.75rem + env(safe-area-inset-bottom, 0px)); }
+  .dock__item { flex: 1; padding: 0 .4rem; font-size: .88rem; }
+  .footer { padding-bottom: 6rem; }
+  .go-sheet { align-items: flex-end; padding: 0; }
+  .go-sheet__card {
+    max-width: none;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-bottom: calc(1.6rem + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
   }
-  .fab__book { flex: 1; justify-content: center; }
 }
 
 /* ---------- Bandeau consentement cookies (RGPD) ---------- */
