@@ -1,0 +1,17 @@
+{
+  "name": "QENTINA — Pizzeria napolitaine",
+  "short_name": "QENTINA",
+  "description": "Pizzas napolitaines au feu de bois à Louviers, Normandie.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f4ecd9",
+  "theme_color": "#0f5460",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
