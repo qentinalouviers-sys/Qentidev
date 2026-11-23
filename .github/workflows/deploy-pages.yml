@@ -47,6 +47,11 @@ jobs:
         with:
           path: _site
 
+      # L'artefact met parfois quelques secondes à être visible côté GitHub :
+      # sans cette attente, le déploiement échoue (« No artifacts named github-pages »).
+      - name: Attente de disponibilité de l'artefact
+        run: sleep 20
+
       - name: Déploiement
         id: deployment
         uses: actions/deploy-pages@v4
