@@ -1047,20 +1047,28 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .order__card h3 { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; }
 .order__card > p { color: var(--ink-soft); }
 .order__btn { margin-top: auto; font-size: 1.02rem; }
-/* Logo officiel Uber Eats : noir + vert, il lui faut un fond clair */
-.order__btn--uber {
-  background: #fff;
-  color: var(--ink);
-  border-color: rgba(5, 193, 103, .45);
-  gap: .45rem;
+/* Livraison maison : annoncée, pas encore ouverte */
+.order__btn--soon {
+  background: transparent;
+  color: var(--terra);
+  border: 1px dashed rgba(200, 144, 47, .8);
+  cursor: default;
 }
-.order__btn--uber:hover {
-  background: #f1fbf5;
-  border-color: #05c167;
-  transform: translateY(-2px);
+.order__ami { height: 4.2rem; width: auto; margin: -.5rem auto -.3rem; }
+.order__badge {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: .35rem;
+  padding: .18rem .6rem;
+  border-radius: 100px;
+  background: var(--gold);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
-.order__btn-label { font-weight: 500; }
-.order__uber-logo { height: 1.15rem; width: auto; display: block; }
 .order__hint { font-size: .78rem; color: var(--ink-soft); margin: 0; }
 /* Paire de boutons sur les pages locales (hors cartes) */
 .order__actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
