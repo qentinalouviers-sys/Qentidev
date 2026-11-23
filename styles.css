@@ -1054,7 +1054,7 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   border: 1px dashed rgba(200, 144, 47, .8);
   cursor: default;
 }
-.order__ami { height: 4.2rem; width: auto; margin: -.5rem auto -.3rem; }
+.order__picto { height: 2.5rem; width: auto; margin: 0 auto; }
 .order__badge {
   display: inline-block;
   vertical-align: middle;
