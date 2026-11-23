@@ -372,7 +372,7 @@
   }
 
   /* ============================================================
-     APPELS À L'ACTION — Réserver · Commander · Je me rends chez QENTINA
+     APPELS À L'ACTION — Réserver · Commander · Appeler · Je me rends chez QENTINA
 
      ORDER_URL : adresse du site de commande en ligne. Tant que c'est
        vide, « Commander » mène à la rubrique Commander de l'accueil
@@ -381,6 +381,8 @@
        du site y mèneront, sans rien modifier d'autre.
      ============================================================ */
   var ORDER_URL = "";
+
+  var CALL_TEL = "tel:+33259162093";
 
   var GO_ADDRESS = "20 rue Maréchal Foch · 27400 Louviers";
   var GO_GMAPS = "https://www.google.com/maps/dir/?api=1&destination=QENTINA%2C%2020%20rue%20Mar%C3%A9chal%20Foch%2C%2027400%20Louviers";
@@ -404,6 +406,7 @@
     dock.innerHTML =
       '<a class="dock__item dock__item--main cta cta--book" href="' + home + '#contact">Réserver</a>' +
       '<a class="dock__item cta cta--order" data-cta="order" href="' + (ORDER_URL || home + "#commander") + '">Commander</a>' +
+      '<a class="dock__item cta cta--call" href="' + CALL_TEL + '" aria-label="Appeler QENTINA au 02 59 16 20 93">Appeler</a>' +
       '<a class="dock__item cta cta--go" data-cta="go" href="' + GO_GMAPS + '" target="_blank" rel="noopener" aria-label="Je me rends chez QENTINA : itinéraire">Y aller</a>';
     document.body.appendChild(dock);
 

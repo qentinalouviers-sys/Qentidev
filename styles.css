@@ -1342,8 +1342,8 @@ body.nav-dark .nav__burger span { background: var(--ink); }
   font-size: .85rem;
 }
 
-/* ---------- Appels à l'action : Réserver · Commander · Je me rends chez QENTINA ----------
-   Trois actions, toujours dans le même ordre et avec la même icône, partout
+/* ---------- Appels à l'action : Réserver · Commander · Appeler · Je me rends chez QENTINA ----------
+   Quatre actions, toujours dans le même ordre et avec la même icône, partout
    sur le site : menu, haut de page, menu mobile, barre flottante.
    Le lien « Commander » se règle dans script.js (ORDER_URL). */
 .cta { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; }
@@ -1358,6 +1358,7 @@ body.nav-dark .nav__burger span { background: var(--ink); }
 .cta--book { --ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E"); }
 .cta--order { --ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8h14l-1 12H6L5 8z'/%3E%3Cpath d='M9 8V6.5a3 3 0 0 1 6 0V8'/%3E%3C/svg%3E"); }
 .cta--go { --ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z'/%3E%3Ccircle cx='12' cy='10' r='2.3'/%3E%3C/svg%3E"); }
+.cta--call { --ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 3.5h3l1.2 4-2 1.3a12 12 0 0 0 5.2 5.2l1.3-2 4 1.2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z'/%3E%3C/svg%3E"); }
 
 /* Menu principal : icône itinéraire + Commander + Réserver (plein) */
 .nav__actions { display: flex; align-items: center; gap: .55rem; }
@@ -1381,18 +1382,19 @@ body.nav-dark .nav__cta.nav__cta--main:hover { background: var(--terra-deep); bo
 .contact__inner.contact__inner--center { grid-template-columns: 1fr; max-width: 620px; text-align: center; }
 .contact__inner--center .cta-row { justify-content: center; }
 
-/* Sur grand écran, les trois boutons du haut de page tiennent sur une ligne */
-@media (min-width: 901px) {
-  .hero .cta-row { display: grid; grid-template-columns: repeat(3, max-content); width: max-content; }
-  .hero .cta-row > .cta-more { grid-column: 1 / -1; }
+/* Quatre boutons : grille 2 × 2, tous de la même largeur */
+@media (min-width: 621px) {
+  .cta-row { display: grid; grid-template-columns: 1fr 1fr; width: max-content; max-width: 100%; }
+  .cta-row > .cta-more { grid-column: 1 / -1; }
+  .contact__inner--center .cta-row { margin-left: auto; margin-right: auto; }
 }
 /* Note Google : en haut à droite du bloc de texte. Ancrée en bas, elle
    recouvrait les repères « Feu de bois · Panuozzo · À emporter ». */
 @media (min-width: 621px) {
   .hero__rating { top: 0; bottom: auto; right: 0; }
 }
-/* Avec les trois actions, le menu ne tient plus sous ~1180px → menu burger */
-@media (max-width: 1180px) {
+/* Avec les actions, le menu ne tient plus sous ~1240px → menu burger */
+@media (max-width: 1240px) {
   .nav__links { display: none; }
   .nav__burger { display: flex; }
 }
@@ -1400,7 +1402,9 @@ body.nav-dark .nav__cta.nav__cta--main:hover { background: var(--terra-deep); bo
 /* Menu mobile : les trois actions en boutons, sous les liens */
 .mobile-menu { overflow-y: auto; gap: 1.1rem; padding: 5rem 1.4rem 1.6rem; justify-content: safe center; }
 .mobile-menu > a { font-size: 1.55rem; }
-.mobile-menu__cta { display: grid; gap: .55rem; width: min(100%, 320px); margin-top: .5rem; }
+.mobile-menu__cta { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; width: min(100%, 320px); margin-top: .5rem; }
+.mobile-menu__cta .cta--call, .mobile-menu__cta .cta--go { grid-column: 1 / -1; }
+.mobile-menu__cta .btn { padding-left: .8rem; padding-right: .8rem; }
 .mobile-menu .mobile-menu__cta a { font-family: var(--sans); font-size: 1rem; }
 @media (max-height: 700px) {
   .mobile-menu { gap: .7rem; padding-top: 4.6rem; }
@@ -1494,10 +1498,13 @@ body.nav-dark .nav__cta.nav__cta--main:hover { background: var(--terra-deep); bo
 
 @media (max-width: 620px) {
   .cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
-  .cta-row > .cta--go, .cta-row > .cta-more { grid-column: 1 / -1; }
+  .cta-row > .cta--call, .cta-row > .cta--go, .cta-row > .cta-more { grid-column: 1 / -1; }
   .cta-row .btn { padding-left: 1rem; padding-right: 1rem; }
   .dock { left: .75rem; right: .75rem; bottom: calc(.75rem + env(safe-area-inset-bottom, 0px)); }
-  .dock__item { flex: 1; padding: 0 .4rem; font-size: .88rem; }
+  /* quatre actions : icône au-dessus du libellé, comme une barre d'onglets */
+  .dock { border-radius: 22px; gap: .15rem; }
+  .dock__item { flex: 1; flex-direction: column; gap: .16rem; height: 54px; padding: 0 .2rem; border-radius: 17px; font-size: .72rem; }
+  .dock__item::before { width: 1.5em; height: 1.5em; }
   .footer { padding-bottom: 6rem; }
   .go-sheet { align-items: flex-end; padding: 0; }
   .go-sheet__card {
