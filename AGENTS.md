@@ -14,18 +14,14 @@ Qentidev/
 ├── traiteur.html              # Page traiteur
 ├── styles.css                 # Styles + animations CSS
 ├── script.js                  # Interactions JS (menu, défilement, formulaire)
-├── intro.js                   # Animation d'intro
+├── intro.js                   # Animation d'intro — édition Noël depuis nov. 2026 (version braises : historique git)
+├── noel.css / noel.js         # Déco de Noël saisonnière (guirlande, neige, vœux, bandeau). Retrait : supprimer
+│                              #   dans chaque page les 2 lignes marquées « NOËL » + restaurer intro.js (braises)
 ├── reviews.js                 # Avis Google (via Cloudflare Worker)
 ├── consent.js                 # Bandeau cookies RGPD : charge Google Analytics (gtag) après accord
 ├── worker.js                  # Cloudflare Worker proxy pour les avis Google
-├── worker-concours.js         # Cloudflare Worker + D1 du jeu concours Halloween (scores, classement)
-├── halloween/                 # Jeu concours « La Nuit du Four Hanté » (oct. 2026)
-│   ├── index.html             #   page d'accueil Halloween : les 2 jeux + les cadeaux (QR ?src=qr → jeu.html)
-│   ├── jeu.html               #   jeu autonome (canvas) ; CONFIG.apiBase = URL du Worker concours
-│   ├── comptoir.html          #   vérification et remise des codes gagnants (clé admin)
-│   ├── roue.html              #   roue d'Halloween : 1 tour par email (instants gagnants + tiramisus)
-│   ├── reglement.html         #   règlement complet du concours (jeu + roue)
-│   └── og.jpg                 #   image de partage réseaux sociaux (1200×630)
+├── worker-concours.js         # Cloudflare Worker + D1 du concours Halloween 2026 (terminé, pages publiques retirées)
+├── halloween/comptoir.html    # Seule page Halloween conservée : remise des lots au comptoir (jusqu'au 30/11/2026)
 ├── DEPLOIEMENT-CONCOURS.md    # Doc : activer le classement du concours (Worker + D1)
 ├── banner.jpg                 # Image bannière
 ├── hero-pizza.jpg             # Image héro
