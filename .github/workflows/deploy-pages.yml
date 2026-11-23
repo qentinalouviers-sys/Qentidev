@@ -31,10 +31,21 @@ jobs:
         with:
           enablement: true
 
+      # Seuls les fichiers du site sont publiés : les documents internes,
+      # sources des Workers et PDF restent dans le dépôt mais hors de qentina.fr.
+      - name: Préparation du site public
+        run: |
+          mkdir _site
+          rsync -a ./ _site/ \
+            --exclude '_site' --exclude '.git' --exclude '.github' --exclude '.wrangler' \
+            --exclude '*.md' --exclude '*.pdf' --exclude '*.sql' --exclude '*.toml' \
+            --exclude 'worker*.js'
+          ls -la _site
+
       - name: Téléversement du site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Déploiement
         id: deployment

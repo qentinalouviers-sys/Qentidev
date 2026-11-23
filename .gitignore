@@ -5,3 +5,5 @@ apercu-*.png
 shot.js
 _shot.js
 _opt.js
+.wrangler/
+_site/
