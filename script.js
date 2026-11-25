@@ -23,10 +23,11 @@
          garder que ce service-là ouvert
      ============================================================ */
   var SERVICES = {
-    2: [[720, 870], [1140, 1350]],
-    3: [[720, 870], [1140, 1350]],
-    4: [[720, 870], [1140, 1350]],
-    5: [[720, 870], [1140, 1380]],
+    // Temporairement soir uniquement (Justine indisponible — recrutement en cours)
+    2: [[1140, 1350]],
+    3: [[1140, 1350]],
+    4: [[1140, 1350]],
+    5: [[1140, 1380]],
     6: [[1140, 1380]]
   };
   var LAST_ARRIVAL = 30; // dernière arrivée 30 min avant la fermeture du service
